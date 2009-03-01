@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B6F7BC3E-92AF-4D00-AFDF-5771EA184AA4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ThalesSim.Core</RootNamespace>
+    <AssemblyName>ThalesCore</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>On</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>ThalesSim.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>ThalesCore.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>ThalesCore.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="HostCommands\AHostCommand.vb" />
+    <Compile Include="HostCommands\CommandExplorer.vb" />
+    <Compile Include="HostCommands\BuildIn\CancelAuthState_RA.vb" />
+    <Compile Include="HostCommands\BuildIn\ExportKey_A8.vb" />
+    <Compile Include="HostCommands\BuildIn\FormKeyFromEncryptedComponents_A4.vb" />
+    <Compile Include="HostCommands\BuildIn\FormZMKFromThreeComponents_GG.vb" />
+    <Compile Include="HostCommands\BuildIn\FormZMKFromTwoToNineComponents_GY.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateAndPrintComponent_A2.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateAndPrintSplitComponents_NE.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateAndPrintTMPTPKPVK_OE.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateAndPrintZMKComponent_OC.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateCheckValue_BU.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateCheckValue_KA.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateCVKPair_AS.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateKey_A0.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateMACForLargeMessage_MQ.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateMAC_MA.vb" />
+    <Compile Include="HostCommands\BuildIn\GeneratePVKPair_FG.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateRandomPIN_JA.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateTAK_HA.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateTMKTPKPVK_HC.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateVISACVV_CW.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateVISAPVV_DG.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateZEKorZAK_FI.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateZPK_IA.vb" />
+    <Compile Include="HostCommands\BuildIn\HSMStatus_NO.vb" />
+    <Compile Include="HostCommands\BuildIn\ImportKey_A6.vb" />
+    <Compile Include="HostCommands\BuildIn\LoadAdditionalFormattingData_PC.vb" />
+    <Compile Include="HostCommands\BuildIn\LoadFormattingData_PA.vb" />
+    <Compile Include="HostCommands\BuildIn\LoadPINTextString_LI.vb" />
+    <Compile Include="HostCommands\BuildIn\PrintPINSolicitationData_PE.vb" />
+    <Compile Include="HostCommands\BuildIn\PrintPINSolicitationMailer_OA.vb" />
+    <Compile Include="HostCommands\BuildIn\SetHSMDelay_LG.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateCVKFromLMKToZMK_AU.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateCVKFromZMKToLMK_AW.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateKeyScheme_B0.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslatePINFromLMKToZPK_JG.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslatePINFromTPKToLMK_JC.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslatePINFromTPKToZPK_CA.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslatePINFromVISAToRacal_BQ.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslatePINFromZPKToLMK_JE.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslatePINFromZPKToZPK_CC.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateTAKFromLMKToTMK_AG.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateTAKFromLMKToZMK_MG.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateTAKFromZMKToLMK_MI.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateTMKTPKPVKFromLMKToTMKTPKPVK_AE.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateTMKTPKPVKFromLMKToZMK_FE.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateTMPTPKPVKFromZMKToLMK_FC.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateZEKORZAKFromLMKToZMK_FM.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateZEKORZAKFromZMKToLMK_FK.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateZMKFromZMKToLMK_BY.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateZPKFromLMKToZMK_GC.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateZPKFromZMKToLMK_FA.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifyAndTranslateMAC_ME.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifyInterchangePINWithVISAAlgorithm_EC.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifyMAC_MC.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifyPINSolicitationMailerCryptography_PG.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifySolicitationMailerCryptography_RC.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifyTerminalPINWithVISAAlgorithm_DC.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifyVISACVV_CY.vb" />
+    <Compile Include="HostCommands\Runtime\HSMDiagnostics_NC.vb" />
+    <Compile Include="Cryptography\DES.vb" />
+    <Compile Include="ErrorCodes.vb" />
+    <Compile Include="Exceptions\Exceptions.vb" />
+    <Compile Include="Cryptography\HexKey.vb" />
+    <Compile Include="KeySchemeTable.vb" />
+    <Compile Include="KeyTypeTable.vb" />
+    <Compile Include="LMKPairs.vb" />
+    <Compile Include="Cryptography\LMK\LMKStorage.vb" />
+    <Compile Include="Log\Logger.vb" />
+    <Compile Include="Message\Message.vb" />
+    <Compile Include="Message\MessageFieldDeterminer.vb" />
+    <Compile Include="Message\MessageFieldParser.vb" />
+    <Compile Include="Message\MessageResponse.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="HostCommands\NoImplementation.vb" />
+    <Compile Include="PIN\PINBlockFormat.vb" />
+    <Compile Include="ThalesMain.vb" />
+    <Compile Include="Resources.vb" />
+    <Compile Include="HostCommands\TranslateFromKeyToLMK.vb" />
+    <Compile Include="HostCommands\TranslateFromLMKToKey.vb" />
+    <Compile Include="Cryptography\TripleDES.vb" />
+    <Compile Include="Utility.vb" />
+    <Compile Include="Cryptography\LMK\Variants.vb" />
+    <Compile Include="TCP\WorkerClient.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="ThalesSim.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ThalesParameters.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
