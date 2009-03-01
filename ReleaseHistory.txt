@@ -1,0 +1,70 @@
+﻿ThalesSim Release History
+=========================
+
+2009/03/01: Version 0.8 beta released.
+--------------------------------------
+
+* Ported to .Net 3.5, VS 2008. The code has not been reworked at all to take advantage of 3.5 available functionality, this will be taken care of in the next release. NUnit test cases have been removed in favor of VS 2008 testing unit framework. NDoc dependency has been removed. The Windows Service and setup will be re-added in the next release.
+
+2006/06/15: Version 0.7 beta released.
+--------------------------------------
+
+* New implemented command: HC.
+* GUI key type table implemented in simulator executable. 
+
+2006/06/12: Version 0.6 released.
+---------------------------------
+
+* New implemented commands: FI, FK, FM, MA, MC, ME, MQ. 
+
+2006/06/11: Version 0.5 released.
+---------------------------------
+
+* New implemented commands: AS, CW, CY, AU, AW.
+* Added new field parser method (field type VariableLengthUntilDelimiter) to facilitate parsing of variable fields whose end is signaled by a following delimiter. 
+
+2006/06/10: Version 0.4.3 released.
+-----------------------------------
+
+* Added initial version of the simulator service and related installer.
+
+2006/06/07: Version 0.4.2 released.
+-----------------------------------
+
+* Added initial version of the simulator executable.
+* Changed command explorer to ignore multiple classes that implement the same Thales command.
+
+2006/06/05: Version 0.4.1 released.
+-----------------------------------
+
+* New classes TranslateFromLMKToKey, TranslateFromKeyToLMK and NoImplementation are inherited by several commands that used similar functionality.
+* Initial project overview documentation added.
+
+2006/06/04: Version 0.4 released.
+---------------------------------
+
+* New implemented commands: HA, AE, FC, FE, MI, MG, AG.
+* Added code to allow DES encrypt/decrypt using a DES weak key. The .Net crypto implementation throws an exception when a DES weak key is used in an encrypt or decrypt operation. Although this is simply good practice, it prevents someone from using the standard LMK test suite. The library now logs a major warning when a weak key is encountered.
+
+2006/06/03: Version 0.3 released.
+---------------------------------
+
+* New implemented commands: GY, BY, FA, GC, IA, OE, FG.
+* Fixed improper termination of TCP listening thread.
+
+2006/05/29: Version 0.2.1 released.
+-----------------------------------
+
+* Minor update, added NUnit test cases.
+
+2006/05/28: Version 0.2 released.
+---------------------------------
+
+* New implemented commands: BQ, CA, CC, DC, DG, EC, JA, JC, JE, JG.
+* Fixed bugs relating to construction and decomposition of Diebold and Docutel PIN block formats.
+* After some rethink, Log4Net is dropped in favor of the current event system. Log4Net may be incorporated into the final simulator executable.
+
+2006/05/25: Version 0.1 released.
+----------------------------------
+
+This is the initial version of the library. It contains the initial implementation of a lot of things like cryptography, LMK storage, message parsing methods, host command base class and implementation of several Thales commands, TCP/IP worker class, logic to parse key schemes, key types and other stuff. The only real way to get into the library is to get into the code.
