@@ -39,6 +39,7 @@ Namespace PIN
             ''' ANSI X9.8 format, code 01.
             ''' </remarks>
             AnsiX98 = 1
+
             ''' <summary>
             ''' Docutel format, code 02.
             ''' </summary>
@@ -46,6 +47,7 @@ Namespace PIN
             ''' Docutel format, code 02.
             ''' </remarks>
             Docutel = 2
+
             ''' <summary>
             ''' Diebold format, code 03.
             ''' </summary>
@@ -53,6 +55,7 @@ Namespace PIN
             ''' Diebold format, code 03.
             ''' </remarks>
             Diebold = 3
+
             ''' <summary>
             ''' PLUS network format, code 04.
             ''' </summary>
@@ -60,6 +63,7 @@ Namespace PIN
             ''' PLUS network format, code 04.
             ''' </remarks>
             Plus = 4
+
             ''' <summary>
             ''' ISO 9564-1 Format 1, code 05.
             ''' </summary>
@@ -67,6 +71,7 @@ Namespace PIN
             ''' ISO 9564-1 Format 1, code 05.
             ''' </remarks>
             ISO9564_1 = 5
+
             ''' <summary>
             ''' Invalid PIN Block code.
             ''' </summary>

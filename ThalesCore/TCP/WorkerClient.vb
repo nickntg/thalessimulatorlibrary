@@ -175,32 +175,37 @@ Namespace TCP
                                      ByVal offset As Integer, _
                                      ByVal count As Integer)
 
+            Static len As Integer = -1
+            Static recBytesOffset As Integer = 0
+            Static recBytes() As Byte = {}
+
             Dim ByteCount As Integer = 0
 
-startOver:
+            'Unpack what we have.
+            While ByteCount <> count
 
-            If ByteCount = count Then Exit Sub
-
-            If m_len = -1 Then
-                If count - ByteCount < 2 Then Exit Sub
-                m_len = Bytes(ByteCount) * 256 + Bytes(ByteCount + 1)
-                ByteCount += 2
-                ReDim recBytes(m_len - 1)
-            End If
-
-            Dim i As Integer
-            For i = ByteCount To count - 1
-                recBytes(recBytesOffset) = Bytes(i)
-                recBytesOffset += 1
-                ByteCount += 1
-                If recBytesOffset = m_len Then
-                    RaiseEvent MessageArrived(Me, recBytes, recBytesOffset)
-                    ReDim recBytes(-1)
-                    m_len = -1
-                    recBytesOffset = 0
-                    GoTo startOver
+                'Get the software header.
+                If len = -1 Then
+                    If count - ByteCount < 2 Then Exit Sub
+                    len = Bytes(ByteCount) * 256 + Bytes(ByteCount + 1)
+                    ByteCount += 2
+                    ReDim recBytes(len - 1)
                 End If
-            Next
+
+                For i As Integer = ByteCount To count - 1
+                    recBytes(recBytesOffset) = Bytes(i)
+                    recBytesOffset += 1
+                    ByteCount += 1
+                    'If we have a logical packet, fire our event.
+                    If recBytesOffset = len Then
+                        RaiseEvent MessageArrived(Me, recBytes, recBytesOffset)
+                        ReDim recBytes(-1)
+                        len = -1
+                        recBytesOffset = 0
+                        Exit For
+                    End If
+                Next
+            End While
 
         End Sub
 

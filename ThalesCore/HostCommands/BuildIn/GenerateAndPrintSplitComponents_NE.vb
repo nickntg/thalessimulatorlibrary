@@ -96,19 +96,19 @@ Namespace HostCommands.BuildIn
                     Log.Logger.MinorInfo("Component A: " + rndKey.Substring(0, 8))
                     Log.Logger.MinorInfo("Component B: " + rndKey.Substring(8))
                     AddPrinterData("COMPONENT A: " + rndKey.Substring(0, 8))
-                    addprinterdata("COMPONENT B: " + rndKey.Substring(8))
+                    AddPrinterData("COMPONENT B: " + rndKey.Substring(8))
                 Case KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, KeySchemeTable.KeyScheme.DoubleLengthKeyVariant
                     Log.Logger.MinorInfo("Component A: " + rndKey.Substring(0, 16))
                     Log.Logger.MinorInfo("Component B: " + rndKey.Substring(16))
                     AddPrinterData("COMPONENT A: " + rndKey.Substring(0, 16))
-                    addprinterdata("COMPONENT B: " + rndKey.Substring(16))
+                    AddPrinterData("COMPONENT B: " + rndKey.Substring(16))
                 Case KeySchemeTable.KeyScheme.TripleLengthKeyAnsi, KeySchemeTable.KeyScheme.TripleLengthKeyVariant
                     Log.Logger.MinorInfo("Component A: " + rndKey.Substring(0, 16))
                     Log.Logger.MinorInfo("Component B: " + rndKey.Substring(16, 16))
                     Log.Logger.MinorInfo("Component C: " + rndKey.Substring(32))
                     AddPrinterData("COMPONENT A: " + rndKey.Substring(0, 8))
-                    addprinterdata("COMPONENT B: " + rndKey.Substring(16, 16))
-                    addprinterdata("COMPONENT C: " + rndKey.Substring(32))
+                    AddPrinterData("COMPONENT B: " + rndKey.Substring(16, 16))
+                    AddPrinterData("COMPONENT C: " + rndKey.Substring(32))
             End Select
 
             AddPrinterData("CHECK VALUE: " + checkValue.Substring(0, 6))

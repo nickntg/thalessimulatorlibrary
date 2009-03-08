@@ -100,7 +100,7 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            Dim clearPB = Core.PIN.PINBlockFormat.ToPINBlock(clearPIN, _acct, PBFormat)
+            Dim clearPB As String = Core.PIN.PINBlockFormat.ToPINBlock(clearPIN, _acct, PBFormat)
             Dim cryptPB As String = TripleDES.TripleDESEncrypt(New HexKey(clearZPK), clearPB)
 
             Log.Logger.MinorInfo("Clear ZPK: " + clearZPK)

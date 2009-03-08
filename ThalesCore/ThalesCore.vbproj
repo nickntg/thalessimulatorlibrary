@@ -15,7 +15,7 @@
     <OptionExplicit>On</OptionExplicit>
     <OptionCompare>Binary</OptionCompare>
     <OptionStrict>On</OptionStrict>
-    <OptionInfer>On</OptionInfer>
+    <OptionInfer>Off</OptionInfer>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ThalesSim.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -62,7 +62,22 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\XDecryptError.vb" />
+    <Compile Include="Exceptions\XEncryptError.vb" />
+    <Compile Include="Exceptions\XInvalidAccount.vb" />
+    <Compile Include="Exceptions\XInvalidConfiguration.vb" />
+    <Compile Include="Exceptions\XInvalidData.vb" />
+    <Compile Include="Exceptions\XInvalidKey.vb" />
+    <Compile Include="Exceptions\XInvalidKeyScheme.vb" />
+    <Compile Include="Exceptions\XInvalidKeyType.vb" />
+    <Compile Include="Exceptions\XInvalidLMKTypeCode.vb" />
+    <Compile Include="Exceptions\XInvalidPINLength.vb" />
+    <Compile Include="Exceptions\XInvalidStorageFile.vb" />
+    <Compile Include="Exceptions\XNoDeterminerMatched.vb" />
+    <Compile Include="Exceptions\XShortMessage.vb" />
+    <Compile Include="Exceptions\XUnsupportedPINBlockFormat.vb" />
     <Compile Include="HostCommands\AHostCommand.vb" />
+    <Compile Include="HostCommands\CommandClass.vb" />
     <Compile Include="HostCommands\CommandExplorer.vb" />
     <Compile Include="HostCommands\BuildIn\CancelAuthState_RA.vb" />
     <Compile Include="HostCommands\BuildIn\ExportKey_A8.vb" />
@@ -122,19 +137,22 @@
     <Compile Include="HostCommands\BuildIn\VerifySolicitationMailerCryptography_RC.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyTerminalPINWithVISAAlgorithm_DC.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyVISACVV_CY.vb" />
-    <Compile Include="HostCommands\Runtime\HSMDiagnostics_NC.vb" />
+    <None Include="HostCommands\Runtime\HSMDiagnostics_NC.vb" />
     <Compile Include="Cryptography\DES.vb" />
     <Compile Include="ErrorCodes.vb" />
-    <Compile Include="Exceptions\Exceptions.vb" />
     <Compile Include="Cryptography\HexKey.vb" />
+    <Compile Include="HostCommands\ThalesCommandCode.vb" />
     <Compile Include="KeySchemeTable.vb" />
     <Compile Include="KeyTypeTable.vb" />
     <Compile Include="LMKPairs.vb" />
     <Compile Include="Cryptography\LMK\LMKStorage.vb" />
+    <Compile Include="Log\ILogProcs.vb" />
     <Compile Include="Log\Logger.vb" />
     <Compile Include="Message\Message.vb" />
     <Compile Include="Message\MessageFieldDeterminer.vb" />
+    <Compile Include="Message\MessageFieldDeterminerCollection.vb" />
     <Compile Include="Message\MessageFieldParser.vb" />
+    <Compile Include="Message\MessageFieldParserCollection.vb" />
     <Compile Include="Message\MessageResponse.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -153,6 +171,7 @@
     </Compile>
     <Compile Include="HostCommands\NoImplementation.vb" />
     <Compile Include="PIN\PINBlockFormat.vb" />
+    <Compile Include="ThalesError.vb" />
     <Compile Include="ThalesMain.vb" />
     <Compile Include="Resources.vb" />
     <Compile Include="HostCommands\TranslateFromKeyToLMK.vb" />

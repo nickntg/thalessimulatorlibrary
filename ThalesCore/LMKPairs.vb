@@ -400,6 +400,8 @@ Public Class LMKPairs
                 LMK = LMKPair.Pair04_05
             Case "42"
                 LMK = LMKPair.Pair14_15
+            Case Else
+                Throw New Exceptions.XInvalidLMKTypeCode("Invalid LMKL type code [" + s + "]")
         End Select
 
     End Sub
