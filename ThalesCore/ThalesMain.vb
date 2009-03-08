@@ -189,18 +189,23 @@ Public Class ThalesMain
 
         Dim files() As String = IO.Directory.GetFiles(vbDir, "*.vb")
         For i As Integer = 0 To files.GetUpperBound(0)
-            Dim asm As Reflection.Assembly = CompileCode(files(i))
+            CompileCode(files(i), "VB")
+        Next
+
+        files = IO.Directory.GetFiles(vbDir, "*.cs")
+        For i As Integer = 0 To files.GetUpperBound(0)
+            CompileCode(files(i), "CSharp")
         Next
 
     End Sub
 
-    Private Function CompileCode(ByVal vbSourceFile As String) As Reflection.Assembly
+    Private Function CompileCode(ByVal sourceFile As String, ByVal language As String) As Reflection.Assembly
 
         Dim vbSource As String = ""
-        Dim fName As String = New IO.FileInfo(vbSourceFile).Name
+        Dim fName As String = New IO.FileInfo(sourceFile).Name
         Log.Logger.MajorVerbose("Compiling " + fName + "...")
         Try
-            Dim SR As New IO.StreamReader(vbSourceFile)
+            Dim SR As New IO.StreamReader(sourceFile)
             While SR.Peek > -1
                 vbSource += SR.ReadLine() + vbCrLf
             End While
@@ -212,8 +217,7 @@ Public Class ThalesMain
             Return Nothing
         End Try
 
-        Dim myProvider As Microsoft.VisualBasic.VBCodeProvider
-        Dim myCompiler As System.CodeDom.Compiler.ICodeCompiler
+        Dim prov As CodeDom.Compiler.CodeDomProvider = Nothing
         Dim compParams As System.CodeDom.Compiler.CompilerParameters = New System.CodeDom.Compiler.CompilerParameters
         Dim compResults As System.CodeDom.Compiler.CompilerResults
 
@@ -224,13 +228,12 @@ Public Class ThalesMain
         compParams.TempFiles.KeepFiles = True
 
         'Add some common refs
-        Dim refs() As String = {"System.dll", "Microsoft.VisualBasic.dll", "System.XML.dll", "System.Data.dll", "ThalesCore.dll", Reflection.Assembly.GetAssembly(GetType(ThalesMain)).Location}
+        Dim refs() As String = {"System.dll", "Microsoft.VisualBasic.dll", "System.XML.dll", "System.Data.dll", My.Application.Info.DirectoryPath + "\ThalesCore.dll", Reflection.Assembly.GetAssembly(GetType(ThalesMain)).Location}
         compParams.ReferencedAssemblies.AddRange(refs)
 
         Try
-            myProvider = New Microsoft.VisualBasic.VBCodeProvider
-            myCompiler = myProvider.CreateCompiler
-            compResults = myCompiler.CompileAssemblyFromSource(compParams, vbSource)
+            prov = System.CodeDom.Compiler.CodeDomProvider.CreateProvider(language)
+            compResults = prov.CompileAssemblyFromSource(compParams, vbSource)
         Catch ex As Exception
             'Oops
             Logger.MajorError("Exception raised during compilation of " + fName + vbCrLf + _

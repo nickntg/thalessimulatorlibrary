@@ -1,6 +1,12 @@
 ﻿ThalesSim Release History
 =========================
 
+2009/03/08: Version 0.8.1 beta released.
+----------------------------------------
+
+* Converted code to use generics.
+* Added Windows service and setup projects.
+
 2009/03/01: Version 0.8 beta released.
 --------------------------------------
 

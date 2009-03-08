@@ -416,7 +416,6 @@ Namespace HostCommands
             MFPC.AddMessageFieldParser(P_KeyCheckVal)
         End Sub
 
-
         ''' <summary>
         ''' Decrypts an ZMK.
         ''' </summary>
@@ -787,63 +786,6 @@ Namespace HostCommands
 
     End Class
 
-    ''' <summary>
-    ''' The ThalesCommandCode attribute should be attached to all classes that inherit
-    ''' from <see cref="HostCommands.AHostCommand"/>.
-    ''' </summary>
-    ''' <remarks>
-    ''' The attribute is parsed at runtime and is used by <see cref="ThalesMain"/>
-    ''' to find classes that implement host commands.
-    ''' </remarks>
-    <AttributeUsage(AttributeTargets.Class)> Public Class ThalesCommandCode
-        Inherits Attribute
 
-        ''' <summary>
-        ''' Racal Command Code.
-        ''' </summary>
-        ''' <remarks>
-        ''' The command code of the host command implemented by a class.
-        ''' </remarks>
-        Public CommandCode As String
-
-        ''' <summary>
-        ''' Racal Response Code.
-        ''' </summary>
-        ''' <remarks>
-        ''' The response code of the host command implemented by a class.
-        ''' </remarks>
-        Public ResponseCode As String
-
-        ''' <summary>
-        ''' Racal Response Code after I/O.
-        ''' </summary>
-        ''' <remarks>
-        ''' The response code, after I/O is concluded, of the host command implemented by a class.
-        ''' </remarks>
-        Public ResponseCodeAfterIO As String
-
-        ''' <summary>
-        ''' Command description.
-        ''' </summary>
-        ''' <remarks>
-        ''' A description of the host command implemented by a class.
-        ''' </remarks>
-        Public Description As String
-
-        ''' <summary>
-        ''' Command code constructor.
-        ''' </summary>
-        ''' <remarks>
-        ''' This is the constructor of the ThalesCommandCode attribute.
-        ''' </remarks>
-        Public Sub New(ByVal commandCode As String, ByVal responseCode As String, _
-        ByVal responseCodeAfterIO As String, ByVal Description As String)
-            Me.CommandCode = commandCode
-            Me.ResponseCode = responseCode
-            Me.ResponseCodeAfterIO = responseCodeAfterIO
-            Me.Description = Description
-        End Sub
-
-    End Class
 
 End Namespace

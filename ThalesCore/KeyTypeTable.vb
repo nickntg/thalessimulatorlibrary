@@ -192,6 +192,8 @@ Public Class KeyTypeTable
                 LMKKeyPair = LMKPairs.LMKPair.Pair36_37
             Case "0E"
                 LMKKeyPair = LMKPairs.LMKPair.Pair38_39
+            Case Else
+                Throw New Exceptions.XInvalidKeyType("Invalid Variant in key type (" + var + ")")
         End Select
 
     End Sub

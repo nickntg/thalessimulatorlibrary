@@ -65,13 +65,11 @@ Public Class Utility
     Public Shared Sub HexStringToByteArray(ByVal s As String, ByRef bData() As Byte)
 
         Dim i As Integer, j As Integer
-        Dim sTmp As String
 
         i = 0
         j = 0
         While i <= s.Length - 1
-            sTmp = "&H" & s.Substring(i, 2)
-            bData(j) = CByte(sTmp)
+            bData(j) = Convert.ToByte(s.Substring(i, 2), 16)
             i += 2
             j += 1
         End While
@@ -86,12 +84,13 @@ Public Class Utility
     ''' </remarks>
     Public Shared Sub ByteArrayToHexString(ByVal bData() As Byte, ByRef s As String)
 
-        Dim i As Integer
+        Dim i As Integer, sb As New Text.StringBuilder
 
-        s = ""
         For i = 0 To bData.GetUpperBound(0)
-            s = s + Hex$(bData(i)).PadLeft(2, "0"c)
+            sb.AppendFormat("{0:X2}", bData(i))
         Next
+        s = sb.ToString
+        sb = Nothing
 
     End Sub
 
@@ -104,12 +103,13 @@ Public Class Utility
     ''' </remarks>
     Public Shared Function RandomKey(ByVal EnforceParity As Boolean, ByVal Parity As ParityCheck) As String
         Dim i As Integer
-        Dim s As String
+        Dim s As String, sb As New Text.StringBuilder
 
-        s = ""
         For i = 1 To 16
-            s = s + Hex(rndMachine.Next(0, 16))
+            sb.AppendFormat("{0:X2}", rndMachine.Next(0, 16))
         Next
+        s = sb.ToString
+        sb = Nothing
 
         If EnforceParity = True Then
             If Parity <> ParityCheck.NoParity Then
@@ -140,9 +140,10 @@ Public Class Utility
         i = 0
         bFound = False
         While (i < s.Length) And (bFound = False)
-            If (s.Substring(i, 1) < "0") Or (s.Substring(i, 1) > "9") Then
-                If (s.Substring(i, 1) < "A") Or (s.Substring(i, 1) > "F") Then
+            If Not Char.IsDigit(s.Chars(i)) Then
+                If (s.Chars(i) < "A") Or (s.Chars(i) > "F") Then
                     bFound = True
+                    Exit While
                 End If
             End If
             i += 1
@@ -205,10 +206,7 @@ Public Class Utility
         While i < hexString.Length
             Dim b As String = toBinary(hexString.Substring(i, 2))
             i += 2
-            Dim l As Integer = 0
-            For j As Integer = 0 To b.Length - 1
-                If b.Substring(j, 1) = "1" Then l += 1
-            Next
+            Dim l As Integer = b.Replace("0", "").Length
 
             If ((l Mod 2 = 0) AndAlso (parity = ParityCheck.OddParity)) OrElse _
                ((l Mod 2 = 1) AndAlso (parity = ParityCheck.EvenParity)) Then
@@ -220,7 +218,6 @@ Public Class Utility
             Else
                 r = r + b
             End If
-
         End While
 
         Return head + fromBinary(r)
@@ -235,18 +232,7 @@ Public Class Utility
     ''' to be 16 characters long.
     ''' </remarks>
     Public Shared Function XORHexStrings(ByVal s1 As String, ByVal s2 As String) As String
-        Dim i As Integer
-        Dim s As String
-
-        s = ""
-        s1 = RemoveKeyType(s1)
-        s2 = RemoveKeyType(s2)
-        For i = 0 To 15
-            s = s + Hex$(CLng("&H" + s1.Substring(i, 1)) Xor CLng("&H" + s2.Substring(i, 1)))
-        Next
-
-        Return s
-
+        Return XORHexStringsFull(s1.Substring(0, 16), s2.Substring(0, 16))
     End Function
 
     ''' <summary>
@@ -268,7 +254,6 @@ Public Class Utility
         Next
 
         Return s
-
     End Function
 
     ''' <summary>
@@ -292,16 +277,9 @@ Public Class Utility
     ''' Converts a binary string to hexadecimal.
     ''' </remarks>
     Public Shared Function fromBinary(ByVal binaryString As String) As String
-        Dim o As Integer = 0, r As String = ""
-        For i As Integer = 0 To binaryString.Length - 1
-            o = o * 2
-            If binaryString.Substring(i, 1) = "1" Then
-                o += 1
-            End If
-            If (i + 1) Mod 4 = 0 Then
-                r = r + Hex(o)
-                o = 0
-            End If
+        Dim r As String = ""
+        For i As Integer = 0 To binaryString.Length - 1 Step 4
+            r = r + Convert.ToByte(binaryString.Substring(i, 4), 2).ToString("X1")
         Next
         Return r
     End Function

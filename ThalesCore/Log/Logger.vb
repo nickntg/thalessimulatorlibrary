@@ -249,31 +249,4 @@ Namespace Log
 
     End Class
 
-    ''' <summary>
-    ''' Logging interface.
-    ''' </summary>
-    ''' <remarks>
-    ''' The logging interface is used by the <see cref="Logger"/> class to direct
-    ''' logging messages to an implementor.
-    ''' </remarks>
-    Public Interface ILogProcs
-
-        ''' <summary>
-        ''' Logs a major event.
-        ''' </summary>
-        ''' <remarks>
-        ''' Called when a major event is logged.
-        ''' </remarks>
-        Sub GetMajor(ByVal s As String)
-
-        ''' <summary>
-        ''' Logs a minor event.
-        ''' </summary>
-        ''' <remarks>
-        ''' Called when a minor event is logged.
-        ''' </remarks>
-        Sub GetMinor(ByVal s As String)
-
-    End Interface
-
 End Namespace

@@ -27,7 +27,7 @@ Namespace HostCommands
     ''' </remarks>
     Public Class CommandExplorer
 
-        Private _commandTypes As New Hashtable
+        Private _commandTypes As New SortedList(Of String, CommandClass)
 
         ''' <summary>
         ''' CommandExplorer constructor.
@@ -45,15 +45,18 @@ Namespace HostCommands
                     Dim atr As Attribute
                     For Each atr In t.GetCustomAttributes(False)
                         If atr.GetType() Is GetType(ThalesSim.Core.HostCommands.ThalesCommandCode) Then
-                            If _commandTypes.Item(CType(atr, ThalesCommandCode).CommandCode) Is Nothing Then
+                            Try
                                 _commandTypes.Add(CType(atr, ThalesCommandCode).CommandCode, _
                                                   New CommandClass(CType(atr, ThalesCommandCode).CommandCode, _
                                                                    CType(atr, ThalesCommandCode).ResponseCode, _
                                                                    CType(atr, ThalesCommandCode).ResponseCodeAfterIO, _
                                                                    t, asm(i).FullName, _
                                                                    CType(atr, ThalesCommandCode).Description))
-                            End If
+                            Catch ex As ArgumentException
+                                'We ignore attempts to add duplicates - this may happen when running the unit tests.
+                            End Try
                         End If
+                        'End If
                     Next
                 Next
             Next
@@ -70,16 +73,16 @@ Namespace HostCommands
         ''' </remarks>
         Public Function GetLoadedCommands() As String
             Dim s As String = ""
-            Dim x As IDictionaryEnumerator = _commandTypes.GetEnumerator
-            x.Reset()
-            While x.MoveNext
-                Dim o As CommandClass = CType(x.Value, CommandClass)
-                s = s + "Command code: " + o.CommandCode + vbCrLf + _
-                        "Response code: " + o.ResponseCode + vbCrLf + _
-                        "Type: " + o.DeclaringType.FullName() + vbCrLf + _
-                        "Description: " + o.Description + vbCrLf + vbCrLf
+            Dim en As IEnumerator(Of KeyValuePair(Of String, CommandClass)) = _commandTypes.GetEnumerator()
+            en.Reset()
+            While en.MoveNext
+                s = s + "Command code: " + en.Current.Value.CommandCode + vbCrLf + _
+                        "Response code: " + en.Current.Value.ResponseCode + vbCrLf + _
+                        "Type: " + en.Current.Value.DeclaringType.FullName() + vbCrLf + _
+                        "Description: " + en.Current.Value.Description + vbCrLf + vbCrLf
             End While
-            x = Nothing
+            en.Dispose()
+            en = Nothing
             Return s
         End Function
 
@@ -91,84 +94,17 @@ Namespace HostCommands
         ''' command is not implemented, Nothing is returned.
         ''' </remarks>
         Public Function GetLoadedCommand(ByVal commandCode As String) As CommandClass
-            Return CType(_commandTypes(commandCode), CommandClass)
+            Return _commandTypes(commandCode)
         End Function
 
-    End Class
-
-    ''' <summary>
-    ''' Holds information about loaded command implementations.
-    ''' </summary>
-    ''' <remarks>
-    ''' Objects of this class contain information about <see cref="AHostCommand"/> implementations
-    ''' of host commands (either buildin or compliled at runtime).
-    ''' </remarks>
-    Public Class CommandClass
-
         ''' <summary>
-        ''' Command code.
+        ''' Clears the sorted list with the loaded commands.
         ''' </summary>
-        ''' <remarks>
-        ''' The two-character Thales command code.
-        ''' </remarks>
-        Public CommandCode As String
-
-        ''' <summary>
-        ''' Response code.
-        ''' </summary>
-        ''' <remarks>
-        ''' The two-character Thales response code.
-        ''' </remarks>
-        Public ResponseCode As String
-
-        ''' <summary>
-        ''' Response code after I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' The two-character Thales response code after I/O is concluded.
-        ''' </remarks>
-        Public ResponseCodeAfterIO As String
-
-        ''' <summary>
-        ''' The implementation type.
-        ''' </summary>
-        ''' <remarks>
-        ''' A Type with the implementation class type.
-        ''' </remarks>
-        Public DeclaringType As Type
-
-        ''' <summary>
-        ''' Command description.
-        ''' </summary>
-        ''' <remarks>
-        ''' A description of the command's purpose.
-        ''' </remarks>
-        Public Description As String
-
-        ''' <summary>
-        ''' Assembly name.
-        ''' </summary>
-        ''' <remarks>
-        ''' The full name of the assembly containing the implemented class.
-        ''' </remarks>
-        Public AssemblyName As String
-
-        ''' <summary>
-        ''' Class constructor.
-        ''' </summary>
-        ''' <remarks>
-        ''' Class constructor.
-        ''' </remarks>
-        Public Sub New(ByVal cCode As String, ByVal rCode As String, ByVal rCodeAfterIO As String, _
-                       ByVal dclType As Type, ByVal assemblyName As String, _
-                       ByVal description As String)
-            Me.CommandCode = cCode
-            Me.ResponseCode = rCode
-            Me.ResponseCodeAfterIO = rCodeAfterIO
-            Me.DeclaringType = dclType
-            Me.AssemblyName = assemblyName
-            Me.Description = description
+        ''' <remarks></remarks>
+        Public Sub ClearLoadedCommands()
+            _commandTypes.Clear()
         End Sub
+
     End Class
 
 End Namespace

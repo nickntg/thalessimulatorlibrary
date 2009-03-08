@@ -8,19 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("ThalesCore.Tests")> 
-<Assembly: AssemblyDescription("Tests for the ThalesSim core classes")> 
+<Assembly: AssemblyTitle("ThalesServiceSimulator")> 
+<Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("NTG")> 
-<Assembly: AssemblyProduct("ThalesCore.Tests")> 
+<Assembly: AssemblyProduct("ThalesServiceSimulator")> 
 <Assembly: AssemblyCopyright("Copyright © NTG 2009")> 
 <Assembly: AssemblyTrademark("")> 
-
-<Assembly: CLSCompliant(True)> 
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("85a66a3d-1e23-4a00-8101-9f448eefdfaf")> 
+<Assembly: Guid("5a1f85f9-df57-4aec-aab3-e48985ed44d4")> 
 
 ' Version information for an assembly consists of the following four values:
 '

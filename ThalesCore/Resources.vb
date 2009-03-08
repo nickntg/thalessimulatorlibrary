@@ -70,7 +70,7 @@ Public Class Resources
     ''' </remarks>
     Public Const CLEAR_PIN_LENGTH As String = "CLEAR_PIN_LENGTH"
 
-    Private Shared _HT As New Hashtable
+    Private Shared _lst As New SortedList(Of String, Object)
 
     ''' <summary>
     ''' Cleans up all resources.
@@ -79,7 +79,7 @@ Public Class Resources
     ''' This method cleans up all resources that are present in the hash table.
     ''' </remarks>
     Public Shared Sub CleanUp()
-        _HT.Clear()
+        _lst.Clear()
     End Sub
 
     ''' <summary>
@@ -89,7 +89,7 @@ Public Class Resources
     ''' This method adds a resource to the memory store.
     ''' </remarks>
     Public Shared Sub AddResource(ByVal key As String, ByVal value As Object)
-        _HT.Add(key, value)
+        _lst.Add(key, value)
     End Sub
 
     ''' <summary>
@@ -100,7 +100,7 @@ Public Class Resources
     ''' not exist, Nothing is returned.
     ''' </remarks>
     Public Shared Function GetResource(ByVal key As String) As Object
-        Return _HT(key)
+        Return _lst(key)
     End Function
 
     ''' <summary>
@@ -110,8 +110,8 @@ Public Class Resources
     ''' Updates a resource value. If the resource does not exist, it is added.
     ''' </remarks>
     Public Shared Sub UpdateResource(ByVal key As String, ByVal value As Object)
-        _HT.Remove(key)
-        _HT.Add(key, value)
+        _lst.Remove(key)
+        _lst.Add(key, value)
     End Sub
 
 End Class
