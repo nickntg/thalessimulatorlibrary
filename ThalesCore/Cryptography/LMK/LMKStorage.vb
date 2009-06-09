@@ -92,6 +92,8 @@ Namespace Cryptography.LMK
                         If Core.Utility.IsHexString(s) = True Then
                             If s.Length = 32 Then
                                 _LMKs(i) = s
+                                '...and increase the index to read into the next LMK.
+                                i += 1
                             End If
                         End If
                     End If
