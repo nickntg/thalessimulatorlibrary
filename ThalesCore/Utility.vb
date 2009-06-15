@@ -106,7 +106,7 @@ Public Class Utility
         Dim s As String, sb As New Text.StringBuilder
 
         For i = 1 To 16
-            sb.AppendFormat("{0:X2}", rndMachine.Next(0, 16))
+            sb.AppendFormat("{0:X1}", rndMachine.Next(0, 16))
         Next
         s = sb.ToString
         sb = Nothing
