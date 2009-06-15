@@ -115,16 +115,7 @@ Namespace TCP
         ''' Returns the remote party IP address.
         ''' </remarks>
         Public Function ClientIP() As String
-
-            Dim _socket As Socket
-            Dim prInfo As PropertyInfo = MyClient.GetType().GetProperty("Client", BindingFlags.Instance Or BindingFlags.NonPublic)
-            If Not prInfo Is Nothing Then
-                _socket = CType(prInfo.GetValue(MyClient, Nothing), Socket)
-                ClientIP = CType(_socket.RemoteEndPoint, IPEndPoint).Address.ToString
-            Else
-                ClientIP = "ERROR: Couldn't get IP address thru reflection"
-            End If
-
+            Return MyClient.Client.RemoteEndPoint.ToString()
         End Function
 
         'Property ClientNum() As Integer

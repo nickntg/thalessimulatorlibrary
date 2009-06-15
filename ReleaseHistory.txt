@@ -1,6 +1,16 @@
 ﻿ThalesSim Release History
 =========================
 
+2009/06/15: Version 0.8.2 beta released.
+----------------------------------------
+
+* Added the ThalesPVVClashingDemo utility. This is used to demonstrate the existence of multiple PINs per card.
+  Note that this is not always valid for all cards/PINs. 
+* Fixed a bug in Utility.RandomKey method that created invalid length keys.
+* Dumped the reflection code in WorkerClient and used the Client.RemoteEndPoint.String method to return the client IP.
+* Fixed a bug in LMKStorage.ReadLMKs method that caused the simulator to incorrectly read existing keys.
+* The simulator now uses the Invoke method to write to the text boxes on the UI thread.
+
 2009/03/08: Version 0.8.1 beta released.
 ----------------------------------------
 

@@ -18,6 +18,8 @@ Imports ThalesSim.Core
 
 Public Class frmMain
 
+    Delegate Sub UpdateTextBox(ByVal s As String)
+
     Dim WithEvents o As ThalesSim.Core.ThalesMain
 
     Private Sub cmdStartSim_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdStartSim.Click
@@ -45,14 +47,26 @@ Public Class frmMain
     End Sub
 
     Private Sub o_MajorLogEvent(ByVal sender As ThalesMain, ByVal s As String) Handles o.MajorLogEvent
-        txtMajorEvents.AppendText(s + vbCrLf)
+        Me.Invoke(New UpdateTextBox(AddressOf UpdateMajorLogEvent), New String() {s})
     End Sub
 
     Private Sub o_MinorLogEvent(ByVal sender As ThalesMain, ByVal s As String) Handles o.MinorLogEvent
-        txtMinorEvents.AppendText(s + vbCrLf)
+        Me.Invoke(New UpdateTextBox(AddressOf UpdateMinorLogEvent), New String() {s})
     End Sub
 
     Private Sub o_PrinterData(ByVal sender As ThalesMain, ByVal s As String) Handles o.PrinterData
+        Me.Invoke(New UpdateTextBox(AddressOf UpdatePrinterData), New String() {s})
+    End Sub
+
+    Private Sub UpdateMajorLogEvent(ByVal s As String)
+        txtMajorEvents.AppendText(s + vbCrLf)
+    End Sub
+
+    Private Sub UpdateMinorLogEvent(ByVal s As String)
+        txtMinorEvents.AppendText(s + vbCrLf)
+    End Sub
+
+    Private Sub UpdatePrinterData(ByVal s As String)
         txtPrinterOutput.AppendText(s + vbCrLf)
     End Sub
 
