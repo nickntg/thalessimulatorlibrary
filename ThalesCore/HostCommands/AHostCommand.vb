@@ -498,6 +498,31 @@ Namespace HostCommands
         End Function
 
         ''' <summary>
+        ''' Decrypts data encrypted under a ZMK.
+        ''' </summary>
+        ''' <remarks>
+        ''' This method may be used with Thales commands that decrypt key encrypted under a ZMK.
+        ''' </remarks>
+        Protected Function DecryptUnderZMK(ByVal clearZMK As String, ByVal cryptData As String, _
+                                           ByVal ZMK_KeyScheme As KeySchemeTable.KeyScheme) As String
+            Dim result As String = ""
+            Select Case ZMK_KeyScheme
+                Case KeySchemeTable.KeyScheme.SingleDESKey, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, KeySchemeTable.KeyScheme.TripleLengthKeyAnsi, KeySchemeTable.KeyScheme.Unspecified
+                    result = TripleDES.TripleDESDecrypt(New HexKey(clearZMK), cryptData)
+                Case KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, KeySchemeTable.KeyScheme.TripleLengthKeyVariant
+                    result = TripleDES.TripleDESDecryptVariant(New HexKey(clearZMK), cryptData)
+            End Select
+
+            Select Case ZMK_KeyScheme
+                Case KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, KeySchemeTable.KeyScheme.TripleLengthKeyAnsi, KeySchemeTable.KeyScheme.TripleLengthKeyVariant
+                    result = KeySchemeTable.GetKeySchemeValue(ZMK_KeyScheme) + result
+            End Select
+
+            Return result
+        End Function
+
+
+        ''' <summary>
         ''' Returns a random hex key.
         ''' </summary>
         ''' <remarks>

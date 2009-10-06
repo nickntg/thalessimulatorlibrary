@@ -219,7 +219,15 @@ Namespace HostCommands
                 Return mr
             End If
 
-            clearTarget = TripleDES.TripleDESDecrypt(New HexKey(clearSource), _targetKEY)
+            'This catered only for single-length key situations (see http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=70958).
+            'clearTarget = TripleDES.TripleDESDecrypt(New HexKey(clearSource), _targetKEY)
+            clearTarget = DecryptUnderZMK(clearSource, _targetKEY, KeyKs)
+
+            'If the resulting key has a scheme, remove it.
+            If clearTarget.Length Mod 8 <> 0 Then
+                clearTarget = clearTarget.Substring(1)
+            End If
+
             Dim finalTarget As String = clearTarget
             If AllowBadParity = True Then
                 If Utility.IsParityOK(clearTarget, Utility.ParityCheck.OddParity) = False Then
