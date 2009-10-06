@@ -210,7 +210,7 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual(TestTran("4ED06495741C280C35ED0C0EA7F7D0FA", New TranslateTMPTPKPVKFromZMKToLMK_FC), "000406FBB23A5214DF0035BBE340A4B763")
         Assert.AreEqual(TestTran("4ED06495741C280C35ED0C0EA7F7D0FA;ZZ1", New TranslateTMPTPKPVKFromZMKToLMK_FC), "000406FBB23A5214DF0035BB")
         Assert.AreEqual(TestTran("U1457FF6ADF6250C66C368416B4C9D38355FF9012A3854818", New TranslateTMPTPKPVKFromZMKToLMK_FC), "000406FBB23A5214DF0035BBE340A4B763")
-        Assert.AreEqual(TestTran("U1457FF6ADF6250C66C368416B4C9D383XF7D53991678347EFB3026882F724E6EE;UU1", New TranslateTMPTPKPVKFromZMKToLMK_FC), "00U8463435FC4B4DAA0C49025272C29B12C070753")
+        Assert.AreEqual(TestTran("U1457FF6ADF6250C66C368416B4C9D383XF7D53991678347EFB3026882F724E6EE;XU1", New TranslateTMPTPKPVKFromZMKToLMK_FC), "00U8463435FC4B4DAA0C49025272C29B12C070753")
     End Sub
 
     <TestMethod()> _
@@ -299,6 +299,16 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual(TestTran("1UE84C6E8F364BB594D2F59F6E8A6BBBF5010givemeSOMEMACing", New GenerateMACForLargeMessage_MQ), "007F805A8874D3B604")
         Assert.AreEqual(TestTran("2UE84C6E8F364BB594D2F59F6E8A6BBBF57F805A8874D3B604014givemeSOMEMOREMACing", New GenerateMACForLargeMessage_MQ), "00832239FEDDD43CE1")
         Assert.AreEqual(TestTran("3UE84C6E8F364BB594D2F59F6E8A6BBBF5832239FEDDD43CE1014givemeSOMEMOREMACing", New GenerateMACForLargeMessage_MQ), "00D2BF9C1E86E5BB14")
+    End Sub
+
+    'Contributed by robt, http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=70958
+    <TestMethod()> _
+    Public Sub TestGenerateZEKAndCheckTranslation()
+        Dim ZMK As String = TestTran("0000U", New GenerateKey_A0).Substring(2, 33)
+        Dim ZEKResult As String = TestTran("0" + ZMK + ";UU1", New GenerateZEKorZAK_FI)
+        Dim ZEKUnderZMK As String = ZEKResult.Substring(2, 33)
+        Dim ZEKUnderLMK As String = TestTran("0" + ZMK + ZEKUnderZMK + ";UU1", New TranslateZEKORZAKFromZMKToLMK_FK)
+        Assert.AreEqual(ZEKResult.Substring(35, 33), ZEKUnderLMK.Substring(2, 33))
     End Sub
 
 End Class
