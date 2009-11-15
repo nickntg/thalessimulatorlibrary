@@ -75,6 +75,12 @@
     <Compile Include="frmAbout.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="frmConsole.Designer.vb">
+      <DependentUpon>frmConsole.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmConsole.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmKeyTypeTable.Designer.vb">
       <DependentUpon>frmKeyTypeTable.vb</DependentUpon>
     </Compile>
@@ -106,6 +112,9 @@
   <ItemGroup>
     <EmbeddedResource Include="frmAbout.resx">
       <DependentUpon>frmAbout.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmConsole.resx">
+      <DependentUpon>frmConsole.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmKeyTypeTable.resx">
       <DependentUpon>frmKeyTypeTable.vb</DependentUpon>

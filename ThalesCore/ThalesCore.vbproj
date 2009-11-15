@@ -62,17 +62,37 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleCommands\AConsoleCommand.vb" />
+    <Compile Include="ConsoleCommands\Implementations\CancelAuthorizedState_C.vb" />
+    <Compile Include="ConsoleCommands\ConsoleCommandClass.vb" />
+    <Compile Include="ConsoleCommands\ConsoleCommandExplorer.vb" />
+    <Compile Include="ConsoleCommands\ConsoleMessageStack.vb" />
+    <Compile Include="ConsoleCommands\ConsoleMessage.vb" />
+    <Compile Include="ConsoleCommands\Implementations\EnterAuthorizedState_A.vb" />
+    <Compile Include="ConsoleCommands\IConsoleDataValidator.vb" />
+    <Compile Include="ConsoleCommands\Implementations\GenerateKeyComponent_GC.vb" />
+    <Compile Include="ConsoleCommands\Implementations\QueryAuxilliary_QA.vb" />
+    <Compile Include="ConsoleCommands\Implementations\QueryConsole_QC.vb" />
+    <Compile Include="ConsoleCommands\Implementations\QueryHost_QH.vb" />
+    <Compile Include="ConsoleCommands\Implementations\ViewHSMSoftwareRevision_VR.vb" />
+    <Compile Include="ConsoleCommands\Validators\KeyLengthValidator.vb" />
+    <Compile Include="ConsoleCommands\Validators\KeySchemeValidator.vb" />
+    <Compile Include="ConsoleCommands\Validators\KeyTypeValidator.vb" />
+    <Compile Include="ConsoleCommands\ThalesConsoleCommandCode.vb" />
     <Compile Include="Exceptions\XDecryptError.vb" />
     <Compile Include="Exceptions\XEncryptError.vb" />
+    <Compile Include="Exceptions\XFunctionNotPermitted.vb" />
     <Compile Include="Exceptions\XInvalidAccount.vb" />
     <Compile Include="Exceptions\XInvalidConfiguration.vb" />
     <Compile Include="Exceptions\XInvalidData.vb" />
     <Compile Include="Exceptions\XInvalidKey.vb" />
+    <Compile Include="Exceptions\XInvalidKeyLength.vb" />
     <Compile Include="Exceptions\XInvalidKeyScheme.vb" />
     <Compile Include="Exceptions\XInvalidKeyType.vb" />
     <Compile Include="Exceptions\XInvalidLMKTypeCode.vb" />
     <Compile Include="Exceptions\XInvalidPINLength.vb" />
     <Compile Include="Exceptions\XInvalidStorageFile.vb" />
+    <Compile Include="Exceptions\XNeedsAuthorizedState.vb" />
     <Compile Include="Exceptions\XNoDeterminerMatched.vb" />
     <Compile Include="Exceptions\XShortMessage.vb" />
     <Compile Include="Exceptions\XUnsupportedPINBlockFormat.vb" />

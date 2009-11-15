@@ -137,7 +137,7 @@ Namespace HostCommands.BuildIn
 
             clearKey = Utility.XORHexStringsFull(Utility.XORHexStringsFull(clearA, clearB), clearC)
 
-            Dim cryptKey As String = Me.EncryptUnderLMK(clearKey, ks, LMKPairs.LMKPair.Pair04_05, "0")
+            Dim cryptKey As String = Utility.EncryptUnderLMK(clearKey, ks, LMKPairs.LMKPair.Pair04_05, "0")
             Dim checkValue As String = TripleDES.TripleDESEncrypt(New HexKey(clearKey), ZEROES)
 
             Log.Logger.MinorInfo("Component A (clear): " + Utility.RemoveKeyType(clearA))

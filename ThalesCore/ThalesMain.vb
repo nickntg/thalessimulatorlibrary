@@ -33,18 +33,39 @@ Public Class ThalesMain
     Private Const COMMAND_CODE As String = "COMMAND_CODE"
 
     Private port As Integer
+    Private consolePort As Integer
     Private maxCons As Integer
     Private curCons As Integer = 0
+    Private consoleCurCons As Integer = 0
     Private LMKFile As String
     Private VBsources As String
     Private CheckLMKParity As Boolean
 
+    'Listening thread for hosts
     Private LT As Threading.Thread
-    Private CE As ThalesSim.Core.HostCommands.CommandExplorer
 
+    'Listening thread for console
+    Private CLT As Threading.Thread
+
+    'Host commands explorer
+    Private CE As HostCommands.CommandExplorer
+
+    'Console commands explorer
+    Private CCE As ConsoleCommands.ConsoleCommandExplorer
+
+    'Host connections
     Private WC() As TCP.WorkerClient
 
+    'Console connection - we allow only one at a time
+    Private CWC As TCP.WorkerClient
+
+    'Host TCP listener
     Private SL As TcpListener
+
+    'Console TCP listener
+    Private CSL As TcpListener
+
+    Private curMsg As ConsoleCommands.AConsoleCommand = Nothing
 
     ''' <summary>
     ''' Major event.
@@ -100,35 +121,53 @@ Public Class ThalesMain
 
     Private Sub StartTCP()
 
-        Logger.MajorVerbose("Starting up the TCP listening thread...")
-        LT = New Threading.Thread(AddressOf ListenerThread)
-        LT.IsBackground = True
-        Try
-            LT.Start()
-            Dim cntr As Integer = 0
-            While LT.ThreadState <> Threading.ThreadState.Running AndAlso _
-                  LT.ThreadState <> Threading.ThreadState.Aborted AndAlso _
-                  LT.ThreadState <> Threading.ThreadState.Background AndAlso _
-                  cntr < 20
-                cntr += 1
-                Threading.Thread.Sleep(50)
-            End While
-
-            If LT.ThreadState <> Threading.ThreadState.Background Then
-                LT.Abort()
-                LT = Nothing
-                Throw New Exception("Timeout on starting the listener thread")
-            End If
-
-        Catch ex As Exception
-            Logger.MajorError("Error while starting the TCP listening thread: " + ex.ToString())
-            Throw ex
-        End Try
+        StartThread(LT, AddressOf ListenerThread, "TCP listening")
+        StartThread(CLT, AddressOf ConsoleListenerThread, "Console TCP listening")
 
         Logger.MajorInfo("Startup complete")
 
     End Sub
 
+    ''' <summary>
+    ''' Starts a new thread that hosts a tcp listener.
+    ''' </summary>
+    ''' <param name="t">Thread variable of thread to start.</param>
+    ''' <param name="threadStart">Thread entry point</param>
+    ''' <param name="threadMsg">Debug message.</param>
+    ''' <remarks></remarks>
+    Private Sub StartThread(ByRef t As Threading.Thread, ByVal threadStart As System.Threading.ThreadStart, ByVal threadMsg As String)
+
+        Logger.MajorVerbose(String.Format("Starting up the {0} thread...", threadMsg))
+        t = New Threading.Thread(threadStart)
+        t.IsBackground = True
+        Try
+            t.Start()
+            Dim cntr As Integer = 0
+            While t.ThreadState <> Threading.ThreadState.Running AndAlso _
+                  t.ThreadState <> Threading.ThreadState.Aborted AndAlso _
+                  t.ThreadState <> Threading.ThreadState.Background AndAlso _
+                  cntr < 20
+                cntr += 1
+                Threading.Thread.Sleep(50)
+            End While
+
+            If t.ThreadState <> Threading.ThreadState.Background Then
+                t.Abort()
+                t = Nothing
+                Throw New Exception(String.Format("Timeout on starting the {0} thread", threadMsg))
+            End If
+        Catch ex As Exception
+            Logger.MajorError(String.Format("Error while starting the {0} thread: " + ex.ToString(), threadMsg))
+            Throw ex
+        End Try
+
+    End Sub
+
+    ''' <summary>
+    ''' Starts the crypto only.
+    ''' </summary>
+    ''' <param name="XMLParameterFile">Full or relative path to XML parameters file.</param>
+    ''' <remarks></remarks>
     Private Sub StartCrypto(ByVal XMLParameterFile As String)
         Logger.LogInterface = Me
 
@@ -147,19 +186,22 @@ Public Class ThalesMain
             doc.Load(reader)
 
             port = CType(GetParameterValue(doc, "Port"), Integer)
+            consolePort = CType(GetParameterValue(doc, "ConsolePort"), Integer)
             maxCons = CType(GetParameterValue(doc, "MaxConnections"), Integer)
             LMKFile = CType(GetParameterValue(doc, "LMKStorageFile"), String)
             VBsources = CType(GetParameterValue(doc, "VBSourceDirectory"), String)
-            Log.Logger.CurrentLogLevel = CType(GetParameterValue(doc, "LogLevel"), Log.Logger.LogLevel)
+            Logger.CurrentLogLevel = CType(GetParameterValue(doc, "LogLevel"), Logger.LogLevel)
             CheckLMKParity = CType(GetParameterValue(doc, "CheckLMKParity"), Boolean)
 
             CompileAndLoad(VBsources)
 
-            Core.Resources.AddResource(Core.Resources.FIRMWARE_NUMBER, CType(GetParameterValue(doc, "FirmwareNumber"), String))
-            Core.Resources.AddResource(Core.Resources.DSP_FIRMWARE_NUMBER, CType(GetParameterValue(doc, "DSPFirmwareNumber"), String))
-            Core.Resources.AddResource(Core.Resources.MAX_CONS, maxCons)
-            Core.Resources.AddResource(Core.Resources.AUTHORIZED_STATE, CType(GetParameterValue(doc, "StartInAuthorizedState"), Boolean))
-            Core.Resources.AddResource(Core.Resources.CLEAR_PIN_LENGTH, CType(GetParameterValue(doc, "ClearPINLength"), Integer))
+            Resources.AddResource(Resources.CONSOLE_PORT, consolePort)
+            Resources.AddResource(Resources.WELL_KNOWN_PORT, port)
+            Resources.AddResource(Resources.FIRMWARE_NUMBER, CType(GetParameterValue(doc, "FirmwareNumber"), String))
+            Resources.AddResource(Resources.DSP_FIRMWARE_NUMBER, CType(GetParameterValue(doc, "DSPFirmwareNumber"), String))
+            Resources.AddResource(Resources.MAX_CONS, maxCons)
+            Resources.AddResource(Resources.AUTHORIZED_STATE, CType(GetParameterValue(doc, "StartInAuthorizedState"), Boolean))
+            Resources.AddResource(Resources.CLEAR_PIN_LENGTH, CType(GetParameterValue(doc, "ClearPINLength"), Integer))
 
             If LMKFile = "" Then
                 Logger.MajorInfo("No LMK storage file specified, creating new keys")
@@ -170,7 +212,7 @@ Public Class ThalesMain
                 ThalesSim.Core.Cryptography.LMK.LMKStorage.ReadLMKs(LMKFile)
             End If
 
-            Core.Resources.AddResource(Core.Resources.LMK_CHECK_VALUE, Cryptography.LMK.LMKStorage.GenerateLMKCheckValue())
+            Resources.AddResource(Core.Resources.LMK_CHECK_VALUE, Cryptography.LMK.LMKStorage.GenerateLMKCheckValue())
 
             reader.Close()
             reader = Nothing
@@ -178,9 +220,15 @@ Public Class ThalesMain
             Throw New Exceptions.XInvalidConfiguration(ex.Message())
         End Try
 
+        'Parse the loaded host commands
         Logger.MajorDebug("Searching for host command implementors...")
-        CE = New ThalesSim.Core.HostCommands.CommandExplorer
+        CE = New HostCommands.CommandExplorer
         Logger.MinorInfo("Loaded commands dump" + vbCrLf + CE.GetLoadedCommands())
+
+        'Parse the loaded console commands
+        Logger.MajorDebug("Searching for console command implementors...")
+        CCE = New ConsoleCommands.ConsoleCommandExplorer
+        Logger.MinorInfo("Loaded console commands dump " + vbCrLf + CCE.GetLoadedCommands())
     End Sub
 
     Private Sub CompileAndLoad(ByVal vbDir As String)
@@ -203,7 +251,7 @@ Public Class ThalesMain
 
         Dim vbSource As String = ""
         Dim fName As String = New IO.FileInfo(sourceFile).Name
-        Log.Logger.MajorVerbose("Compiling " + fName + "...")
+        Logger.MajorVerbose("Compiling " + fName + "...")
         Try
             Dim SR As New IO.StreamReader(sourceFile)
             While SR.Peek > -1
@@ -212,7 +260,7 @@ Public Class ThalesMain
             SR.Close()
             SR = Nothing
         Catch ex As Exception
-            Log.Logger.MajorError("Exception raised while reading " + fName + vbCrLf + _
+            Logger.MajorError("Exception raised while reading " + fName + vbCrLf + _
                                   ex.ToString())
             Return Nothing
         End Try
@@ -292,12 +340,62 @@ Public Class ThalesMain
                 End Try
             Next
 
+            Try
+                CSL.Stop()
+                CSL = Nothing
+            Catch ex As Exception
+            End Try
+
+            Logger.MajorVerbose("Stopping the console listening thread...")
+            Try
+                CLT.Abort()
+                CLT = Nothing
+            Catch ex As Exception
+            End Try
+
+            Try
+                If Not CWC Is Nothing AndAlso CWC.IsConnected Then CWC.TermClient()
+                CWC = Nothing
+            Catch ex As Exception
+            End Try
+
         End If
 
         Logger.MajorInfo("Shutdown complete")
 
     End Sub
 
+    'Thread for the console listening socket.
+    Private Sub ConsoleListenerThread()
+        Try
+            CSL = New TcpListener(New System.Net.IPEndPoint(0, consolePort))
+            CSL.Start()
+
+            While True
+                CWC = New TCP.WorkerClient(CSL.AcceptTcpClient())
+                CWC.InitOps()
+
+                AddHandler CWC.Disconnected, AddressOf CWCDisconnected
+                AddHandler CWC.MessageArrived, AddressOf CWCMessageArrived
+
+                Logger.MajorInfo("Console client from " + CWC.ClientIP + " is connected")
+
+                'If we have one connection, don't accept others.
+                consoleCurCons = 1
+                While consoleCurCons = 1
+                    Threading.Thread.Sleep(50)
+                End While
+            End While
+        Catch ex As Exception
+            Logger.MajorInfo("Exception on console listening thread (" + ex.Message + ")")
+            If Not CSL Is Nothing Then
+                CSL.Stop()
+                CSL = Nothing
+            End If
+        End Try
+    End Sub
+
+    'Thread for the host listening socket.
     Private Sub ListenerThread()
 
         ReDim WC(-1)
@@ -340,6 +438,7 @@ Public Class ThalesMain
             End While
 
         Catch ex As Exception
+            Logger.MajorInfo("Exception on listening thread (" + ex.Message + ")")
             If Not SL Is Nothing Then
                 SL.Stop()
                 SL = Nothing
@@ -348,6 +447,92 @@ Public Class ThalesMain
 
     End Sub
 
+    'Console client disconnect event
+    Private Sub CWCDisconnected(ByVal sender As TCP.WorkerClient)
+
+        Logger.MajorInfo("Console client disconnected.")
+        sender.TermClient()
+
+        'Indicate that the console is off
+        consoleCurCons -= 1
+
+        curMsg = Nothing
+
+    End Sub
+
+    'Console client data event
+    Private Sub CWCMessageArrived(ByVal sender As TCP.WorkerClient, ByRef b() As Byte, ByVal len As Integer)
+
+        '' Data for console commands do not all arrive at once. For most console commands, the console
+        '' prompts the user to enter information during a series of steps, then the command is executed
+        '' when all information has been gathered.
+        ''
+        '' This event handler is coded in order to reflect that. During the first message arrival, an
+        '' appropriate implementor of a console command is searched. If one is found, an object is
+        '' created and kept in the curMsg variable. This is used to accept keyed data from the console
+        '' and prompt the user for the next part of information to be entered. Once all information has
+        '' been entered, curMsg performs the processing and returns the result.
+        ''
+
+        'We're using a Message only to get a string back. No other relation to processing.
+        Dim msg As New ThalesSim.Core.Message.Message(b)
+
+        Try
+            'Do we have a current command?
+            If curMsg Is Nothing Then
+                'No, find the appropriate one.
+                Logger.MajorVerbose("Client: " + sender.ClientIP + vbCrLf + _
+                                    "Request: " + msg.MessageData())
+                Logger.MajorDebug("Searching for implementor of " + msg.MessageData + "...")
+                Dim CC As ConsoleCommands.ConsoleCommandClass = CCE.GetLoadedCommand(msg.MessageData)
+                If CC Is Nothing Then
+                    Logger.MajorError("No implementor for " + msg.MessageData + ".")
+                    sender.send("Command not found" + vbCrLf)
+                    Exit Sub
+                End If
+
+                'Instantiate and let it initialize its command stack.
+                curMsg = CType(Activator.CreateInstance(CC.CommandType), ConsoleCommands.AConsoleCommand)
+                curMsg.InitializeStack()
+            Else
+                'We already have a command so we'll pass the data from the console to it.
+                Dim returnMsg As String = curMsg.AcceptMessage(msg.MessageData)
+
+                'If it returns some string and it signaled a finish, we're done with the command.
+                If returnMsg IsNot Nothing AndAlso curMsg.CommandFinished Then
+                    sender.send(returnMsg + vbCrLf)
+                    curMsg = Nothing
+                Else
+                    'Else, let the command send the next prompt to the console.
+                    sender.send(curMsg.GetClientMessage())
+                End If
+                Exit Sub
+            End If
+
+            'This is reached when a command has just been instantiated.
+            'There are some commands that require no input. If this is one
+            'of them, just run the ProcessMessage method and return the result.
+            If curMsg.IsNoinputCommand Then
+                Try
+                    sender.send(curMsg.ProcessMessage + vbCrLf)
+                    curMsg = Nothing
+                Catch ex As Exception
+                End Try
+            Else
+                'Else, let the command send the first prompt to the console.
+                sender.send(curMsg.GetClientMessage())
+            End If
+
+        Catch ex As Exception
+            Logger.MajorError("Exception while parsing message or creating implementor instance" + vbCrLf + ex.ToString())
+            Logger.MajorError("Disconnecting client.")
+            sender.TermClient()
+            curMsg = Nothing
+        End Try
+
+    End Sub
+
+    'Host disconnect event
     Private Sub WCDisconnected(ByVal sender As TCP.WorkerClient)
 
         Logger.MajorInfo("Client disconnected.")
@@ -356,6 +541,7 @@ Public Class ThalesMain
 
     End Sub
 
+    'Host date event
     Private Sub WCMessageArrived(ByVal sender As TCP.WorkerClient, ByRef b() As Byte, ByVal len As Integer)
 
         Dim MFPC As New ThalesSim.Core.Message.MessageFieldParserCollection
@@ -368,18 +554,18 @@ Public Class ThalesMain
                             "Request: " + msg.MessageData())
 
         Try
-            Log.Logger.MajorDebug("Parsing header and code of message " + msg.MessageData + "...")
+            Logger.MajorDebug("Parsing header and code of message " + msg.MessageData + "...")
             MFPC.ParseMessage(msg)
 
-            Log.Logger.MajorDebug("Searching for implementor of " + MFPC.GetMessageFieldByName(COMMAND_CODE).FieldValue + "...")
+            Logger.MajorDebug("Searching for implementor of " + MFPC.GetMessageFieldByName(COMMAND_CODE).FieldValue + "...")
             Dim CC As ThalesSim.Core.HostCommands.CommandClass = CE.GetLoadedCommand(MFPC.GetMessageFieldByName(COMMAND_CODE).FieldValue)
 
             If CC Is Nothing Then
-                Log.Logger.MajorError("No implementor for " + MFPC.GetMessageFieldByName(COMMAND_CODE).FieldValue + "." + vbCrLf + _
+                Logger.MajorError("No implementor for " + MFPC.GetMessageFieldByName(COMMAND_CODE).FieldValue + "." + vbCrLf + _
                                       "Disconnecting client.")
                 sender.TermClient()
             Else
-                Log.Logger.MajorDebug("Found implementor " + CC.DeclaringType.FullName() + ", instantiating...")
+                Logger.MajorDebug("Found implementor " + CC.DeclaringType.FullName() + ", instantiating...")
                 Dim o As ThalesSim.Core.HostCommands.AHostCommand
                 'o = Activator.CreateInstance(CC.AssemblyName, CC.DeclaringType).Unwrap()
                 o = CType(Activator.CreateInstance(CC.DeclaringType), HostCommands.AHostCommand)
@@ -389,33 +575,33 @@ Public Class ThalesMain
 
                 Try
                     If CheckLMKParity = False OrElse Cryptography.LMK.LMKStorage.CheckLMKStorage() = True Then
-                        Log.Logger.MajorDebug("Calling AcceptMessage()...")
+                        Logger.MajorDebug("Calling AcceptMessage()...")
                         o.AcceptMessage(msg)
 
                         DumpMinorRequest(MFPC)
-                        Log.Logger.MinorVerbose(o.DumpFields())
+                        Logger.MinorVerbose(o.DumpFields())
 
-                        Log.Logger.MajorDebug("Calling ConstructResponse()...")
+                        Logger.MajorDebug("Calling ConstructResponse()...")
                         retMsg = o.ConstructResponse()
-                        Log.Logger.MajorDebug("Calling ConstructResponseAfterOperationComplete()...")
+                        Logger.MajorDebug("Calling ConstructResponseAfterOperationComplete()...")
                         retMsgAfterIO = o.ConstructResponseAfterOperationComplete()
 
-                        Log.Logger.MajorDebug("Attaching header/response code to response...")
+                        Logger.MajorDebug("Attaching header/response code to response...")
                         retMsg.AddElementFront(CC.ResponseCode)
                         retMsg.AddElementFront(MFPC.GetMessageFieldByName(HEADER).FieldValue)
 
-                        Log.Logger.MajorVerbose("Sending: " + retMsg.MessageData())
+                        Logger.MajorVerbose("Sending: " + retMsg.MessageData())
                         sender.send(retMsg.MessageData())
 
                         If Not (retMsgAfterIO Is Nothing) Then
-                            Log.Logger.MajorDebug("Attaching header/response code to response after I/O...")
+                            Logger.MajorDebug("Attaching header/response code to response after I/O...")
                             retMsgAfterIO.AddElementFront(CC.ResponseCodeAfterIO)
                             retMsgAfterIO.AddElementFront(MFPC.GetMessageFieldByName(HEADER).FieldValue)
-                            Log.Logger.MajorVerbose("Sending: " + retMsgAfterIO.MessageData())
+                            Logger.MajorVerbose("Sending: " + retMsgAfterIO.MessageData())
                             sender.send(retMsgAfterIO.MessageData())
                         End If
                     Else
-                        Log.Logger.MajorError("LMK parity error")
+                        Logger.MajorError("LMK parity error")
                         retMsg = New Message.MessageResponse
                         retMsg.AddElementFront(Core.ErrorCodes._13_MASTER_KEY_PARITY_ERROR)
                         retMsg.AddElementFront(CC.ResponseCode)
@@ -424,8 +610,8 @@ Public Class ThalesMain
                     End If
 
                 Catch ex As Exception
-                    Log.Logger.MajorError("Exception while processing message" + vbCrLf + ex.ToString())
-                    Log.Logger.MajorError("Disconnecting client.")
+                    Logger.MajorError("Exception while processing message" + vbCrLf + ex.ToString())
+                    Logger.MajorError("Disconnecting client.")
                     sender.TermClient()
                 End Try
 
@@ -433,16 +619,16 @@ Public Class ThalesMain
                     RaiseEvent PrinterData(Me, o.PrinterData)
                 End If
 
-                Log.Logger.MajorDebug("Calling Terminate()...")
+                Logger.MajorDebug("Calling Terminate()...")
                 o.Terminate()
-                Log.Logger.MajorDebug("Implementor to Nothing")
+                Logger.MajorDebug("Implementor to Nothing")
                 o = Nothing
 
             End If
 
         Catch ex As Exception
-            Log.Logger.MajorError("Exception while parsing message or creating implementor instance" + vbCrLf + ex.ToString())
-            Log.Logger.MajorError("Disconnecting client.")
+            Logger.MajorError("Exception while parsing message or creating implementor instance" + vbCrLf + ex.ToString())
+            Logger.MajorError("Disconnecting client.")
             sender.TermClient()
         End Try
 

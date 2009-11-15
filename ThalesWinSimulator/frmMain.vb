@@ -159,4 +159,9 @@ Public Class frmMain
         frm = Nothing
     End Sub
 
+    Private Sub cmdConsole_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdConsole.Click
+        Dim frm As New frmConsole
+        frm.ShowDialog(Me)
+        frm = Nothing
+    End Sub
 End Class

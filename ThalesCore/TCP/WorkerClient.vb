@@ -210,7 +210,10 @@ Namespace TCP
 
             Dim Buffer() As Byte
 
-            Buffer = System.Text.ASCIIEncoding.ASCII.GetBytes(Chr(sendData.Length \ 256) + Chr(sendData.Length Mod 256) + sendData)
+            'Fixed bug where this was behaving completely wrong.
+            Buffer = System.Text.ASCIIEncoding.ASCII.GetBytes("  " + sendData)
+            Buffer(0) = CByte(sendData.Length \ 256)
+            Buffer(1) = CByte(sendData.Length Mod 256)
 
             SyncLock MyClient.GetStream
                 MyClient.GetStream.BeginWrite(Buffer, 0, Buffer.Length, _

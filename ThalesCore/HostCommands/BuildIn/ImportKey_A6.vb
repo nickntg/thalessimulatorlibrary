@@ -100,7 +100,7 @@ Namespace HostCommands.BuildIn
                 _warnParity = True
             End If
 
-            Dim cryptKey As String = EncryptUnderLMK(clearKey, lmk_ks, LMKKeyPair, var)
+            Dim cryptKey As String = Utility.EncryptUnderLMK(clearKey, lmk_ks, LMKKeyPair, var)
             Dim checkValue As String = TripleDES.TripleDESEncrypt(New HexKey(clearKey), ZEROES)
 
             Log.Logger.MinorInfo("ZMK (clear): " + clearZMK)

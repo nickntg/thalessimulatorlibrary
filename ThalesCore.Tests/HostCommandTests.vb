@@ -87,6 +87,8 @@ Imports ThalesSim.Core.Message
     <TestMethod()> _
     Public Sub TestGenerateCheckValueBU()
         Assert.AreEqual(TestTran("0200406FBB23A5214DF", New GenerateCheckValue_BU), "000035BBE340A4B763")
+        Assert.AreEqual(TestTran("000ACE9B8A0BE50C09B", New GenerateCheckValue_BU), "004BD5E2482582C2C4")
+        Assert.AreEqual(TestTran("001U93CB819F8FEE4F78BF9C4CDD84750DB1", New GenerateCheckValue_BU), "00B70AD25C94548822")
         Assert.AreEqual(TestTran("011U1EF828AA8F6B80EB83E19FBC373F3A85", New GenerateCheckValue_BU), "006F1E3F74F826B7EB")
     End Sub
 

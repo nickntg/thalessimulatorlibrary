@@ -89,6 +89,7 @@ Partial Class frmMain
         Me.pbAbout = New System.Windows.Forms.PictureBox
         Me.cmdLMK = New System.Windows.Forms.Button
         Me.cmdLMKPairs = New System.Windows.Forms.Button
+        Me.cmdConsole = New System.Windows.Forms.Button
         Me.gb.SuspendLayout()
         CType(Me.authMode, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.status, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -190,7 +191,7 @@ Partial Class frmMain
         Me.txtMajorEvents.Multiline = True
         Me.txtMajorEvents.Name = "txtMajorEvents"
         Me.txtMajorEvents.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtMajorEvents.Size = New System.Drawing.Size(304, 264)
+        Me.txtMajorEvents.Size = New System.Drawing.Size(304, 320)
         Me.txtMajorEvents.TabIndex = 3
         Me.txtMajorEvents.WordWrap = False
         '
@@ -218,14 +219,14 @@ Partial Class frmMain
         Me.txtMinorEvents.Multiline = True
         Me.txtMinorEvents.Name = "txtMinorEvents"
         Me.txtMinorEvents.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtMinorEvents.Size = New System.Drawing.Size(304, 264)
+        Me.txtMinorEvents.Size = New System.Drawing.Size(304, 320)
         Me.txtMinorEvents.TabIndex = 5
         Me.txtMinorEvents.WordWrap = False
         '
         'Label4
         '
         Me.Label4.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(161, Byte))
-        Me.Label4.Location = New System.Drawing.Point(99, 329)
+        Me.Label4.Location = New System.Drawing.Point(99, 386)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(144, 23)
         Me.Label4.TabIndex = 8
@@ -234,17 +235,17 @@ Partial Class frmMain
         'txtPrinterOutput
         '
         Me.txtPrinterOutput.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(161, Byte))
-        Me.txtPrinterOutput.Location = New System.Drawing.Point(99, 352)
+        Me.txtPrinterOutput.Location = New System.Drawing.Point(99, 412)
         Me.txtPrinterOutput.Multiline = True
         Me.txtPrinterOutput.Name = "txtPrinterOutput"
         Me.txtPrinterOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtPrinterOutput.Size = New System.Drawing.Size(653, 120)
+        Me.txtPrinterOutput.Size = New System.Drawing.Size(653, 114)
         Me.txtPrinterOutput.TabIndex = 7
         Me.txtPrinterOutput.WordWrap = False
         '
         'sb
         '
-        Me.sb.Location = New System.Drawing.Point(0, 479)
+        Me.sb.Location = New System.Drawing.Point(0, 535)
         Me.sb.Name = "sb"
         Me.sb.Panels.AddRange(New System.Windows.Forms.StatusBarPanel() {Me.authMode, Me.status, Me.various})
         Me.sb.ShowPanels = True
@@ -305,7 +306,7 @@ Partial Class frmMain
         '
         Me.cmdClearPrinter.BackgroundImage = CType(resources.GetObject("cmdClearPrinter.BackgroundImage"), System.Drawing.Image)
         Me.cmdClearPrinter.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.cmdClearPrinter.Location = New System.Drawing.Point(757, 354)
+        Me.cmdClearPrinter.Location = New System.Drawing.Point(757, 410)
         Me.cmdClearPrinter.Name = "cmdClearPrinter"
         Me.cmdClearPrinter.Size = New System.Drawing.Size(32, 32)
         Me.cmdClearPrinter.TabIndex = 14
@@ -325,7 +326,7 @@ Partial Class frmMain
         '
         Me.cmdCopyPrinter.BackgroundImage = CType(resources.GetObject("cmdCopyPrinter.BackgroundImage"), System.Drawing.Image)
         Me.cmdCopyPrinter.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.cmdCopyPrinter.Location = New System.Drawing.Point(757, 394)
+        Me.cmdCopyPrinter.Location = New System.Drawing.Point(757, 450)
         Me.cmdCopyPrinter.Name = "cmdCopyPrinter"
         Me.cmdCopyPrinter.Size = New System.Drawing.Size(32, 32)
         Me.cmdCopyPrinter.TabIndex = 15
@@ -384,10 +385,22 @@ Partial Class frmMain
         Me.cmdLMKPairs.TabIndex = 23
         Me.cmdLMKPairs.Text = "LMK Pairs"
         '
+        'cmdConsole
+        '
+        Me.cmdConsole.BackgroundImage = CType(resources.GetObject("cmdConsole.BackgroundImage"), System.Drawing.Image)
+        Me.cmdConsole.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.cmdConsole.Location = New System.Drawing.Point(17, 478)
+        Me.cmdConsole.Name = "cmdConsole"
+        Me.cmdConsole.Size = New System.Drawing.Size(55, 47)
+        Me.cmdConsole.TabIndex = 24
+        Me.cmdConsole.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.cmdConsole.UseVisualStyleBackColor = True
+        '
         'frmMain
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 14)
-        Me.ClientSize = New System.Drawing.Size(792, 501)
+        Me.ClientSize = New System.Drawing.Size(792, 557)
+        Me.Controls.Add(Me.cmdConsole)
         Me.Controls.Add(Me.cmdLMKPairs)
         Me.Controls.Add(Me.cmdLMK)
         Me.Controls.Add(Me.pbAbout)
@@ -426,4 +439,5 @@ Partial Class frmMain
         Me.PerformLayout()
 
     End Sub
+    Friend WithEvents cmdConsole As System.Windows.Forms.Button
 End Class
