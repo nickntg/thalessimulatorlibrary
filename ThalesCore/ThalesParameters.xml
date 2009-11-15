@@ -6,6 +6,9 @@
 
 		<!-- Port number for the simulator's TCP listener -->
 		<Port value="9998" />
+    
+    <!-- Port number for the simulator's console commands listener -->
+    <ConsolePort value="9997" />
 		
 		<!-- Max TCP connections allowed -->
 		<MaxConnections value="5" />
@@ -15,7 +18,7 @@
 		
 		<!-- Directory that contains VB sources to compile and use as racal commands
 		     in runtime -->
-		<VBSourceDirectory value="D:\Projects\_PERSONAL_PROJECTS_\ThalesSim\ThalesCore\HostCommands\Runtime" />
+		<VBSourceDirectory value="..\..\..\ThalesCore\HostCommands\Runtime" />
 		
 		<!-- Log level -->
 		<LogLevel value="5" />

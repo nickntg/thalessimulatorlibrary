@@ -1,6 +1,23 @@
 ﻿ThalesSim Release History
 =========================
 
+2009/11/15: Version 0.8.3 beta released.
+----------------------------------------
+
+* Fixed a parity error big that occured when using double and triple length length keys with commands
+  that translated from ZPK to LMK encryption (wiki item 70958).
+* Fixed a bug in the WorkerClient class that prevented correct transmission of string data.
+* Added the capability to accept and execute console commands. This is done by listening to another 
+  TCP port for commands typed-in by a user. The following commands are now implemented:
+    - A (enter the authorized state).
+    - C (cancel the authorized state).
+    - QA (query auxilliary).
+    - QC (query console).
+    - QH (query host).
+    - VR (version number).
+    - GC (generate key component).
+* Added a new console form in the Windows client simulator.
+
 2009/06/15: Version 0.8.2 beta released.
 ----------------------------------------
 

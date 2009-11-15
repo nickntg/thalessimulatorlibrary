@@ -172,7 +172,7 @@ Namespace HostCommands.BuildIn
                 End If
             Next
 
-            Dim cryptKey As String = Me.EncryptUnderLMK(clearKey, lmkKs, LMKPairs.LMKPair.Pair04_05, "0")
+            Dim cryptKey As String = Utility.EncryptUnderLMK(clearKey, lmkKs, LMKPairs.LMKPair.Pair04_05, "0")
             Dim checkValue As String = TripleDES.TripleDESEncrypt(New HexKey(clearKey), ZEROES)
 
             For i As Integer = 1 To _iNbrComponents

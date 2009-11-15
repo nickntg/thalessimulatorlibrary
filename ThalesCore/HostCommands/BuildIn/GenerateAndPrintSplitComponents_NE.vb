@@ -84,8 +84,8 @@ Namespace HostCommands.BuildIn
             If ValidateKeyTypeCode(_keyType, LMKKeyPair, var, mr) = False Then Return mr
             If ValidateKeySchemeCode(_keyScheme, ks, mr) = False Then Return mr
 
-            Dim rndKey As String = Me.CreateRandomKey(ks)
-            Dim cryptRndKey As String = Me.EncryptUnderLMK(rndKey, ks, LMKKeyPair, var)
+            Dim rndKey As String = Utility.CreateRandomKey(ks)
+            Dim cryptRndKey As String = Utility.EncryptUnderLMK(rndKey, ks, LMKKeyPair, var)
             Dim checkValue As String = TripleDES.TripleDESEncrypt(New HexKey(rndKey), ZEROES)
 
             Log.Logger.MinorInfo("Key generated (clear): " + rndKey)

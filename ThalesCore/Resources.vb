@@ -70,6 +70,18 @@ Public Class Resources
     ''' </remarks>
     Public Const CLEAR_PIN_LENGTH As String = "CLEAR_PIN_LENGTH"
 
+    ''' <summary>
+    ''' Resource name for the host port.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const WELL_KNOWN_PORT As String = "WELL_KNOWN_PORT"
+
+    ''' <summary>
+    ''' Resource name for the console port.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const CONSOLE_PORT As String = "CONSOLE_PORT"
+
     Private Shared _lst As New SortedList(Of String, Object)
 
     ''' <summary>

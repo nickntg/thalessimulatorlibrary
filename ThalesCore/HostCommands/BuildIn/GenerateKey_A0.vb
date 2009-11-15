@@ -97,13 +97,13 @@ Namespace HostCommands.BuildIn
             If ValidateKeySchemeCode(_keyScheme, ks, mr) = False Then Return mr
 
             If _zmkScheme <> "" Then
-                If validatekeyschemecode(_zmkScheme, zmk_ks, mr) = False Then Return mr
+                If ValidateKeySchemeCode(_zmkScheme, zmk_ks, mr) = False Then Return mr
             End If
 
             If ValidateFunctionRequirement(KeyTypeTable.KeyFunction.Generate, LMKKeyPair, var, mr) = False Then Return mr
 
-            Dim rndKey As String = Me.CreateRandomKey(ks)
-            Dim cryptRndKey As String = Me.EncryptUnderLMK(rndKey, ks, LMKKeyPair, var)
+            Dim rndKey As String = Utility.CreateRandomKey(ks)
+            Dim cryptRndKey As String = Utility.EncryptUnderLMK(rndKey, ks, LMKKeyPair, var)
             Dim chkVal As String = TripleDES.TripleDESEncrypt(New HexKey(rndKey), ZEROES)
 
             Log.Logger.MinorInfo("Key generated (clear): " + rndKey)

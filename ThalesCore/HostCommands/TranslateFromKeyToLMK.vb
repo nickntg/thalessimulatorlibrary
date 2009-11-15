@@ -240,7 +240,7 @@ Namespace HostCommands
                 End If
             End If
 
-            Dim cryptKey As String = Me.EncryptUnderLMK(finalTarget, LMKks, TargetLMK, TargetVariant)
+            Dim cryptKey As String = Utility.EncryptUnderLMK(finalTarget, LMKks, TargetLMK, TargetVariant)
             Dim checkValue As String
 
             Log.Logger.MinorInfo(str1 + clearSource)

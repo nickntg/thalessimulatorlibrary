@@ -113,7 +113,7 @@ Namespace HostCommands.BuildIn
                     End If
             End Select
 
-            Dim cryptKey As String = Me.EncryptUnderLMK(clearKey, ks, LMKKeyPair, var)
+            Dim cryptKey As String = Utility.EncryptUnderLMK(clearKey, ks, LMKKeyPair, var)
 
             Log.Logger.MinorInfo("Key (clear): " + clearKey)
             Log.Logger.MinorInfo("Key (LMK): " + cryptKey)

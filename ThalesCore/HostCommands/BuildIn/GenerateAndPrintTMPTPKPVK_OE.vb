@@ -88,8 +88,8 @@ Namespace HostCommands.BuildIn
 
             If ValidateKeySchemeCode(_keyScheme, ks, mr) = False Then Return mr
 
-            Dim rndKey As String = CreateRandomKey(ks)
-            Dim cryptRndKey As String = Me.EncryptUnderLMK(rndKey, ks, LMKPairs.LMKPair.Pair14_15, "0")
+            Dim rndKey As String = Utility.CreateRandomKey(ks)
+            Dim cryptRndKey As String = Utility.EncryptUnderLMK(rndKey, ks, LMKPairs.LMKPair.Pair14_15, "0")
 
             Log.Logger.MinorInfo("Key (clear): " + rndKey)
             Log.Logger.MinorInfo("Key (LMK): " + cryptRndKey)

@@ -120,10 +120,10 @@ Namespace HostCommands.BuildIn
                     Return mr
                 End If
             End If
-            Dim clearKey As String = CreateRandomKey(zmkKs)
+            Dim clearKey As String = Utility.CreateRandomKey(zmkKs)
 
             Dim cryptKeyZMK As String = EncryptUnderZMK(clearSource, clearKey, zmkKs)
-            Dim cryptKeyLMK As String = encryptunderlmk(clearKey, ks, LMKPairs.LMKPair.Pair06_07, "0")
+            Dim cryptKeyLMK As String = Utility.EncryptUnderLMK(clearKey, ks, LMKPairs.LMKPair.Pair06_07, "0")
             Dim checkValue As String = TripleDES.TripleDESEncrypt(New HexKey(clearKey), ZEROES)
 
             Log.Logger.MinorInfo("ZMK (clear): " + clearSource)

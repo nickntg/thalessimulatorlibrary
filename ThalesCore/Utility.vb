@@ -14,6 +14,8 @@
 '' Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '' 
 
+Imports ThalesSim.Core.Cryptography
+
 ''' <summary>
 ''' Placeholder class for various utility methods.
 ''' </summary>
@@ -301,6 +303,54 @@ Public Class Utility
         Else
             Return keyString
         End If
+    End Function
+
+    ''' <summary>
+    ''' Returns a random hex key.
+    ''' </summary>
+    ''' <remarks>
+    ''' Creates a single, double or triple length random hex key.
+    ''' </remarks>
+    Public Shared Function CreateRandomKey(ByVal ks As KeySchemeTable.KeyScheme) As String
+        Select Case ks
+            Case KeySchemeTable.KeyScheme.SingleDESKey
+                Return Utility.RandomKey(True, Utility.ParityCheck.OddParity)
+            Case KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, KeySchemeTable.KeyScheme.DoubleLengthKeyVariant
+                Return Utility.MakeParity(Utility.RandomKey(False, Utility.ParityCheck.OddParity) + Utility.RandomKey(False, Utility.ParityCheck.OddParity), Utility.ParityCheck.OddParity)
+            Case KeySchemeTable.KeyScheme.TripleLengthKeyAnsi, KeySchemeTable.KeyScheme.TripleLengthKeyVariant
+                Return Utility.MakeParity(Utility.RandomKey(False, Utility.ParityCheck.OddParity) + Utility.RandomKey(False, Utility.ParityCheck.OddParity) + Utility.RandomKey(False, Utility.ParityCheck.OddParity), Utility.ParityCheck.OddParity)
+            Case Else
+                Throw New InvalidOperationException("Invalid key scheme [" + ks.ToString + "]")
+        End Select
+    End Function
+
+    ''' <summary>
+    ''' Encrypts a key under an LMK pair and a variant.
+    ''' </summary>
+    ''' <remarks>
+    ''' This method encrypts a key under an LMK pair.
+    ''' </remarks>
+    Public Shared Function EncryptUnderLMK(ByVal clearKey As String, _
+                                           ByVal Target_KeyScheme As KeySchemeTable.KeyScheme, _
+                                           ByVal LMKKeyPair As LMKPairs.LMKPair, _
+                                           ByVal variantNumber As String) As String
+
+        Dim result As String = ""
+
+        Select Case Target_KeyScheme
+            Case KeySchemeTable.KeyScheme.SingleDESKey, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, KeySchemeTable.KeyScheme.TripleLengthKeyAnsi, KeySchemeTable.KeyScheme.Unspecified
+                result = TripleDES.TripleDESEncrypt(New HexKey(LMK.LMKStorage.LMKVariant(LMKKeyPair, Convert.ToInt32(variantNumber))), clearKey)
+            Case KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, KeySchemeTable.KeyScheme.TripleLengthKeyVariant
+                result = TripleDES.TripleDESEncryptVariant(New HexKey(LMK.LMKStorage.LMKVariant(LMKKeyPair, Convert.ToInt32(variantNumber))), clearKey)
+        End Select
+
+        Select Case Target_KeyScheme
+            Case KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, KeySchemeTable.KeyScheme.TripleLengthKeyAnsi, KeySchemeTable.KeyScheme.TripleLengthKeyVariant
+                result = KeySchemeTable.GetKeySchemeValue(Target_KeyScheme) + result
+        End Select
+
+        Return result
+
     End Function
 
 End Class

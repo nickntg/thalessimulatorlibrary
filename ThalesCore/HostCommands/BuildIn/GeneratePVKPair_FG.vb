@@ -109,10 +109,10 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            Dim clearKey As String = CreateRandomKey(ks)
+            Dim clearKey As String = Utility.CreateRandomKey(ks)
 
             Dim cryptKeyZMK As String = EncryptUnderZMK(clearSource, clearKey, zmkKs)
-            Dim cryptKeyLMK As String = EncryptUnderLMK(clearKey, ks, LMKPairs.LMKPair.Pair14_15, "0")
+            Dim cryptKeyLMK As String = Utility.EncryptUnderLMK(clearKey, ks, LMKPairs.LMKPair.Pair14_15, "0")
             Dim chkVal1 As String = TripleDES.TripleDESEncrypt(New HexKey(clearKey), ZEROES)
             Dim chkVal2 As String = TripleDES.TripleDESEncrypt(New HexKey(Utility.RemoveKeyType(clearKey).Substring(0, 16)), ZEROES)
             Dim chkVal3 As String = TripleDES.TripleDESEncrypt(New HexKey(Utility.RemoveKeyType(clearKey).Substring(16)), ZEROES)

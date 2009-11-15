@@ -98,10 +98,10 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            Dim clearKey As String = CreateRandomKey(tmkKs)
+            Dim clearKey As String = Utility.CreateRandomKey(tmkKs)
 
             Dim cryptKeyTMK As String = EncryptUnderZMK(clearSource, clearKey, tmkKs)
-            Dim cryptKeyLMK As String = EncryptUnderLMK(clearKey, ks, LMKPairs.LMKPair.Pair14_15, "0")
+            Dim cryptKeyLMK As String = Utility.EncryptUnderLMK(clearKey, ks, LMKPairs.LMKPair.Pair14_15, "0")
 
             Log.Logger.MinorInfo("TMK (clear): " + clearSource)
             Log.Logger.MinorInfo("New key (clear): " + clearKey)

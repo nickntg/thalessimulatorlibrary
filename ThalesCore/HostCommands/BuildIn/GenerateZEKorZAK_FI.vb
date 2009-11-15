@@ -101,13 +101,13 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            Dim clearKey As String = CreateRandomKey(ks)
+            Dim clearKey As String = Utility.CreateRandomKey(ks)
             Dim cryptKeyZMK As String = EncryptUnderZMK(clearSource, clearKey, zmkKs)
             Dim cryptKeyLMK As String
             If _cmdFlag = "0" Then
-                cryptKeyLMK = EncryptUnderLMK(clearKey, ks, LMKPairs.LMKPair.Pair30_31, "0")
+                cryptKeyLMK = Utility.EncryptUnderLMK(clearKey, ks, LMKPairs.LMKPair.Pair30_31, "0")
             Else
-                cryptKeyLMK = EncryptUnderLMK(clearKey, ks, LMKPairs.LMKPair.Pair26_27, "0")
+                cryptKeyLMK = Utility.EncryptUnderLMK(clearKey, ks, LMKPairs.LMKPair.Pair26_27, "0")
             End If
 
             Dim chkValue As String = TripleDES.TripleDESEncrypt(New HexKey(clearKey), ZEROES)

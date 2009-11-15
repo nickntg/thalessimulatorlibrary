@@ -78,8 +78,8 @@ Namespace HostCommands.BuildIn
             If ValidateKeyTypeCode(_keyType, LMKKeyPair, var, mr) = False Then Return mr
             If ValidateKeySchemeCode(_keyScheme, ks, mr) = False Then Return mr
 
-            Dim rndKey As String = Me.CreateRandomKey(ks)
-            Dim cryptRndKey As String = Me.EncryptUnderLMK(rndKey, ks, LMKKeyPair, var)
+            Dim rndKey As String = Utility.CreateRandomKey(ks)
+            Dim cryptRndKey As String = Utility.EncryptUnderLMK(rndKey, ks, LMKKeyPair, var)
 
             Log.Logger.MinorInfo("ZMK component (clear): " + rndKey)
             Log.Logger.MinorInfo("ZMK component (LMK): " + cryptRndKey)

@@ -97,9 +97,9 @@ Namespace HostCommands.BuildIn
                 useKs = KeySchemeTable.KeyScheme.Unspecified
             End If
 
-            Dim clearKeyA As String = CreateRandomKey(KeySchemeTable.KeyScheme.SingleDESKey)
-            Dim clearKeyB As String = CreateRandomKey(KeySchemeTable.KeyScheme.SingleDESKey)
-            Dim cryptKeyLMK As String = EncryptUnderLMK(clearKeyA + clearKeyB, useKs, LMKPairs.LMKPair.Pair14_15, "4")
+            Dim clearKeyA As String = Utility.CreateRandomKey(KeySchemeTable.KeyScheme.SingleDESKey)
+            Dim clearKeyB As String = Utility.CreateRandomKey(KeySchemeTable.KeyScheme.SingleDESKey)
+            Dim cryptKeyLMK As String = Utility.EncryptUnderLMK(clearKeyA + clearKeyB, useKs, LMKPairs.LMKPair.Pair14_15, "4")
 
             Log.Logger.MinorInfo("CVK (clear): " + clearKeyA + clearKeyB)
             Log.Logger.MinorInfo("CVK (LMK): " + cryptKeyLMK)
