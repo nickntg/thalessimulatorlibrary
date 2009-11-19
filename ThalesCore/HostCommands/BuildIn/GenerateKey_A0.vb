@@ -113,13 +113,13 @@ Namespace HostCommands.BuildIn
             Dim clearZMK As String, cryptUnderZMK As String = ""
 
             If _zmk <> "" Then
-                clearZMK = DecryptEncryptedZMK(_zmk, ZMK, MFPC.GetMessageFieldByName(ZMK).DeterminerName)
+                clearZMK = Utility.DecryptEncryptedZMK(_zmk, ZMK, MFPC.GetMessageFieldByName(ZMK).DeterminerName)
                 If Utility.IsParityOK(clearZMK, Utility.ParityCheck.OddParity) = False Then
                     mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                     Return mr
                 End If
 
-                cryptUnderZMK = EncryptUnderZMK(clearZMK, rndKey, zmk_ks)
+                cryptUnderZMK = Utility.EncryptUnderZMK(clearZMK, rndKey, zmk_ks)
 
                 Log.Logger.MinorInfo("ZMK (clear): " + clearZMK)
                 Log.Logger.MinorInfo("Key under ZMK: " + cryptUnderZMK)

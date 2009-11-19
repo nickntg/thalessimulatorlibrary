@@ -353,4 +353,145 @@ Public Class Utility
 
     End Function
 
+    ''' <summary>
+    ''' Decrypts a key encrypted under an LMK pair and a variant.
+    ''' </summary>
+    ''' <remarks>
+    ''' This method decrypts a key encrypted under an LMK pair and a variant.
+    ''' </remarks>
+    Public Shared Function DecryptUnderLMK(ByVal encryptedKey As String, _
+                                           ByVal Target_KeyScheme As KeySchemeTable.KeyScheme, _
+                                           ByVal LMKKeyPair As LMKPairs.LMKPair, _
+                                           ByVal variantNumber As String) As String
+
+        Dim result As String = ""
+
+        Select Case Target_KeyScheme
+            Case KeySchemeTable.KeyScheme.SingleDESKey, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, KeySchemeTable.KeyScheme.TripleLengthKeyAnsi
+                result = TripleDES.TripleDESDecrypt(New HexKey(LMK.LMKStorage.LMKVariant(LMKKeyPair, Convert.ToInt32(variantNumber))), encryptedKey)
+            Case KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, KeySchemeTable.KeyScheme.TripleLengthKeyVariant
+                result = TripleDES.TripleDESDecryptVariant(New HexKey(LMK.LMKStorage.LMKVariant(LMKKeyPair, Convert.ToInt32(variantNumber))), encryptedKey)
+        End Select
+
+        Select Case Target_KeyScheme
+            Case KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, KeySchemeTable.KeyScheme.TripleLengthKeyAnsi, KeySchemeTable.KeyScheme.TripleLengthKeyVariant
+                result = KeySchemeTable.GetKeySchemeValue(Target_KeyScheme) + result
+        End Select
+
+        Return result
+
+    End Function
+
+    ''' <summary>
+    ''' Decrypts a key encrypted under an LMK pair and a variant.
+    ''' </summary>
+    ''' <remarks>
+    ''' This method decrypts a key encrypted under an LMK pair and a variant. The key
+    ''' length is found by the name of the determiner that matched the key.
+    ''' </remarks>
+    Public Shared Function DecryptUnderLMK(ByVal encryptedKey As String, _
+                                           ByVal KeyPrefix As String, ByVal DeterminerName As String, _
+                                           ByVal LMKKeyPair As LMKPairs.LMKPair, _
+                                           ByVal variantNumber As String) As String
+
+        Select Case DeterminerName
+            Case KeyPrefix + DOUBLE_VARIANT
+                Return DecryptUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, LMKKeyPair, variantNumber)
+            Case KeyPrefix + DOUBLE_X917
+                Return DecryptUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, LMKKeyPair, variantNumber)
+            Case KeyPrefix + TRIPLE_VARIANT
+                Return DecryptUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.TripleLengthKeyVariant, LMKKeyPair, variantNumber)
+            Case KeyPrefix + TRIPLE_X917
+                Return DecryptUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.TripleLengthKeyAnsi, LMKKeyPair, variantNumber)
+            Case KeyPrefix + PLAIN_DOUBLE
+                Return DecryptUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, LMKKeyPair, variantNumber)
+            Case KeyPrefix + PLAIN_SINGLE
+                Return DecryptUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.SingleDESKey, LMKKeyPair, variantNumber)
+            Case Else
+                Throw New InvalidOperationException("Invalid key prefix [" + KeyPrefix + "]")
+        End Select
+
+    End Function
+
+    ''' <summary>
+    ''' Decrypts an ZMK.
+    ''' </summary>
+    ''' <remarks>
+    ''' The ZMK is assumed to be a single-length key encrypted under LMK 04-05.
+    ''' </remarks>
+    Public Shared Function DecryptEncryptedZMK(ByVal encryptedKey As String) As String
+        Return CStr(DecryptEncryptedZMK(encryptedKey, "", PLAIN_SINGLE))
+    End Function
+
+    ''' <summary>
+    ''' Decrypts a ZMK.
+    ''' </summary>
+    ''' <remarks>
+    ''' The ZMK type is determined by the determiner that matched the field.
+    ''' </remarks>
+    Public Shared Function DecryptEncryptedZMK(ByVal encryptedKey As String, ByVal keyPrefix As String, ByVal DeterminerName As String) As String
+        Select Case DeterminerName
+            Case keyPrefix + DOUBLE_VARIANT
+                Return DecryptZMKEncryptedUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, 0)
+            Case keyPrefix + DOUBLE_X917
+                Return DecryptZMKEncryptedUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, 0)
+            Case keyPrefix + TRIPLE_VARIANT
+                Return DecryptZMKEncryptedUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.TripleLengthKeyVariant, 0)
+            Case keyPrefix + TRIPLE_X917
+                Return DecryptZMKEncryptedUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.TripleLengthKeyAnsi, 0)
+            Case keyPrefix + PLAIN_DOUBLE
+                Return DecryptZMKEncryptedUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, 0)
+            Case keyPrefix + PLAIN_SINGLE
+                Return DecryptZMKEncryptedUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.SingleDESKey, 0)
+            Case Else
+                Throw New InvalidOperationException("Invalid key prefix [" + keyPrefix + "]")
+        End Select
+    End Function
+
+    ''' <summary>
+    ''' Decrypts a ZMK encrypted under LMK pair 04-05 and a variant.
+    ''' </summary>
+    ''' <remarks>
+    ''' Decrypts a ZMK encrypted under LMK pair 04-05 and a variant.
+    ''' </remarks>
+    Public Shared Function DecryptZMKEncryptedUnderLMK(ByVal encryptedZMK As String, ByVal ks As Core.KeySchemeTable.KeyScheme, ByVal var As Integer) As String
+
+        Select Case ks
+            Case Core.KeySchemeTable.KeyScheme.SingleDESKey, Core.KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, Core.KeySchemeTable.KeyScheme.TripleLengthKeyAnsi
+                Return TripleDES.TripleDESDecrypt(New HexKey(Cryptography.LMK.LMKStorage.LMKVariant(Core.LMKPairs.LMKPair.Pair04_05, var)), encryptedZMK)
+            Case Core.KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, Core.KeySchemeTable.KeyScheme.TripleLengthKeyVariant
+                Return TripleDES.TripleDESDecryptVariant(New HexKey(Cryptography.LMK.LMKStorage.LMKVariant(Core.LMKPairs.LMKPair.Pair04_05, var)), encryptedZMK)
+            Case Else
+                Throw New InvalidOperationException("Invalid key scheme [" + ks.ToString + "]")
+        End Select
+
+    End Function
+
+    ''' <summary>
+    ''' Encrypts clear data under a ZMK.
+    ''' </summary>
+    ''' <remarks>
+    ''' This method may be used with Thales commands that encrypt key output under a ZMK.
+    ''' </remarks>
+    Public Shared Function EncryptUnderZMK(ByVal clearZMK As String, ByVal clearData As String, _
+                                           ByVal ZMK_KeyScheme As KeySchemeTable.KeyScheme) As String
+
+        Dim result As String = ""
+
+        Select Case ZMK_KeyScheme
+            Case KeySchemeTable.KeyScheme.SingleDESKey, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, KeySchemeTable.KeyScheme.TripleLengthKeyAnsi, KeySchemeTable.KeyScheme.Unspecified
+                result = TripleDES.TripleDESEncrypt(New HexKey(clearZMK), clearData)
+            Case KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, KeySchemeTable.KeyScheme.TripleLengthKeyVariant
+                result = TripleDES.TripleDESEncryptVariant(New HexKey(clearZMK), clearData)
+        End Select
+
+        Select Case ZMK_KeyScheme
+            Case KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, KeySchemeTable.KeyScheme.TripleLengthKeyAnsi, KeySchemeTable.KeyScheme.TripleLengthKeyVariant
+                result = KeySchemeTable.GetKeySchemeValue(ZMK_KeyScheme) + result
+        End Select
+
+        Return result
+
+    End Function
+
 End Class

@@ -156,7 +156,7 @@ Namespace HostCommands.BuildIn
             Dim clearKeys(8) As String, clearKey As String = ""
 
             For i As Integer = 1 To _iNbrComponents
-                clearKeys(i - 1) = DecryptUnderLMK(_comps(i - 1), COMPONENT + i.ToString(), _defs(i - 1).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
+                clearKeys(i - 1) = Utility.DecryptUnderLMK(_comps(i - 1), COMPONENT + i.ToString(), _defs(i - 1).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
                 If Utility.IsParityOK(clearKeys(i - 1), Utility.ParityCheck.OddParity) = False Then
                     If i = 1 Then
                         mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)

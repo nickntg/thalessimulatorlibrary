@@ -87,7 +87,7 @@ Namespace HostCommands.BuildIn
             If ValidateKeyTypeCode(_keyType, LMKKeyPair, var, mr) = False Then Return mr
             If ValidateKeySchemeCode(_keyScheme, ks, mr) = False Then Return mr
 
-            Dim clearKey As String = Me.DecryptUnderLMK(_key, KEY, MFPC.GetMessageFieldByName(KEY).DeterminerName, LMKKeyPair, var)
+            Dim clearKey As String = Utility.DecryptUnderLMK(_key, KEY, MFPC.GetMessageFieldByName(KEY).DeterminerName, LMKKeyPair, var)
             If Utility.IsParityOK(clearKey, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr

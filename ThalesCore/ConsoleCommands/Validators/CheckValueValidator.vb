@@ -17,10 +17,10 @@
 Namespace ConsoleCommands.Validators
 
     ''' <summary>
-    ''' This validator verifies a key scheme string.
+    ''' Validator that verifies a key check value.
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class KeySchemeValidator
+    Public Class CheckValueValidator
         Implements IConsoleDataValidator
 
         Dim ignoreEmpty As Boolean
@@ -34,25 +34,25 @@ Namespace ConsoleCommands.Validators
         End Sub
 
         ''' <summary>
-        ''' Constructor that allows to specify whether an empty key scheme is allowed.
+        ''' Constructor that allows to specify whether an empty check value is allowed.
         ''' </summary>
-        ''' <param name="ignoreEmpty">Empty key scheme flag.</param>
+        ''' <param name="ignoreEmpty">Empty check value flag.</param>
         ''' <remarks></remarks>
         Public Sub New(ByVal ignoreEmpty As Boolean)
             Me.ignoreEmpty = ignoreEmpty
         End Sub
 
         ''' <summary>
-        ''' Determines whether a correct key scheme has been entered (0,U,T,X,Y).
+        ''' Determines whether a check value appears correct.
         ''' </summary>
         ''' <param name="consoleMsg">Console message to validate.</param>
-        ''' <remarks>If the console message is incorrect, the validator 
-        ''' throws a <see cref="Exceptions.XInvalidKeyScheme"/> exception.</remarks>
+        ''' <remarks>If the check value appears to be incorrect, the validator 
+        ''' throws a <see cref="Exceptions.XInvalidCheckValue"/> exception.</remarks>
         Public Sub ValidateConsoleMessage(ByVal consoleMsg As String) Implements IConsoleDataValidator.ValidateConsoleMessage
             If ignoreEmpty AndAlso consoleMsg = "" Then Return
 
-            If consoleMsg <> "0" AndAlso consoleMsg <> "U" AndAlso consoleMsg <> "T" AndAlso consoleMsg <> "X" AndAlso consoleMsg <> "Y" Then
-                Throw New Exceptions.XInvalidKeyScheme("Invalid key scheme, must be 0, U, T, X or Y")
+            If consoleMsg.Length <> 6 OrElse Utility.IsHexString(consoleMsg) = False Then
+                Throw New Exceptions.XInvalidCheckValue("INVALID CHECK VALUE")
             End If
         End Sub
     End Class

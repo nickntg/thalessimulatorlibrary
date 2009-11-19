@@ -85,7 +85,7 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim clearCVK As String = DecryptUnderLMK(_cvkPair, CVK_PAIR, MFPC.GetMessageFieldByName(CVK_PAIR).DeterminerName, LMKPairs.LMKPair.Pair14_15, "4")
+            Dim clearCVK As String = Utility.DecryptUnderLMK(_cvkPair, CVK_PAIR, MFPC.GetMessageFieldByName(CVK_PAIR).DeterminerName, LMKPairs.LMKPair.Pair14_15, "4")
             If Utility.IsParityOK(clearCVK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr

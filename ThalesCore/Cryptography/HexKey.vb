@@ -60,6 +60,7 @@ Namespace Cryptography
         Private _partB As String
         Private _partC As String
         Private _keyLength As KeyLength
+        Private _scheme As KeySchemeTable.KeyScheme
 
         ''' <summary>
         ''' First part of the key.
@@ -122,6 +123,22 @@ Namespace Cryptography
         End Property
 
         ''' <summary>
+        ''' Key scheme.
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks>The key scheme is determined by the key format.
+        ''' If the key is not passed correctly, the scheme will be incorrect.</remarks>
+        Public Property Scheme() As KeySchemeTable.KeyScheme
+            Get
+                Return _scheme
+            End Get
+            Set(ByVal value As KeySchemeTable.KeyScheme)
+                _scheme = value
+            End Set
+        End Property
+
+        ''' <summary>
         ''' Key constructor.
         ''' </summary>
         ''' <remarks>
@@ -144,15 +161,23 @@ Namespace Cryptography
             End If
 
             If key.Length = 17 OrElse key.Length = 33 OrElse key.Length = 49 Then
-                Dim scheme As ThalesSim.Core.KeySchemeTable.KeyScheme = ThalesSim.Core.KeySchemeTable.GetKeySchemeFromValue(key.Substring(0, 1))
-                If scheme <> Core.KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi AndAlso _
-                   scheme <> Core.KeySchemeTable.KeyScheme.DoubleLengthKeyVariant AndAlso _
-                   scheme <> Core.KeySchemeTable.KeyScheme.SingleDESKey AndAlso _
-                   scheme <> Core.KeySchemeTable.KeyScheme.TripleLengthKeyAnsi AndAlso _
-                   scheme <> Core.KeySchemeTable.KeyScheme.TripleLengthKeyVariant Then
+                _scheme = ThalesSim.Core.KeySchemeTable.GetKeySchemeFromValue(key.Substring(0, 1))
+                If _scheme <> Core.KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi AndAlso _
+                   _scheme <> Core.KeySchemeTable.KeyScheme.DoubleLengthKeyVariant AndAlso _
+                   _scheme <> Core.KeySchemeTable.KeyScheme.SingleDESKey AndAlso _
+                   _scheme <> Core.KeySchemeTable.KeyScheme.TripleLengthKeyAnsi AndAlso _
+                   _scheme <> Core.KeySchemeTable.KeyScheme.TripleLengthKeyVariant Then
                     Throw New Exceptions.XInvalidKeyScheme("Invalid key scheme " + key.Substring(0, 1))
                 Else
                     key = key.Substring(1)
+                End If
+            Else
+                If key.Length = 16 Then
+                    _scheme = KeySchemeTable.KeyScheme.SingleDESKey
+                ElseIf key.Length = 32 Then
+                    _scheme = KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi
+                Else
+                    _scheme = KeySchemeTable.KeyScheme.TripleLengthKeyAnsi
                 End If
             End If
 
@@ -180,6 +205,21 @@ Namespace Cryptography
             End If
 
         End Sub
+
+        ''' <summary>
+        ''' Returns a string representing the key.
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Overrides Function ToString() As String
+            If _keyLength = KeyLength.SingleLength Then
+                Return _partA
+            ElseIf _keyLength = KeyLength.DoubleLength Then
+                Return _partA + _partB
+            Else
+                Return _partA + _partB + _partC
+            End If
+        End Function
 
     End Class
 

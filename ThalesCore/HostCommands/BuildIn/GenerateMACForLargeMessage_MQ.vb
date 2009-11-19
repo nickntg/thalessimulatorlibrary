@@ -97,7 +97,7 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim zak As String = DecryptUnderLMK(_zak, ZAKKEY, MFPC.GetMessageFieldByName(ZAKKEY).DeterminerName, LMKPairs.LMKPair.Pair26_27, "0")
+            Dim zak As String = Utility.DecryptUnderLMK(_zak, ZAKKEY, MFPC.GetMessageFieldByName(ZAKKEY).DeterminerName, LMKPairs.LMKPair.Pair26_27, "0")
             If Utility.IsParityOK(zak, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr

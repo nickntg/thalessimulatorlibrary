@@ -36,7 +36,7 @@ Partial Class frmConsole
         Me.txtIP.Location = New System.Drawing.Point(97, 6)
         Me.txtIP.Name = "txtIP"
         Me.txtIP.Size = New System.Drawing.Size(137, 21)
-        Me.txtIP.TabIndex = 3
+        Me.txtIP.TabIndex = 1
         Me.txtIP.Text = "localhost"
         '
         'Label1
@@ -52,7 +52,7 @@ Partial Class frmConsole
         Me.txtPort.Location = New System.Drawing.Point(97, 33)
         Me.txtPort.Name = "txtPort"
         Me.txtPort.Size = New System.Drawing.Size(137, 21)
-        Me.txtPort.TabIndex = 5
+        Me.txtPort.TabIndex = 2
         '
         'Label2
         '
@@ -73,14 +73,14 @@ Partial Class frmConsole
         Me.txtConsole.Name = "txtConsole"
         Me.txtConsole.ReadOnly = True
         Me.txtConsole.Size = New System.Drawing.Size(650, 398)
-        Me.txtConsole.TabIndex = 6
+        Me.txtConsole.TabIndex = 3
         '
         'cmdConnect
         '
         Me.cmdConnect.Location = New System.Drawing.Point(240, 6)
         Me.cmdConnect.Name = "cmdConnect"
         Me.cmdConnect.Size = New System.Drawing.Size(416, 48)
-        Me.cmdConnect.TabIndex = 17
+        Me.cmdConnect.TabIndex = 0
         Me.cmdConnect.Text = "&Connect to console"
         '
         'frmConsole

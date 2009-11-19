@@ -1,6 +1,28 @@
 ﻿ThalesSim Release History
 =========================
 
+2009/11/19: Version 0.8.4 beta released.
+----------------------------------------
+
+* Fixed an error in ValidateKeySchemeAndLength which resulted in returning all double length
+  keys encrypted with the variant method.
+* Fixed an error where multi-component messages didn't have their components pushed to the stack.
+* Any exceptions that are thrown by console commands are now caught and the exception error
+  is returned to the console instead of simply dropping the console TCP connection.
+* Empty messages can now be received by the TCP socket.
+* Added an ExtendedValidator for console command implementations. This allows to chain a series
+  of validators and perform several checks in sequence.
+* Added the ability to copy and paste at the console window.
+* Added the following console commands:
+    - EC (encrypt clear component).
+    - KG (generate a key).
+    - IK (imports a key).
+    - EK (exports a key).
+    - F (generate a ZMK component).
+    - Z (encrypt a clear ZMK component).
+    - D (form ZMK from encrypted components).
+    
+
 2009/11/15: Version 0.8.3 beta released.
 ----------------------------------------
 

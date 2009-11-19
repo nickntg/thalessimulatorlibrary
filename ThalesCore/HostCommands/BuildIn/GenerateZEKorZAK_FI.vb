@@ -95,14 +95,14 @@ Namespace HostCommands.BuildIn
 
             Dim clearSource As String
 
-            clearSource = DecryptUnderLMK(_sourceZmk, SOURCE_ZMK, MFPC.GetMessageFieldByName(SOURCE_ZMK).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
+            clearSource = Utility.DecryptUnderLMK(_sourceZmk, SOURCE_ZMK, MFPC.GetMessageFieldByName(SOURCE_ZMK).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
             If Utility.IsParityOK(clearSource, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
             End If
 
             Dim clearKey As String = Utility.CreateRandomKey(ks)
-            Dim cryptKeyZMK As String = EncryptUnderZMK(clearSource, clearKey, zmkKs)
+            Dim cryptKeyZMK As String = Utility.EncryptUnderZMK(clearSource, clearKey, zmkKs)
             Dim cryptKeyLMK As String
             If _cmdFlag = "0" Then
                 cryptKeyLMK = Utility.EncryptUnderLMK(clearKey, ks, LMKPairs.LMKPair.Pair30_31, "0")

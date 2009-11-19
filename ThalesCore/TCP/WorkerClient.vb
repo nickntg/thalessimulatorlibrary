@@ -183,19 +183,28 @@ Namespace TCP
                     ReDim recBytes(len - 1)
                 End If
 
-                For i As Integer = ByteCount To count - 1
-                    recBytes(recBytesOffset) = Bytes(i)
-                    recBytesOffset += 1
-                    ByteCount += 1
-                    'If we have a logical packet, fire our event.
-                    If recBytesOffset = len Then
-                        RaiseEvent MessageArrived(Me, recBytes, recBytesOffset)
-                        ReDim recBytes(-1)
-                        len = -1
-                        recBytesOffset = 0
-                        Exit For
-                    End If
-                Next
+                'If empty packet, fire the event now
+                If len = 0 Then
+                    RaiseEvent MessageArrived(Me, recBytes, 0)
+                    ReDim recBytes(-1)
+                    len = -1
+                    recBytesOffset = 0
+                Else
+                    For i As Integer = ByteCount To count - 1
+                        recBytes(recBytesOffset) = Bytes(i)
+                        recBytesOffset += 1
+                        ByteCount += 1
+                        'If we have a logical packet, fire our event.
+                        If recBytesOffset = len Then
+                            RaiseEvent MessageArrived(Me, recBytes, recBytesOffset)
+                            ReDim recBytes(-1)
+                            len = -1
+                            recBytesOffset = 0
+                            Exit For
+                        End If
+                    Next
+                End If
+
             End While
 
         End Sub

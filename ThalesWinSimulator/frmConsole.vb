@@ -103,11 +103,14 @@ Public Class frmConsole
                 txtConsole.ScrollToCaret()
             End If
         ElseIf e.KeyChar = vbCr Then
-            If command <> "" Then
-                w.send(command)
-                command = ""
-            End If
+            w.send(command)
+            command = ""
             txtConsole.AppendText(vbCrLf)
+        ElseIf Asc(e.KeyChar) = 3 Then 'Ctrl-C
+            Clipboard.SetText(txtConsole.SelectedText)
+        ElseIf Asc(e.KeyChar) = 22 Then 'Ctrl-V
+            command = command + Clipboard.GetText
+            txtConsole.AppendText(Clipboard.GetText)
         Else
             command = command + e.KeyChar
             txtConsole.AppendText(e.KeyChar)
