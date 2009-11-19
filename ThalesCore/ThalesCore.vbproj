@@ -63,18 +63,33 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleCommands\AConsoleCommand.vb" />
+    <Compile Include="ConsoleCommands\ExtendedValidator.vb" />
     <Compile Include="ConsoleCommands\Implementations\CancelAuthorizedState_C.vb" />
     <Compile Include="ConsoleCommands\ConsoleCommandClass.vb" />
     <Compile Include="ConsoleCommands\ConsoleCommandExplorer.vb" />
     <Compile Include="ConsoleCommands\ConsoleMessageStack.vb" />
     <Compile Include="ConsoleCommands\ConsoleMessage.vb" />
+    <Compile Include="ConsoleCommands\Implementations\EncryptClearComponent_EC.vb" />
+    <Compile Include="ConsoleCommands\Implementations\EncryptZMKComponent_Z.vb" />
     <Compile Include="ConsoleCommands\Implementations\EnterAuthorizedState_A.vb" />
     <Compile Include="ConsoleCommands\IConsoleDataValidator.vb" />
+    <Compile Include="ConsoleCommands\Implementations\ExportKey_KE.vb" />
+    <Compile Include="ConsoleCommands\Implementations\FormKeyFromComponents_FK.vb" />
+    <Compile Include="ConsoleCommands\Implementations\FormZMKFromEncryptedComponents_D.vb" />
     <Compile Include="ConsoleCommands\Implementations\GenerateKeyComponent_GC.vb" />
+    <Compile Include="ConsoleCommands\Implementations\GenerateKey_KG.vb" />
+    <Compile Include="ConsoleCommands\Implementations\GenerateZMKComponent_F.vb" />
+    <Compile Include="ConsoleCommands\Implementations\ImportKey_IK.vb" />
+    <Compile Include="ConsoleCommands\Validators\CheckValueValidator.vb" />
+    <Compile Include="ConsoleCommands\Validators\FlexibleHexKeyValidator.vb" />
+    <Compile Include="ConsoleCommands\Validators\NumberOfComponentsValidator.vb" />
     <Compile Include="ConsoleCommands\Implementations\QueryAuxilliary_QA.vb" />
     <Compile Include="ConsoleCommands\Implementations\QueryConsole_QC.vb" />
     <Compile Include="ConsoleCommands\Implementations\QueryHost_QH.vb" />
     <Compile Include="ConsoleCommands\Implementations\ViewHSMSoftwareRevision_VR.vb" />
+    <Compile Include="ConsoleCommands\Validators\AuthorizedStateValidator.vb" />
+    <Compile Include="ConsoleCommands\Validators\ComponentTypeValidator.vb" />
+    <Compile Include="ConsoleCommands\Validators\HexKeyValidator.vb" />
     <Compile Include="ConsoleCommands\Validators\KeyLengthValidator.vb" />
     <Compile Include="ConsoleCommands\Validators\KeySchemeValidator.vb" />
     <Compile Include="ConsoleCommands\Validators\KeyTypeValidator.vb" />
@@ -83,6 +98,8 @@
     <Compile Include="Exceptions\XEncryptError.vb" />
     <Compile Include="Exceptions\XFunctionNotPermitted.vb" />
     <Compile Include="Exceptions\XInvalidAccount.vb" />
+    <Compile Include="Exceptions\XInvalidCheckValue.vb" />
+    <Compile Include="Exceptions\XInvalidComponentType.vb" />
     <Compile Include="Exceptions\XInvalidConfiguration.vb" />
     <Compile Include="Exceptions\XInvalidData.vb" />
     <Compile Include="Exceptions\XInvalidKey.vb" />
@@ -90,6 +107,7 @@
     <Compile Include="Exceptions\XInvalidKeyScheme.vb" />
     <Compile Include="Exceptions\XInvalidKeyType.vb" />
     <Compile Include="Exceptions\XInvalidLMKTypeCode.vb" />
+    <Compile Include="Exceptions\XInvalidNumberOfComponents.vb" />
     <Compile Include="Exceptions\XInvalidPINLength.vb" />
     <Compile Include="Exceptions\XInvalidStorageFile.vb" />
     <Compile Include="Exceptions\XNeedsAuthorizedState.vb" />
@@ -161,6 +179,7 @@
     <Compile Include="Cryptography\DES.vb" />
     <Compile Include="ErrorCodes.vb" />
     <Compile Include="Cryptography\HexKey.vb" />
+    <Compile Include="HostCommands\Constants.vb" />
     <Compile Include="HostCommands\ThalesCommandCode.vb" />
     <Compile Include="KeySchemeTable.vb" />
     <Compile Include="KeyTypeTable.vb" />

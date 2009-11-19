@@ -213,7 +213,7 @@ Namespace HostCommands
 
             Dim clearSource As String, clearTarget As String
 
-            clearSource = DecryptUnderLMK(_sourceKEY, SOURCE_KEY, MFPC.GetMessageFieldByName(SOURCE_KEY).DeterminerName, SourceLMK, SourceVariant)
+            clearSource = Utility.DecryptUnderLMK(_sourceKEY, SOURCE_KEY, MFPC.GetMessageFieldByName(SOURCE_KEY).DeterminerName, SourceLMK, SourceVariant)
             If Utility.IsParityOK(clearSource, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr

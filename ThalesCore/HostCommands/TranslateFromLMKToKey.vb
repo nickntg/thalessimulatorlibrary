@@ -223,19 +223,19 @@ Namespace HostCommands
 
             Dim clearSource As String, clearTarget As String
 
-            clearSource = DecryptUnderLMK(_sourceKEY, SOURCE_KEY, MFPC.GetMessageFieldByName(SOURCE_KEY).DeterminerName, SourceLMK, SourceVariant)
+            clearSource = Utility.DecryptUnderLMK(_sourceKEY, SOURCE_KEY, MFPC.GetMessageFieldByName(SOURCE_KEY).DeterminerName, SourceLMK, SourceVariant)
             If Utility.IsParityOK(clearSource, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            clearTarget = DecryptUnderLMK(_targetKEY, TARGET_KEY, MFPC.GetMessageFieldByName(TARGET_KEY).DeterminerName, TargetLMK, TargetVariant)
+            clearTarget = Utility.DecryptUnderLMK(_targetKEY, TARGET_KEY, MFPC.GetMessageFieldByName(TARGET_KEY).DeterminerName, TargetLMK, TargetVariant)
             If Utility.IsParityOK(clearTarget, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._11_DESTINATION_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            Dim cryptKey As String = EncryptUnderZMK(clearSource, Utility.RemoveKeyType(clearTarget), KeyKs)
+            Dim cryptKey As String = Utility.EncryptUnderZMK(clearSource, Utility.RemoveKeyType(clearTarget), KeyKs)
             Dim checkValue As String = ""
 
             Log.Logger.MinorInfo(str1 + clearSource)

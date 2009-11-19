@@ -92,13 +92,13 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim clearPVK As String = DecryptUnderLMK(_pvkPair, PVK_PAIR, MFPC.GetMessageFieldByName(PVK_PAIR).DeterminerName, LMKPairs.LMKPair.Pair14_15, "0")
+            Dim clearPVK As String = Utility.DecryptUnderLMK(_pvkPair, PVK_PAIR, MFPC.GetMessageFieldByName(PVK_PAIR).DeterminerName, LMKPairs.LMKPair.Pair14_15, "0")
             If Utility.IsParityOK(clearPVK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._11_DESTINATION_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            Dim clearZPK As String = DecryptUnderLMK(_zpk, ZPK, MFPC.GetMessageFieldByName(ZPK).DeterminerName, LMKPairs.LMKPair.Pair06_07, "0")
+            Dim clearZPK As String = Utility.DecryptUnderLMK(_zpk, ZPK, MFPC.GetMessageFieldByName(ZPK).DeterminerName, LMKPairs.LMKPair.Pair06_07, "0")
             If Utility.IsParityOK(clearZPK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr

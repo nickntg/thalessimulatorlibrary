@@ -108,11 +108,12 @@ Namespace ConsoleCommands
                     'Yes. We'll push to the stack more messages to make up the number of required components.
 
                     'Off-by-one because we're pushing first component to client already
-                    For i As Integer = 0 To numComponents - 2
-                        Dim newMsg As New ConsoleMessage(_curMessage.ClientMessage + " (component #" + (i + 2).ToString + ")", _
+                    For i As Integer = numComponents - 2 To 0 Step -1
+                        Dim newMsg As New ConsoleMessage(_curMessage.ClientMessage + " component #" + (i + 2).ToString + ": ", _
                                                          _curMessage.ConsoleMessage, False, False, _curMessage.ConsoleMessageValidator)
+                        _stack.PushToStack(newMsg)
                     Next
-                    Return _curMessage.ClientMessage + " (component #1)"
+                    Return _curMessage.ClientMessage + " component #1: "
                 End If
             End If
             Return _curMessage.ClientMessage
@@ -222,7 +223,7 @@ Namespace ConsoleCommands
                         Case "U"
                             ks = KeySchemeTable.KeyScheme.DoubleLengthKeyVariant
                         Case "X"
-                            ks = KeySchemeTable.KeyScheme.DoubleLengthKeyVariant
+                            ks = KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi
                         Case Else
                             Throw New Exceptions.XInvalidKeyScheme("INVALID KEY SCHEME FOR KEY LENGTH")
                     End Select
@@ -235,6 +236,17 @@ Namespace ConsoleCommands
                         Case Else
                             Throw New Exceptions.XInvalidKeyScheme("INVALID KEY SCHEME FOR KEY LENGTH")
                     End Select
+            End Select
+        End Sub
+
+        Protected Sub ValidateKeySchemeAndLength(ByVal keyLen As HexKey.KeyLength, ByVal keyScheme As String, ByRef ks As KeySchemeTable.KeyScheme)
+            Select Case keyLen
+                Case HexKey.KeyLength.SingleLength
+                    ValidateKeySchemeAndLength("1", keyScheme, ks)
+                Case HexKey.KeyLength.DoubleLength
+                    ValidateKeySchemeAndLength("2", keyScheme, ks)
+                Case HexKey.KeyLength.TripleLength
+                    ValidateKeySchemeAndLength("3", keyScheme, ks)
             End Select
         End Sub
 
@@ -254,6 +266,19 @@ Namespace ConsoleCommands
                 Throw New Exceptions.XNeedsAuthorizedState("NOT AUTHORIZED")
             End If
 
+        End Sub
+
+        ''' <summary>
+        ''' Given a hex key, returns the key length and scheme.
+        ''' </summary>
+        ''' <param name="key">Hex key.</param>
+        ''' <param name="keyLen">Key length.</param>
+        ''' <param name="keyScheme">Key scheme.</param>
+        ''' <remarks></remarks>
+        Protected Sub ExtractKeySchemeAndLength(ByVal key As String, ByRef keyLen As Core.Cryptography.HexKey.KeyLength, ByRef keyScheme As Core.KeySchemeTable.KeyScheme)
+            Dim hk As New HexKey(key)
+            keyLen = hk.KeyLen
+            keyScheme = hk.Scheme
         End Sub
 
         ''' <summary>

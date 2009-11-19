@@ -117,19 +117,19 @@ Namespace HostCommands.BuildIn
 
             Dim clearA As String, clearB As String, clearC As String, clearKey As String
 
-            clearA = DecryptUnderLMK(_keyA, COMPONENT_A, MFPC.GetMessageFieldByName(COMPONENT_A).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
+            clearA = Utility.DecryptUnderLMK(_keyA, COMPONENT_A, MFPC.GetMessageFieldByName(COMPONENT_A).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
             If Utility.IsParityOK(clearA, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            clearB = DecryptUnderLMK(_keyB, COMPONENT_B, MFPC.GetMessageFieldByName(COMPONENT_B).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
+            clearB = Utility.DecryptUnderLMK(_keyB, COMPONENT_B, MFPC.GetMessageFieldByName(COMPONENT_B).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
             If Utility.IsParityOK(clearB, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._11_DESTINATION_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            clearC = DecryptUnderLMK(_keyC, COMPONENT_C, MFPC.GetMessageFieldByName(COMPONENT_C).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
+            clearC = Utility.DecryptUnderLMK(_keyC, COMPONENT_C, MFPC.GetMessageFieldByName(COMPONENT_C).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
             If Utility.IsParityOK(clearC, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._11_DESTINATION_KEY_PARITY_ERROR)
                 Return mr

@@ -496,7 +496,14 @@ Public Class ThalesMain
                 curMsg.InitializeStack()
             Else
                 'We already have a command so we'll pass the data from the console to it.
-                Dim returnMsg As String = curMsg.AcceptMessage(msg.MessageData)
+                Dim returnMsg As String = Nothing
+
+                'This catches exceptions of the last process.
+                Try
+                    returnMsg = curMsg.AcceptMessage(msg.MessageData)
+                Catch ex As Exception
+                    returnMsg = ex.Message
+                End Try
 
                 'If it returns some string and it signaled a finish, we're done with the command.
                 If returnMsg IsNot Nothing AndAlso curMsg.CommandFinished Then
@@ -515,9 +522,10 @@ Public Class ThalesMain
             If curMsg.IsNoinputCommand Then
                 Try
                     sender.send(curMsg.ProcessMessage + vbCrLf)
-                    curMsg = Nothing
                 Catch ex As Exception
+                    sender.send(ex.Message)
                 End Try
+                curMsg = Nothing
             Else
                 'Else, let the command send the first prompt to the console.
                 sender.send(curMsg.GetClientMessage())

@@ -81,7 +81,7 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim clearZPK As String = DecryptUnderLMK(_targetKey, DESTINATION_ZPK, MFPC.GetMessageFieldByName(DESTINATION_ZPK).DeterminerName, LMKPairs.LMKPair.Pair06_07, "0")
+            Dim clearZPK As String = Utility.DecryptUnderLMK(_targetKey, DESTINATION_ZPK, MFPC.GetMessageFieldByName(DESTINATION_ZPK).DeterminerName, LMKPairs.LMKPair.Pair06_07, "0")
             If Utility.IsParityOK(clearZPK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr

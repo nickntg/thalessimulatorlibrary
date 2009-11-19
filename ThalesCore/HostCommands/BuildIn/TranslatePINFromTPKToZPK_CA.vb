@@ -97,13 +97,13 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            Dim clearTPK As String = DecryptUnderLMK(_sourceKey, SOURCE_TPK, MFPC.GetMessageFieldByName(SOURCE_TPK).DeterminerName, LMKPairs.LMKPair.Pair14_15, "0")
+            Dim clearTPK As String = Utility.DecryptUnderLMK(_sourceKey, SOURCE_TPK, MFPC.GetMessageFieldByName(SOURCE_TPK).DeterminerName, LMKPairs.LMKPair.Pair14_15, "0")
             If Utility.IsParityOK(clearTPK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            Dim clearZPK As String = DecryptUnderLMK(_targetKey, TARGET_ZPK, MFPC.GetMessageFieldByName(TARGET_ZPK).DeterminerName, LMKPairs.LMKPair.Pair06_07, "0")
+            Dim clearZPK As String = Utility.DecryptUnderLMK(_targetKey, TARGET_ZPK, MFPC.GetMessageFieldByName(TARGET_ZPK).DeterminerName, LMKPairs.LMKPair.Pair06_07, "0")
             If Utility.IsParityOK(clearZPK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._11_DESTINATION_KEY_PARITY_ERROR)
                 Return mr

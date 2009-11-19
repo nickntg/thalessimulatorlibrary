@@ -79,13 +79,13 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim sourceTAK As String = DecryptUnderLMK(_sourceTak, SOURCE_TAK, MFPC.GetMessageFieldByName(SOURCE_TAK).DeterminerName, LMKPairs.LMKPair.Pair16_17, "0")
+            Dim sourceTAK As String = Utility.DecryptUnderLMK(_sourceTak, SOURCE_TAK, MFPC.GetMessageFieldByName(SOURCE_TAK).DeterminerName, LMKPairs.LMKPair.Pair16_17, "0")
             If Utility.IsParityOK(sourceTAK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            Dim targetTAK As String = DecryptUnderLMK(_targetTak, TARGET_TAK, MFPC.GetMessageFieldByName(TARGET_TAK).DeterminerName, LMKPairs.LMKPair.Pair16_17, "0")
+            Dim targetTAK As String = Utility.DecryptUnderLMK(_targetTak, TARGET_TAK, MFPC.GetMessageFieldByName(TARGET_TAK).DeterminerName, LMKPairs.LMKPair.Pair16_17, "0")
             If Utility.IsParityOK(targetTAK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._11_DESTINATION_KEY_PARITY_ERROR)
                 Return mr

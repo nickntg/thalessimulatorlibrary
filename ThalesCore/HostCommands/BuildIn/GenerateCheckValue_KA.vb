@@ -94,7 +94,7 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            Dim clearKey As String = DecryptUnderLMK(_key, KEY, MFPC.GetMessageFieldByName(KEY).DeterminerName, LMKKeyPair, "0")
+            Dim clearKey As String = Utility.DecryptUnderLMK(_key, KEY, MFPC.GetMessageFieldByName(KEY).DeterminerName, LMKKeyPair, "0")
             If Utility.IsParityOK(clearKey, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr

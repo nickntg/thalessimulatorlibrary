@@ -75,7 +75,7 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim clearTAK As String = DecryptUnderLMK(_tak, TAK, MFPC.GetMessageFieldByName(TAK).DeterminerName, LMKPairs.LMKPair.Pair16_17, "0")
+            Dim clearTAK As String = Utility.DecryptUnderLMK(_tak, TAK, MFPC.GetMessageFieldByName(TAK).DeterminerName, LMKPairs.LMKPair.Pair16_17, "0")
             If Utility.IsParityOK(clearTAK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr

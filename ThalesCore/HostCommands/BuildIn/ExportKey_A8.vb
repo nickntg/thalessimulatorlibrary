@@ -88,7 +88,7 @@ Namespace HostCommands.BuildIn
 
             If ValidateFunctionRequirement(KeyTypeTable.KeyFunction.Export, LMKKeyPair, var, mr) = False Then Return mr
 
-            Dim clearZMK As String = DecryptUnderLMK(_zmk, ZMK, MFPC.GetMessageFieldByName(ZMK).DeterminerName, LMKPairs.LMKPair.Pair04_05, var)  'DecryptEncryptedZMK(_zmk, ZMK, MFPC.GetMessageFieldByName(ZMK).DeterminerName)
+            Dim clearZMK As String = Utility.DecryptUnderLMK(_zmk, ZMK, MFPC.GetMessageFieldByName(ZMK).DeterminerName, LMKPairs.LMKPair.Pair04_05, var)  'DecryptEncryptedZMK(_zmk, ZMK, MFPC.GetMessageFieldByName(ZMK).DeterminerName)
             If Utility.IsParityOK(clearZMK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
@@ -97,16 +97,16 @@ Namespace HostCommands.BuildIn
             'Dim clearKey As String = DecryptUnderLMK(_key, KeySchemeTable.KeyScheme.SingleDESKey, LMKKeyPair, var)
             Dim clearKey As String
             If MFPC.GetMessageFieldByName(KEY).HeaderValue() = "" Then
-                clearKey = DecryptUnderLMK(_key, KeySchemeTable.KeyScheme.SingleDESKey, LMKKeyPair, var)
+                clearKey = Utility.DecryptUnderLMK(_key, KeySchemeTable.KeyScheme.SingleDESKey, LMKKeyPair, var)
             Else
-                clearKey = DecryptUnderLMK(_key, KeySchemeTable.GetKeySchemeFromValue(MFPC.GetMessageFieldByName(KEY).HeaderValue()), LMKKeyPair, var)
+                clearKey = Utility.DecryptUnderLMK(_key, KeySchemeTable.GetKeySchemeFromValue(MFPC.GetMessageFieldByName(KEY).HeaderValue()), LMKKeyPair, var)
             End If
             If Utility.IsParityOK(clearKey, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._11_DESTINATION_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            Dim cryptKey As String = EncryptUnderZMK(clearZMK, Utility.RemoveKeyType(clearKey), zmk_ks)
+            Dim cryptKey As String = Utility.EncryptUnderZMK(clearZMK, Utility.RemoveKeyType(clearKey), zmk_ks)
             Dim checkValue As String = TripleDES.TripleDESEncrypt(New HexKey(clearKey), ZEROES)
 
             Log.Logger.MinorInfo("ZMK (clear): " + clearZMK)

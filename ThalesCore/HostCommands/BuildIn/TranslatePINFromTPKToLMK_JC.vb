@@ -80,7 +80,7 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim clearTPK As String = DecryptUnderLMK(_sourceKey, SOURCE_TPK, MFPC.GetMessageFieldByName(SOURCE_TPK).DeterminerName, LMKPairs.LMKPair.Pair14_15, "0")
+            Dim clearTPK As String = Utility.DecryptUnderLMK(_sourceKey, SOURCE_TPK, MFPC.GetMessageFieldByName(SOURCE_TPK).DeterminerName, LMKPairs.LMKPair.Pair14_15, "0")
             If Utility.IsParityOK(clearTPK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr

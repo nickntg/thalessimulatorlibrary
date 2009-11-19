@@ -89,7 +89,7 @@ Namespace HostCommands.BuildIn
 
             If ValidateFunctionRequirement(KeyTypeTable.KeyFunction.Export, LMKKeyPair, var, mr) = False Then Return mr
 
-            Dim clearZMK As String = DecryptUnderLMK(_zmk, ZMK, MFPC.GetMessageFieldByName(ZMK).DeterminerName, LMKPairs.LMKPair.Pair04_05, var)  'DecryptEncryptedZMK(_zmk, ZMK, MFPC.GetMessageFieldByName(ZMK).DeterminerName)
+            Dim clearZMK As String = Utility.DecryptUnderLMK(_zmk, ZMK, MFPC.GetMessageFieldByName(ZMK).DeterminerName, LMKPairs.LMKPair.Pair04_05, var)  'DecryptEncryptedZMK(_zmk, ZMK, MFPC.GetMessageFieldByName(ZMK).DeterminerName)
             If Utility.IsParityOK(clearZMK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
