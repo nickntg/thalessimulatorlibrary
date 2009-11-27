@@ -1,6 +1,17 @@
 ﻿ThalesSim Release History
 =========================
 
+xxxx/xx/xx: Version 0.8.5 beta released.
+----------------------------------------
+
+* Added an implementation of the PM - Verify dynamic CVV command. Currently, the command
+  is working only when:
+    - the scheme ID refers to MasterCard PayPass,
+    - the key derivation method refers to Option A,
+    - the command is supplied with the PAN and track data.
+* Added an implementation of the GM command - Hash a block of data. Currently,
+  the command does not support the ISO 10118-2 and SHA-224 hash algorithms.
+
 2009/11/19: Version 0.8.4 beta released.
 ----------------------------------------
 
@@ -21,12 +32,11 @@
     - F (generate a ZMK component).
     - Z (encrypt a clear ZMK component).
     - D (form ZMK from encrypted components).
-    
 
 2009/11/15: Version 0.8.3 beta released.
 ----------------------------------------
 
-* Fixed a parity error big that occured when using double and triple length length keys with commands
+* Fixed a parity error bug that occured when using double and triple length length keys with commands
   that translated from ZPK to LMK encryption (wiki item 70958).
 * Fixed a bug in the WorkerClient class that prevented correct transmission of string data.
 * Added the capability to accept and execute console commands. This is done by listening to another 
