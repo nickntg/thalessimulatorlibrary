@@ -67,6 +67,14 @@ Public Class ErrorCodes
     Public Const _05_INVALID_KEY_LENGTH_FLAG As String = "05"
 
     ''' <summary>
+    ''' Racal error code 05.
+    ''' </summary>
+    ''' <remarks>
+    ''' Invalid hash identifier.
+    ''' </remarks>
+    Public Const _05_INVALID_HASH_IDENTIFIER As String = "05"
+
+    ''' <summary>
     ''' Racal error code 10.
     ''' </summary>
     ''' <remarks>

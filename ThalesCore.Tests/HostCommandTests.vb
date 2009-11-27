@@ -313,4 +313,66 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual(ZEKResult.Substring(35, 33), ZEKUnderLMK.Substring(2, 33))
     End Sub
 
+    <TestMethod()> _
+    Public Sub TestVerifyDynamicCVV()
+        Assert.AreEqual(TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784804;00019" + CreateBytesWithData("5413123556784804D09061019005997722553F") + "0000077200005XX255", New VerifyDynamicCVV_PM), "00")
+        Assert.AreEqual(TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784803;00019" + CreateBytesWithData("5413123556784803D09061019005997723333F") + "0000077200005XX333", New VerifyDynamicCVV_PM), "00")
+        Assert.AreEqual(TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784801;00019" + CreateBytesWithData("5413123556784801D09061019005997722253F") + "0000077200028XX225", New VerifyDynamicCVV_PM), "00")
+
+        'In authorized mode, we want to return the dynamic CVV when the CVV verification fails.
+        Resources.UpdateResource(Resources.AUTHORIZED_STATE, True)
+        Assert.AreEqual(TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784801;00019" + CreateBytesWithData("5413123556784801D09061019005997722253F") + "0000077200028XX000", New VerifyDynamicCVV_PM), "01225")
+
+        'When not in authorized mode, we want to just say that it failed.
+        Resources.UpdateResource(Resources.AUTHORIZED_STATE, False)
+        Assert.AreEqual(TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784801;00019" + CreateBytesWithData("5413123556784801D09061019005997722253F") + "0000077200028XX000", New VerifyDynamicCVV_PM), "01")
+    End Sub
+
+    'Get a track-II with a string representation and return a string with a byte representation.
+    Private Function CreateBytesWithData(ByVal trackData As String) As String
+        Dim s As String = ""
+        Dim b(100) As Byte
+        Utility.HexStringToByteArray(trackData, b)
+        For i As Integer = 0 To (trackData.Length \ 2) - 1
+            s = s + Chr(b(i))
+        Next
+        Return s
+    End Function
+
+    <TestMethod()> _
+    Public Sub TestHashDataBlock()
+        'Test hashes from Wikipedia.
+        TestHash("01", "The quick brown fox jumps over the lazy dog", "2fd4e1c67a2d28fced849ee1bb76e7391b93eb12".ToUpper)
+        TestHash("02", "The quick brown fox jumps over the lazy dog", "9e107d9d372bb6826bd81d3542a419d6".ToUpper)
+        TestHash("06", "The quick brown fox jumps over the lazy dog", "d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592".ToUpper)
+        TestHash("07", "The quick brown fox jumps over the lazy dog", "ca737f1014a48f4c0b6dd43cb177b0afd9e5169367544c494011e3317dbf9a509cb1e5dc1e85a941bbee3d7f2afbc9b1".ToUpper)
+        TestHash("08", "The quick brown fox jumps over the lazy dog", "07e547d9586f6a73f73fbac0435ed76951218fb7d0c8d788a309d785436bbb642e93a252a954f23912547d1e8a3b5ed6e1bfd7097821233fa0538f3db854fee6".ToUpper)
+    End Sub
+
+    'Test a hash
+    Private Sub TestHash(ByVal hashID As String, ByVal data As String, ByVal expectedResult As String)
+        Dim res As String = TestTran(hashID + data.Length.ToString.PadLeft(5, "0"c) + data, New HashDataBlock_GM)
+        If res.Substring(0, 2) <> "00" Then
+            Assert.Fail("Hash failed")
+        End If
+
+        Dim resBytes() As Byte = bytesFromString(res.Substring(2))
+        Dim hexResult As String = ""
+        Utility.ByteArrayToHexString(resBytes, hexResult)
+
+        If hexResult <> expectedResult Then
+            Assert.Fail("Hash failed for hash id " + hashID)
+        End If
+    End Sub
+
+    'ASC-convert a string to a byte-array.
+    Private Function bytesFromString(ByVal s As String) As Byte()
+        Dim b() As Byte
+        ReDim b(s.Length - 1)
+        For i As Integer = 0 To s.Length - 1
+            b(i) = CByte(Asc(s.Substring(i, 1)))
+        Next
+        Return b
+    End Function
+
 End Class
