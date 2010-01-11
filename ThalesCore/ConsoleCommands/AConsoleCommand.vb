@@ -310,7 +310,7 @@ Namespace ConsoleCommands
         ''' <returns>Formatted check value.</returns>
         ''' <remarks></remarks>
         Protected Function MakeCheckValuePresentable(ByVal cv As String) As String
-            Return cv.Substring(0, 4) + " " + cv.Substring(5, 2)
+            Return cv.Substring(0, 4) + " " +  cv.Substring(4, 2)
         End Function
 
     End Class
