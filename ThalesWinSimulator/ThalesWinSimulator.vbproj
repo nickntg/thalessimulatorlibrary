@@ -142,6 +142,7 @@
     <None Include="ThalesSim.snk" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\Debug\ThalesParameters.xml" />
     <Content Include="keys.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +150,9 @@
       <Project>{B6F7BC3E-92AF-4D00-AFDF-5771EA184AA4}</Project>
       <Name>ThalesCore</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\Runtime\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
