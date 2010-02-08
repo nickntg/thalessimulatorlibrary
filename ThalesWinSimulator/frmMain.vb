@@ -164,4 +164,10 @@ Public Class frmMain
         frm.ShowDialog(Me)
         frm = Nothing
     End Sub
+
+    Private Sub frmMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        If IO.File.Exists("ThalesParameters.xml") Then
+            txtParameters.Text = "ThalesParameters.xml"
+        End If
+    End Sub
 End Class
