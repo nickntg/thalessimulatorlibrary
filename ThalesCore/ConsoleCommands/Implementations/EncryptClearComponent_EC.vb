@@ -53,13 +53,25 @@ Namespace ConsoleCommands
             Dim keyScheme As String = _inStack.PopFromStack.ConsoleMessage
             Dim keyType As String = _inStack.PopFromStack.ConsoleMessage
             Dim keyLen As String
+            ''
+            '' Bug (see item http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=154290).
+            '' ValidateKeySchemeAndLength expects 1, 2, 3 instead of 0, 1, 2.
+            ''
+            'Select Case clearComponent.Length
+            '    Case 16
+            '        keyLen = "0"
+            '    Case 32
+            '        keyLen = "1"
+            '    Case Else
+            '        keyLen = "2"
+            'End Select
             Select Case clearComponent.Length
                 Case 16
-                    keyLen = "0"
-                Case 32
                     keyLen = "1"
-                Case Else
+                Case 32
                     keyLen = "2"
+                Case Else
+                    keyLen = "3"
             End Select
 
             ValidateKeySchemeAndLength(keyLen, keyScheme, ks)

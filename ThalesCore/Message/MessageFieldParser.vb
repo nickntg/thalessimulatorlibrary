@@ -182,6 +182,17 @@ Namespace Message
         End Property
 
         ''' <summary>
+        ''' Sets the length of the message.
+        ''' </summary>
+        ''' <value></value>
+        ''' <remarks></remarks>
+        Public WriteOnly Property Length() As Integer
+            Set(ByVal value As Integer)
+                _length = value
+            End Set
+        End Property
+
+        ''' <summary>
         ''' Constructor for fixed length fields.
         ''' </summary>
         ''' <remarks>
