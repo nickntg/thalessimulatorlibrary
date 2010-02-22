@@ -375,4 +375,9 @@ Imports ThalesSim.Core.Message
         Return b
     End Function
 
+    <TestMethod()> _
+    Public Sub TestEchoCommand()
+        Assert.AreEqual(TestTran("00100123456789ABCDEF", New EchoTest_B2), "000123456789ABCDEF")
+    End Sub
+
 End Class

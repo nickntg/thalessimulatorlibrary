@@ -119,8 +119,11 @@
     <Compile Include="Exceptions\XShortMessage.vb" />
     <Compile Include="Exceptions\XUnsupportedPINBlockFormat.vb" />
     <Compile Include="HostCommands\AHostCommand.vb" />
+    <Compile Include="HostCommands\BuildIn\CommandChaining_NK.vb" />
+    <Compile Include="HostCommands\BuildIn\EchoTest_B2.vb" />
     <Compile Include="HostCommands\BuildIn\HashDataBlock_GM.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyDynamicCVV_PM.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifyInterchangePinUsingComparisonMethod_BE.vb" />
     <Compile Include="HostCommands\CommandClass.vb" />
     <Compile Include="HostCommands\CommandExplorer.vb" />
     <Compile Include="HostCommands\BuildIn\CancelAuthState_RA.vb" />

@@ -1,6 +1,19 @@
 ﻿ThalesSim Release History
 =========================
 
+XXXX/XX/XX: Version 0.8.6 beta released.
+----------------------------------------
+
+* Fixed a bug which caused check values generated from console commands
+  to be displayed incorrectly.
+* Added redistributable setup project.
+* Fixed a bug at the EC console command that prevented use of double and
+  triple length keys.
+* Added the following host commands:
+    - B2 (echo test).
+    - BE (Verify an interchange PIN using the comparison method).
+    - NK (Command chaining).
+
 2009/12/07: Version 0.8.5 beta released.
 ----------------------------------------
 
