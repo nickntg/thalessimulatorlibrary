@@ -26,7 +26,7 @@ Public Class frmConsole
     'Try to read the console port automatically.
     Private Sub frmConsole_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Try
-            txtPort.Text = CType(Resources.GetResource(Resources.CONSOLE_PORT), Integer).ToString()
+            txtPort.Text = Convert.ToInt32(Resources.GetResource(Resources.CONSOLE_PORT)).ToString()
         Catch ex As Exception
             'Local sim not started.
             txtPort.Text = "9997"
@@ -48,7 +48,7 @@ Public Class frmConsole
     'Connect to the simulator's console port.
     Private Sub cmdConnect_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdConnect.Click
         Try
-            w = New TCP.WorkerClient(New TcpClient(txtIP.Text, CInt(txtPort.Text)))
+            w = New TCP.WorkerClient(New TcpClient(txtIP.Text, Convert.ToInt32(txtPort.Text)))
             w.InitOps()
             txtConsole.AppendText(vbCrLf + "Connected - Type in commands followed by ENTER." + vbCrLf)
             txtConsole.Enabled = True

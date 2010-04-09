@@ -47,7 +47,7 @@ Namespace HostCommands.BuildIn
             MFPC = New MessageFieldParserCollection
             MFPC.AddMessageFieldParser(New MessageFieldParser(ACCT_NBR, 12))
             MFPC.AddMessageFieldParser(New MessageFieldParser(PIN, _
-                                       CType(Core.Resources.GetResource(Core.Resources.CLEAR_PIN_LENGTH), Integer) + 1))
+                                       Convert.ToInt32(Core.Resources.GetResource(Core.Resources.CLEAR_PIN_LENGTH)) + 1))
         End Sub
 
         ''' <summary>
@@ -73,7 +73,7 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            If CType(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE), Boolean) = False Then
+            If Convert.ToBoolean(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE)) = False Then
                 mr.AddElement(ErrorCodes._17_HSM_IS_NOT_IN_THE_AUTHORIZED_STATE)
                 Return mr
             End If

@@ -77,14 +77,14 @@ Namespace HostCommands.BuildIn
             Dim mr As New MessageResponse
 
             If _pinLen = "" Then
-                _pinLen = Convert.ToString(CType(Core.Resources.GetResource(Core.Resources.CLEAR_PIN_LENGTH), Integer))
+                _pinLen = Convert.ToString(Convert.ToInt32(Core.Resources.GetResource(Core.Resources.CLEAR_PIN_LENGTH)))
             Else
-                If IsNumeric(_pinLen) = False Then
+                If Integer.TryParse(_pinLen, Nothing) = False Then
                     mr.AddElement(ErrorCodes._15_INVALID_INPUT_DATA)
                     Return mr
                 End If
 
-                If CType(Core.Resources.GetResource(Core.Resources.CLEAR_PIN_LENGTH), Integer) < Convert.ToInt32(_pinLen) OrElse _
+                If Convert.ToInt32(Core.Resources.GetResource(Core.Resources.CLEAR_PIN_LENGTH)) < Convert.ToInt32(_pinLen) OrElse _
                    Convert.ToInt32(_pinLen) < 4 Then
                     mr.AddElement(ErrorCodes._24_PIN_IS_FEWER_THAN_4_OR_MORE_THAN_12_DIGITS_LONG)
                     Return mr

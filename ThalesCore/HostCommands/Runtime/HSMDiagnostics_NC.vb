@@ -30,8 +30,8 @@ Namespace HostCommands.Runtime
         Public Overrides Function ConstructResponse() As ThalesSim.Core.Message.MessageResponse
             Dim mr As New ThalesSim.Core.Message.MessageResponse
             mr.AddElement(ThalesSim.Core.ErrorCodes._00_NO_ERROR)
-            mr.AddElement(CType(ThalesSim.Core.Resources.GetResource(ThalesSim.Core.Resources.LMK_CHECK_VALUE), String))
-            mr.AddElement(CType(ThalesSim.Core.Resources.GetResource(ThalesSim.Core.Resources.FIRMWARE_NUMBER), String))
+            mr.AddElement(Convert.ToString(ThalesSim.Core.Resources.GetResource(ThalesSim.Core.Resources.LMK_CHECK_VALUE)))
+            mr.AddElement(Convert.ToString(ThalesSim.Core.Resources.GetResource(ThalesSim.Core.Resources.FIRMWARE_NUMBER)))
             Return mr
         End Function
 

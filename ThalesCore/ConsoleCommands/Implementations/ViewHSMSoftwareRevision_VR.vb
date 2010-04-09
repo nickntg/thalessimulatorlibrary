@@ -40,8 +40,8 @@ Namespace ConsoleCommands
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Overrides Function ProcessMessage() As String
-            Return "Firmware revision: " + CType(Resources.GetResource(Resources.FIRMWARE_NUMBER), String) + vbCrLf + _
-                   "DSP revision: " + CType(Resources.GetResource(Resources.DSP_FIRMWARE_NUMBER), String)
+            Return "Firmware revision: " + Convert.ToString(Resources.GetResource(Resources.FIRMWARE_NUMBER)) + vbCrLf + _
+                   "DSP revision: " + Convert.ToString(Resources.GetResource(Resources.DSP_FIRMWARE_NUMBER))
         End Function
 
     End Class

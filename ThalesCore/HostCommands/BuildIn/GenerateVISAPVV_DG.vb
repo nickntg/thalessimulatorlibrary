@@ -51,7 +51,7 @@ Namespace HostCommands.BuildIn
             MFPC = New MessageFieldParserCollection
             MFPC.AddMessageFieldParser(GeneratePVKKeyParser(PVK_PAIR))
             MFPC.AddMessageFieldParser(New MessageFieldParser(PIN, _
-                           CType(Core.Resources.GetResource(Core.Resources.CLEAR_PIN_LENGTH), Integer) + 1))
+                           Convert.ToInt32(Core.Resources.GetResource(Core.Resources.CLEAR_PIN_LENGTH)) + 1))
             MFPC.AddMessageFieldParser(New MessageFieldParser(ACCT_NBR, 12))
             MFPC.AddMessageFieldParser(New MessageFieldParser(PVKI, 1))
         End Sub
@@ -94,7 +94,7 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            If IsNumeric(_pvki) = False Then
+            If Integer.TryParse(_pvki, Nothing) = False Then
                 mr.AddElement(ErrorCodes._15_INVALID_INPUT_DATA)
                 Return mr
             End If

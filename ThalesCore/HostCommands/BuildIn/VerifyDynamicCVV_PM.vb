@@ -110,12 +110,12 @@ Namespace HostCommands.BuildIn
 
                     'We want the ATC in hexadecimal.
                     Dim ATC As Integer = Convert.ToInt32(_ATC)
-                    Utility.ByteArrayToHexString(New Byte() {CByte(ATC \ 256), CByte(ATC Mod 256)}, _ATCHex)
+                    Utility.ByteArrayToHexString(New Byte() {Convert.ToByte(ATC \ 256), Convert.ToByte(ATC Mod 256)}, _ATCHex)
 
                     'Track data is in binary. We want a hex string with this data.
                     _TrackClearData = ""
                     For i As Integer = 0 To _TrackData.Length - 1
-                        _TrackClearData = _TrackClearData + Hex(Asc(_TrackData.Substring(i, 1))).PadLeft(2, "0"c)
+                        _TrackClearData = _TrackClearData + Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetBytes(_TrackData.Substring(i, 1))(0).ToString("X2")
                     Next
                 Catch ex As Exception
                     'Currently assuming that an error means that a short message was send.
@@ -158,7 +158,7 @@ Namespace HostCommands.BuildIn
                 mr.AddElement(ErrorCodes._00_NO_ERROR)
             Else
                 mr.AddElement(ErrorCodes._01_VERIFICATION_FAILURE)
-                If CType(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE), Boolean) = True Then
+                If Convert.ToBoolean(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE)) = True Then
                     mr.AddElement(calcDynamicCVV)
                 End If
             End If

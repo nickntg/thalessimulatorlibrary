@@ -66,16 +66,13 @@ Public Class Utility
     ''' </remarks>
     Public Shared Sub HexStringToByteArray(ByVal s As String, ByRef bData() As Byte)
 
-        Dim i As Integer, j As Integer
+        Dim i As Integer = 0, j As Integer = 0
 
-        i = 0
-        j = 0
         While i <= s.Length - 1
             bData(j) = Convert.ToByte(s.Substring(i, 2), 16)
             i += 2
             j += 1
         End While
-
     End Sub
 
     ''' <summary>
@@ -120,7 +117,6 @@ Public Class Utility
         End If
 
         Return s
-
     End Function
 
     ''' <summary>
@@ -130,29 +126,20 @@ Public Class Utility
     ''' Determines if a string is comprised of hexadecimal characters.
     ''' </remarks>
     Public Shared Function IsHexString(ByVal s As String) As Boolean
+        If String.IsNullOrEmpty(s) Then Return False
 
-        If s Is Nothing OrElse s = "" Then Return False
+        s = RemoveKeyType(s).ToUpper
 
-        s = RemoveKeyType(s)
-
-        Dim i As Integer
-        Dim bFound As Boolean
-
-        s = s.ToUpper
-        i = 0
-        bFound = False
-        While (i < s.Length) And (bFound = False)
+        For i As Integer = 0 To s.Length - 1
             If Not Char.IsDigit(s.Chars(i)) Then
-                If (s.Chars(i) < "A") Or (s.Chars(i) > "F") Then
-                    bFound = True
-                    Exit While
+                If (s.Chars(i) < "A"c) Or (s.Chars(i) > "F"c) Then
+                    Return False
                 End If
             End If
-            i += 1
-        End While
 
-        IsHexString = Not bFound
+        Next
 
+        Return True
     End Function
 
     ''' <summary>
@@ -245,14 +232,12 @@ Public Class Utility
     ''' up to the length of the first string parameter.
     ''' </remarks>
     Public Shared Function XORHexStringsFull(ByVal s1 As String, ByVal s2 As String) As String
-        Dim i As Integer
-        Dim s As String
+        Dim s As String = ""
 
-        s = ""
         s1 = RemoveKeyType(s1)
         s2 = RemoveKeyType(s2)
-        For i = 0 To s1.Length - 1
-            s = s + Hex$(CLng("&H" + s1.Substring(i, 1)) Xor CLng("&H" + s2.Substring(i, 1)))
+        For i As Integer = 0 To s1.Length - 1
+            s = s + (Convert.ToInt32(s1.Substring(i, 1), 16) Xor Convert.ToInt32(s2.Substring(i, 1), 16)).ToString("X")
         Next
 
         Return s
@@ -267,7 +252,7 @@ Public Class Utility
     Public Shared Function toBinary(ByVal hexString As String) As String
         Dim r As String = ""
         For i As Integer = 0 To hexString.Length - 1
-            r = r + Convert.ToString(CInt("&H" + hexString.Substring(i, 1)), 2).PadLeft(4, "0"c)
+            r = r + Convert.ToString(Convert.ToInt32(hexString.Substring(i, 1), 16), 2).PadLeft(4, "0"c)
         Next
         Return r
     End Function
@@ -420,7 +405,7 @@ Public Class Utility
     ''' The ZMK is assumed to be a single-length key encrypted under LMK 04-05.
     ''' </remarks>
     Public Shared Function DecryptEncryptedZMK(ByVal encryptedKey As String) As String
-        Return CStr(DecryptEncryptedZMK(encryptedKey, "", PLAIN_SINGLE))
+        Return DecryptEncryptedZMK(encryptedKey, "", PLAIN_SINGLE)
     End Function
 
     ''' <summary>

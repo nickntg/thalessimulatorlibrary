@@ -30,7 +30,7 @@ Namespace ConsoleCommands.Validators
         ''' <remarks>If the simulator is not in the authorized state, the validator 
         ''' throws a <see cref="Exceptions.XNeedsAuthorizedState"/> exception.</remarks>
         Public Sub ValidateConsoleMessage(ByVal consoleMsg As String) Implements IConsoleDataValidator.ValidateConsoleMessage
-            If Not CType(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE), Boolean) Then
+            If Not Convert.ToBoolean(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE)) Then
                 Throw New Exceptions.XNeedsAuthorizedState("NOT AUTHORIZED")
             End If
         End Sub

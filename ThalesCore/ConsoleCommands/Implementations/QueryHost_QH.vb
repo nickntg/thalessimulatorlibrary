@@ -44,7 +44,7 @@ Namespace ConsoleCommands
                    "Protocol: Ethernet" + vbCrLf + _
                    "Character format: ASCII" + vbCrLf + _
                    "IP address: " + System.Net.Dns.GetHostAddresses(My.Computer.Name)(0).ToString + vbCrLf + _
-                   "Well-Known-Port address: " + CType(Resources.GetResource(Resources.WELL_KNOWN_PORT), Integer).ToString
+                   "Well-Known-Port address: " + Convert.ToInt32(Resources.GetResource(Resources.WELL_KNOWN_PORT)).ToString
         End Function
 
     End Class

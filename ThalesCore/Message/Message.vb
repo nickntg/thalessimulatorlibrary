@@ -63,10 +63,7 @@ Namespace Message
         ''' incoming message.
         ''' </remarks>
         Public Sub New(ByVal data As String)
-            ReDim _bData(data.Length - 1)
-            For i As Integer = 0 To data.Length - 1
-                _bData(i) = CByte(Asc(data.Substring(i, 1)))
-            Next
+            _bData = Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetBytes(data)
             _data = data
         End Sub
 
@@ -79,10 +76,7 @@ Namespace Message
         ''' </remarks>
         Public Sub New(ByVal data() As Byte)
             ReDim _bData(data.GetLength(0) - 1)
-            For i As Integer = 0 To data.GetUpperBound(0)
-                _data = _data + Chr(data(i))
-                _bData(i) = data(i)
-            Next
+            _data = Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetChars(data)
         End Sub
 
         ''' <summary>

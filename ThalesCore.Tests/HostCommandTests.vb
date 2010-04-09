@@ -1,4 +1,20 @@
-﻿Imports System
+﻿''
+'' This program is free software; you can redistribute it and/or modify
+'' it under the terms of the GNU General Public License as published by
+'' the Free Software Foundation; either version 2 of the License, or
+'' (at your option) any later version.
+''
+'' This program is distributed in the hope that it will be useful,
+'' but WITHOUT ANY WARRANTY; without even the implied warranty of
+'' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+'' GNU General Public License for more details.
+''
+'' You should have received a copy of the GNU General Public License
+'' along with this program; if not, write to the Free Software
+'' Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+'' 
+
+Imports System
 Imports System.Text
 Imports System.Collections.Generic
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
@@ -306,6 +322,7 @@ Imports ThalesSim.Core.Message
     'Contributed by robt, http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=70958
     <TestMethod()> _
     Public Sub TestGenerateZEKAndCheckTranslation()
+        Resources.UpdateResource(Resources.AUTHORIZED_STATE, True)
         Dim ZMK As String = TestTran("0000U", New GenerateKey_A0).Substring(2, 33)
         Dim ZEKResult As String = TestTran("0" + ZMK + ";UU1", New GenerateZEKorZAK_FI)
         Dim ZEKUnderZMK As String = ZEKResult.Substring(2, 33)
@@ -367,17 +384,85 @@ Imports ThalesSim.Core.Message
 
     'ASC-convert a string to a byte-array.
     Private Function bytesFromString(ByVal s As String) As Byte()
-        Dim b() As Byte
-        ReDim b(s.Length - 1)
-        For i As Integer = 0 To s.Length - 1
-            b(i) = CByte(Asc(s.Substring(i, 1)))
-        Next
-        Return b
+        Return Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetBytes(s)
     End Function
 
     <TestMethod()> _
     Public Sub TestEchoCommand()
-        Assert.AreEqual(TestTran("00100123456789ABCDEF", New EchoTest_B2), "000123456789ABCDEF")
+        'Correct - No Data
+        Assert.AreEqual("00", TestTran("0000", New EchoTest_B2))
+        'Correct - With Data
+        Assert.AreEqual("000123456789ABCDEF", TestTran("00100123456789ABCDEF", New EchoTest_B2))
+        'Length bigger than data
+        Assert.AreEqual("80", TestTran("00100123456789", New EchoTest_B2))
+        'Length shorter than data
+        Assert.AreEqual("15", TestTran("00090123456789ABCDEF", New EchoTest_B2))
+    End Sub
+
+    <TestMethod()> _
+    Public Sub TestCommandChainingBasic()
+        'Correct case (without headers)
+        Assert.AreEqual("00020004BF010004CZ00", TestTran("0020070BEUB13875901A7ECEDF1DBD06A5C0AED0FBBF0514F7D6A62A4401020000054301785040061CYB62C0A61BEAB9D15A31A02F7CCBCC8291713500200000543012;0413526", New CommandChaining_NK))
+        'Correct case (with headers)
+        Assert.AreEqual("00020008AAAABF010008BBBBCZ00", TestTran("1020074AAAABEUB13875901A7ECEDF1DBD06A5C0AED0FBBF0514F7D6A62A4401020000054301785040065BBBBCYB62C0A61BEAB9D15A31A02F7CCBCC8291713500200000543012;0413526", New CommandChaining_NK))
+        'Invalid number of commands field
+        Assert.AreEqual("52", TestTran("000", New CommandChaining_NK))
+        'Incorrect sub command count
+        Assert.AreEqual("15", TestTran("0010070BEUB13875901A7ECEDF1DBD06A5C0AED0FBBF0514F7D6A62A4401020000054301785040061CYB62C0A61BEAB9D15A31A02F7CCBCC8291713500200000543012;0413526", New CommandChaining_NK))
+        'Incorrect sub command length
+        Assert.AreEqual("15", TestTran("0020071BEUB13875901A7ECEDF1DBD06A5C0AED0FBBF0514F7D6A62A4401020000054301785040061CYB62C0A61BEAB9D15A31A02F7CCBCC8291713500200000543012;0413526", New CommandChaining_NK))
+        'With Has headers setted but commands have no headers
+        'Assert.AreEqual("00020008BEUB14670008CYB62D67", TestTran("1020070BEUB13875901A7ECEDF1DBD06A5C0AED0FBBF0514F7D6A62A4401020000054301785040061CYB62C0A61BEAB9D15A31A02F7CCBCC8291713500200000543012;0413526", New CommandChaining_NK))
+    End Sub
+
+    <TestMethod()> _
+    Public Sub TestVerifyTerminalPINUsingComparisonMethod()
+        Dim PAN As String = "5044070000253211"
+        Dim PINResult As String = TestTran(PAN.Substring(PAN.Length - 12 - 1, 12), New GenerateRandomPIN_JA)
+        Assert.AreEqual(PINResult.Substring(0, 2), "00")
+
+        'Randomizer based on clock, so sleep a bit to get a different PIN.
+        System.Threading.Thread.Sleep(25)
+
+        Dim PINResult2 As String = TestTran(PAN.Substring(PAN.Length - 12 - 1, 12), New GenerateRandomPIN_JA)
+        Assert.AreEqual(PINResult.Substring(0, 2), "00")
+
+        Dim PIN As String = PINResult.Substring(2)
+        Dim PIN2 As String = PINResult2.Substring(2)
+        Dim PINBlock As String = Core.PIN.PINBlockFormat.ToPINBlock(PIN, PAN, Core.PIN.PINBlockFormat.PIN_Block_Format.Diebold)
+        Dim ClearTPK As String = "99000ECE70A9FEA82AF9EA4B3B5B0495", cryptTPK As String = "UBB7A05C1CC51C1B7242626495B8A93D4"
+        Dim cryptPINBlock As String = Core.Cryptography.TripleDES.TripleDESEncrypt(New Core.Cryptography.HexKey(ClearTPK), PINBlock)
+
+        'Verification OK.
+        Assert.AreEqual("00", TestTran(cryptTPK + cryptPINBlock + Core.PIN.PINBlockFormat.FromPINBlockFormat(Core.PIN.PINBlockFormat.PIN_Block_Format.Diebold) + PAN.Substring(PAN.Length - 12 - 1, 12) + PIN, New VerifyTerminalPinUsingComparisonMethod_BC))
+        'Invalid PIN block.
+        Assert.AreEqual("23", TestTran(cryptTPK + cryptPINBlock + "99" + PAN.Substring(PAN.Length - 12 - 1, 12) + PIN, New VerifyTerminalPinUsingComparisonMethod_BC))
+        'Verification failure.
+        Assert.AreEqual("01", TestTran(cryptTPK + cryptPINBlock + Core.PIN.PINBlockFormat.FromPINBlockFormat(Core.PIN.PINBlockFormat.PIN_Block_Format.Diebold) + PAN.Substring(PAN.Length - 12 - 1, 12) + PIN2, New VerifyTerminalPinUsingComparisonMethod_BC))
+    End Sub
+
+    <TestMethod()> _
+    Public Sub TestVerifyInterchangePINUsingComparisonMethod()
+        Dim PAN As String = "5044070000253211"
+        Dim PINResult As String = TestTran(PAN.Substring(PAN.Length - 12 - 1, 12), New GenerateRandomPIN_JA)
+        Assert.AreEqual(PINResult.Substring(0, 2), "00")
+
+        'Randomizer based on clock, so sleep a bit to get a different PIN.
+        System.Threading.Thread.Sleep(25)
+
+        Dim PINResult2 As String = TestTran(PAN.Substring(PAN.Length - 12 - 1, 12), New GenerateRandomPIN_JA)
+        Assert.AreEqual(PINResult.Substring(0, 2), "00")
+
+        Dim PIN As String = PINResult.Substring(2)
+        Dim PIN2 As String = PINResult2.Substring(2)
+        Dim PINBlock As String = Core.PIN.PINBlockFormat.ToPINBlock(PIN, PAN, Core.PIN.PINBlockFormat.PIN_Block_Format.Diebold)
+        Dim ClearZPK As String = "99000ECE70A9FEA82AF9EA4B3B5B0495", cryptZPK As String = "U402F396F7ABEDC14976EB65959AA99B2"
+        Dim cryptPINBlock As String = Core.Cryptography.TripleDES.TripleDESEncrypt(New Core.Cryptography.HexKey(ClearZPK), PINBlock)
+
+        'Verification OK.
+        Assert.AreEqual("00", TestTran(cryptZPK + cryptPINBlock + Core.PIN.PINBlockFormat.FromPINBlockFormat(Core.PIN.PINBlockFormat.PIN_Block_Format.Diebold) + PAN.Substring(PAN.Length - 12 - 1, 12) + PIN, New VerifyInterchangePinUsingComparisonMethod_BE))
+        'Verification failure.
+        Assert.AreEqual("01", TestTran(cryptZPK + cryptPINBlock + Core.PIN.PINBlockFormat.FromPINBlockFormat(Core.PIN.PINBlockFormat.PIN_Block_Format.Diebold) + PAN.Substring(PAN.Length - 12 - 1, 12) + PIN2, New VerifyInterchangePinUsingComparisonMethod_BE))
     End Sub
 
 End Class

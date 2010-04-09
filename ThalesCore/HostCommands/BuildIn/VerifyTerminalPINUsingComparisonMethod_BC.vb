@@ -21,20 +21,20 @@ Imports ThalesSim.Core.PIN.PINBlockFormat
 Namespace HostCommands.BuildIn
 
     ''' <summary>
-    ''' Verifies a PIN using the comparison method.
+    ''' Verifies a terminal PIN using the comparison method.
     ''' </summary>
     ''' <remarks></remarks>
-    <ThalesCommandCode("BE", "BF", "", "Verify a PIN received from interchange by comparing it with a value held on the Host database")> _
-    Public Class VerifyInterchangePinUsingComparisonMethod_BE
+    <ThalesCommandCode("BC", "BD", "", "Verify a terminal PIN by comparing it with a value held on the Host database")> _
+    Public Class VerifyTerminalPinUsingComparisonMethod_BC
         Inherits AHostCommand
 
-        Const ZPK As String = "ZPK"
+        Const TPK As String = "TPK"
         Const PIN_BLOCK As String = "PIN_BLOCK"
         Const PIN_BLOCK_FORMAT As String = "PIN_BLOCK_FORMAT"
         Const ACCT_NBR As String = "ACCOUNT_NUMBER"
         Const PIN_HOST_STORAGE As String = "PIN_HOST_STORAGE"
 
-        Private _zpk As String
+        Private _tpk As String
         Private _pinBlock As String
         Private _pinBlockFormat As String
         Private _acct As String
@@ -48,7 +48,7 @@ Namespace HostCommands.BuildIn
         ''' </remarks>
         Public Sub New()
             MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(ZPK))
+            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(TPK))
             MFPC.AddMessageFieldParser(New MessageFieldParser(PIN_BLOCK, 16))
             MFPC.AddMessageFieldParser(New MessageFieldParser(PIN_BLOCK_FORMAT, 2))
             MFPC.AddMessageFieldParser(New MessageFieldParser(ACCT_NBR, 12))
@@ -64,7 +64,7 @@ Namespace HostCommands.BuildIn
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
             MFPC.ParseMessage(msg)
-            _zpk = MFPC.GetMessageFieldByName(ZPK).FieldValue()
+            _tpk = MFPC.GetMessageFieldByName(TPK).FieldValue()
             _pinBlock = MFPC.GetMessageFieldByName(PIN_BLOCK).FieldValue()
             _pinBlockFormat = MFPC.GetMessageFieldByName(PIN_BLOCK_FORMAT).FieldValue()
             _acct = MFPC.GetMessageFieldByName(ACCT_NBR).FieldValue()
@@ -82,14 +82,14 @@ Namespace HostCommands.BuildIn
             Dim mr As New MessageResponse
 
             ' Get's clear ZPK
-            Dim clearZPK As String = Utility.DecryptUnderLMK(_zpk, ZPK, MFPC.GetMessageFieldByName(ZPK).DeterminerName, LMKPairs.LMKPair.Pair06_07, "0")
-            If Utility.IsParityOK(clearZPK, Utility.ParityCheck.OddParity) = False Then
+            Dim clearTPK As String = Utility.DecryptUnderLMK(_tpk, TPK, MFPC.GetMessageFieldByName(TPK).DeterminerName, LMKPairs.LMKPair.Pair14_15, "0")
+            If Utility.IsParityOK(clearTPK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
             End If
 
             ' Get's clear Pinblock
-            Dim clearPB As String = TripleDES.TripleDESDecrypt(New HexKey(clearZPK), _pinBlock)
+            Dim clearPB As String = TripleDES.TripleDESDecrypt(New HexKey(clearTPK), _pinBlock)
             Dim PBFormat As PIN_Block_Format = PIN.PINBlockFormat.ToPINBlockFormat(_pinBlockFormat)
             If PBFormat = PIN.PINBlockFormat.PIN_Block_Format.InvalidPBCode Then
                 mr.AddElement(ErrorCodes._23_INVALID_PIN_BLOCK_FORMAT_CODE)
@@ -104,7 +104,7 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            Log.Logger.MinorInfo("Clear ZPK: " + clearZPK)
+            Log.Logger.MinorInfo("Clear TPK: " + clearTPK)
             Log.Logger.MinorInfo("Clear PIN Block: " + clearPB)
             Log.Logger.MinorInfo("Clear PIN: " + clearPIN)
 

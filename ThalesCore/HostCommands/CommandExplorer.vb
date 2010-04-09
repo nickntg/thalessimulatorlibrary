@@ -74,7 +74,10 @@ Namespace HostCommands
         Public Function GetLoadedCommands() As String
             Dim s As String = ""
             Dim en As IEnumerator(Of KeyValuePair(Of String, CommandClass)) = _commandTypes.GetEnumerator()
-            en.Reset()
+
+            'Removed unnecessary Reset() for Mono compatibility.
+            'en.Reset()
+
             While en.MoveNext
                 s = s + "Command code: " + en.Current.Value.CommandCode + vbCrLf + _
                         "Response code: " + en.Current.Value.ResponseCode + vbCrLf + _

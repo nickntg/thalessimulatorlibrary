@@ -53,7 +53,7 @@ Namespace HostCommands.BuildIn
             MFPC.AddMessageFieldParser(New MessageFieldParser(PB_FORMAT, 2))
             MFPC.AddMessageFieldParser(New MessageFieldParser(ACCT_NBR, 12))
             MFPC.AddMessageFieldParser(New MessageFieldParser(PIN, _
-                                       CType(Core.Resources.GetResource(Core.Resources.CLEAR_PIN_LENGTH), Integer) + 1))
+                                       Convert.ToInt32(Core.Resources.GetResource(Core.Resources.CLEAR_PIN_LENGTH)) + 1))
         End Sub
 
         ''' <summary>

@@ -116,10 +116,7 @@ Namespace HostCommands.BuildIn
             End Select
 
             Dim result() As Byte = hash.ComputeHash(_bytes)
-            Dim resultStr As String = ""
-            For i As Integer = 0 To result.GetUpperBound(0)
-                resultStr = resultStr + Chr(result(i))
-            Next
+            Dim resultStr As String = Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetChars(result)
 
             mr.AddElement(ErrorCodes._00_NO_ERROR)
             mr.AddElement(resultStr)

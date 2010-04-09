@@ -62,10 +62,10 @@ Namespace HostCommands.BuildIn
             If _modeFlag = "00" Then
                 mr.AddElement("3")
                 mr.AddElement("1")
-                mr.AddElement(CType(Core.Resources.GetResource(Core.Resources.MAX_CONS), Integer).ToString())
-                mr.AddElement(CType(Core.Resources.GetResource(Core.Resources.FIRMWARE_NUMBER), String))
+                mr.AddElement(Convert.ToInt32(Core.Resources.GetResource(Core.Resources.MAX_CONS)).ToString())
+                mr.AddElement(Convert.ToString(Core.Resources.GetResource(Core.Resources.FIRMWARE_NUMBER)))
                 mr.AddElement("0")
-                mr.AddElement(CType(Core.Resources.GetResource(Core.Resources.DSP_FIRMWARE_NUMBER), String))
+                mr.AddElement(Convert.ToString(Core.Resources.GetResource(Core.Resources.DSP_FIRMWARE_NUMBER)))
             End If
             Return mr
         End Function

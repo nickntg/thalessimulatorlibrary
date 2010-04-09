@@ -262,7 +262,7 @@ Namespace ConsoleCommands
             Dim requirement As KeyTypeTable.AuthorizedStateRequirement = KeyTypeTable.GetAuthorizedStateRequirement(KeyTypeTable.KeyFunction.Generate, Pair, var)
             If requirement = KeyTypeTable.AuthorizedStateRequirement.NotAllowed Then
                 Throw New Exceptions.XFunctionNotPermitted("FUNCTION NOT PERMITTED")
-            ElseIf requirement = KeyTypeTable.AuthorizedStateRequirement.NeedsAuthorizedState AndAlso CType(Resources.GetResource(Resources.AUTHORIZED_STATE), Boolean) = False Then
+            ElseIf requirement = KeyTypeTable.AuthorizedStateRequirement.NeedsAuthorizedState AndAlso Convert.ToBoolean(Resources.GetResource(Resources.AUTHORIZED_STATE)) = False Then
                 Throw New Exceptions.XNeedsAuthorizedState("NOT AUTHORIZED")
             End If
 
