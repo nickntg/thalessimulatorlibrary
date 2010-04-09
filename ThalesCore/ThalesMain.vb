@@ -171,9 +171,10 @@ Public Class ThalesMain
     Private Sub StartCrypto(ByVal XMLParameterFile As String)
         Logger.LogInterface = Me
 
-        Try
-            ThalesSim.Core.Resources.CleanUp()
+        ThalesSim.Core.Resources.CleanUp()
 
+        Try
+            'Try to load from the configuration file.
             Logger.MajorDebug("Reading XML configuration...")
 
             Dim reader As New Xml.XmlTextReader(XMLParameterFile)
@@ -185,39 +186,38 @@ Public Class ThalesMain
             Dim doc As New Xml.XmlDocument
             doc.Load(reader)
 
-            port = CType(GetParameterValue(doc, "Port"), Integer)
-            consolePort = CType(GetParameterValue(doc, "ConsolePort"), Integer)
-            maxCons = CType(GetParameterValue(doc, "MaxConnections"), Integer)
-            LMKFile = CType(GetParameterValue(doc, "LMKStorageFile"), String)
-            VBsources = CType(GetParameterValue(doc, "VBSourceDirectory"), String)
-            Logger.CurrentLogLevel = CType(GetParameterValue(doc, "LogLevel"), Logger.LogLevel)
-            CheckLMKParity = CType(GetParameterValue(doc, "CheckLMKParity"), Boolean)
+            port = Convert.ToInt32(GetParameterValue(doc, "Port"))
+            consolePort = Convert.ToInt32(GetParameterValue(doc, "ConsolePort"))
+            maxCons = Convert.ToInt32(GetParameterValue(doc, "MaxConnections"))
+            LMKFile = Convert.ToString(GetParameterValue(doc, "LMKStorageFile"))
+            VBsources = Convert.ToString(GetParameterValue(doc, "VBSourceDirectory"))
+            Logger.CurrentLogLevel = DirectCast([Enum].Parse(GetType(Logger.LogLevel), Convert.ToString(GetParameterValue(doc, "LogLevel")), True), Logger.LogLevel)
+            CheckLMKParity = Convert.ToBoolean(GetParameterValue(doc, "CheckLMKParity"))
 
-            CompileAndLoad(VBsources)
-
-            Resources.AddResource(Resources.CONSOLE_PORT, consolePort)
-            Resources.AddResource(Resources.WELL_KNOWN_PORT, port)
-            Resources.AddResource(Resources.FIRMWARE_NUMBER, CType(GetParameterValue(doc, "FirmwareNumber"), String))
-            Resources.AddResource(Resources.DSP_FIRMWARE_NUMBER, CType(GetParameterValue(doc, "DSPFirmwareNumber"), String))
-            Resources.AddResource(Resources.MAX_CONS, maxCons)
-            Resources.AddResource(Resources.AUTHORIZED_STATE, CType(GetParameterValue(doc, "StartInAuthorizedState"), Boolean))
-            Resources.AddResource(Resources.CLEAR_PIN_LENGTH, CType(GetParameterValue(doc, "ClearPINLength"), Integer))
-
-            If LMKFile = "" Then
-                Logger.MajorInfo("No LMK storage file specified, creating new keys")
-                ThalesSim.Core.Cryptography.LMK.LMKStorage.LMKStorageFile = "LMKSTORAGE.TXT"
-                ThalesSim.Core.Cryptography.LMK.LMKStorage.GenerateTestLMKs()
-            Else
-                Logger.MajorDebug("Reading LMK storage")
-                ThalesSim.Core.Cryptography.LMK.LMKStorage.ReadLMKs(LMKFile)
-            End If
-
-            Resources.AddResource(Core.Resources.LMK_CHECK_VALUE, Cryptography.LMK.LMKStorage.GenerateLMKCheckValue())
+            StartUpCore(Convert.ToString(GetParameterValue(doc, "FirmwareNumber")), _
+                        Convert.ToString(GetParameterValue(doc, "DSPFirmwareNumber")), _
+                        Convert.ToBoolean(GetParameterValue(doc, "StartInAuthorizedState")), _
+                        Convert.ToInt32(GetParameterValue(doc, "ClearPINLength")))
 
             reader.Close()
             reader = Nothing
         Catch ex As Exception
-            Throw New Exceptions.XInvalidConfiguration(ex.Message())
+            Logger.MajorError("Error loading the configuration file")
+            Logger.MajorError(ex.ToString)
+            Logger.MajorDebug("Using default configuration...")
+
+            port = 9998
+            consolePort = 9997
+            maxCons = 5
+            LMKFile = ""
+            VBsources = "."
+            Logger.CurrentLogLevel = Logger.LogLevel.Debug
+            CheckLMKParity = True
+
+            StartUpCore("0007-E000", _
+                        "0001", _
+                        True, _
+                        4)
         End Try
 
         'Parse the loaded host commands
@@ -229,6 +229,31 @@ Public Class ThalesMain
         Logger.MajorDebug("Searching for console command implementors...")
         CCE = New ConsoleCommands.ConsoleCommandExplorer
         Logger.MinorInfo("Loaded console commands dump " + vbCrLf + CCE.GetLoadedCommands())
+    End Sub
+
+    Private Sub StartUpCore(ByVal firmwareNumber As String, _
+                            ByVal dspFirmwareNumber As String, ByVal startInAuthorizedState As Boolean, _
+                            ByVal clearPINLength As Integer)
+        CompileAndLoad(VBSources)
+
+        Resources.AddResource(Resources.CONSOLE_PORT, consolePort)
+        Resources.AddResource(Resources.WELL_KNOWN_PORT, port)
+        Resources.AddResource(Resources.FIRMWARE_NUMBER, firmwareNumber)
+        Resources.AddResource(Resources.DSP_FIRMWARE_NUMBER, dspFirmwareNumber)
+        Resources.AddResource(Resources.MAX_CONS, maxCons)
+        Resources.AddResource(Resources.AUTHORIZED_STATE, startInAuthorizedState)
+        Resources.AddResource(Resources.CLEAR_PIN_LENGTH, clearPINLength)
+
+        If LMKFile = "" Then
+            Logger.MajorInfo("No LMK storage file specified, creating new keys")
+            ThalesSim.Core.Cryptography.LMK.LMKStorage.LMKStorageFile = "LMKSTORAGE.TXT"
+            ThalesSim.Core.Cryptography.LMK.LMKStorage.GenerateTestLMKs()
+        Else
+            Logger.MajorDebug("Reading LMK storage")
+            ThalesSim.Core.Cryptography.LMK.LMKStorage.ReadLMKs(LMKFile)
+        End If
+
+        Resources.AddResource(Core.Resources.LMK_CHECK_VALUE, Cryptography.LMK.LMKStorage.GenerateLMKCheckValue())
     End Sub
 
     Private Sub CompileAndLoad(ByVal vbDir As String)

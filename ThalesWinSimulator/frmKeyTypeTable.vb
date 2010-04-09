@@ -31,7 +31,7 @@ Public Class frmKeyTypeTable
             If Not ctrl.Tag Is Nothing Then
                 Dim v As String = "", lmk As Core.LMKPairs.LMKPair
                 Core.KeyTypeTable.ParseKeyTypeCode(Convert.ToString(ctrl.Tag), lmk, v)
-                Dim key As String = ThalesSim.Core.Cryptography.LMK.LMKStorage.LMKVariant(lmk, CInt(v))
+                Dim key As String = ThalesSim.Core.Cryptography.LMK.LMKStorage.LMKVariant(lmk, Convert.ToInt32(v))
                 ctrl.Text = ThalesSim.Core.Cryptography.TripleDES.TripleDESEncrypt(New ThalesSim.Core.Cryptography.HexKey(key), txtClearKey.Text)
             End If
         Next

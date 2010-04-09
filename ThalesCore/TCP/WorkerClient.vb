@@ -221,8 +221,8 @@ Namespace TCP
 
             'Fixed bug where this was behaving completely wrong.
             Buffer = System.Text.ASCIIEncoding.ASCII.GetBytes("  " + sendData)
-            Buffer(0) = CByte(sendData.Length \ 256)
-            Buffer(1) = CByte(sendData.Length Mod 256)
+            Buffer(0) = Convert.ToByte(sendData.Length \ 256)
+            Buffer(1) = Convert.ToByte(sendData.Length Mod 256)
 
             SyncLock MyClient.GetStream
                 MyClient.GetStream.BeginWrite(Buffer, 0, Buffer.Length, _
@@ -240,8 +240,8 @@ Namespace TCP
 
             Dim b() As Byte
             ReDim b(buffer.GetLength(0) + 2 - 1)
-            b(0) = CByte(buffer.GetLength(0) \ 256)
-            b(1) = CByte(buffer.GetLength(0) Mod 256)
+            b(0) = Convert.ToByte(buffer.GetLength(0) \ 256)
+            b(1) = Convert.ToByte(buffer.GetLength(0) Mod 256)
             Array.Copy(buffer, 0, b, 2, buffer.GetLength(0))
 
             SyncLock MyClient.GetStream

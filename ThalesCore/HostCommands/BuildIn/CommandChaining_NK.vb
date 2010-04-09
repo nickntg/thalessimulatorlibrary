@@ -33,20 +33,32 @@ Namespace HostCommands.BuildIn
         Const COMMAND As String = "COMMAND_"
 
         ''' <summary>
+        ''' Error code 52.
+        ''' </summary>
+        ''' <remarks>Invalid Number of Commands field.</remarks>
+        Public Const _52_INVALID_NUMBER_OF_COMMANDS As String = "52"
+
+        ''' <summary>
+        ''' Error code 51 
+        ''' </summary>
+        ''' <remarks>Invalid message header</remarks>
+        Public Const _51_INVALID_MESSAGE_HEADER As String = "51"
+
+        ''' <summary>
         ''' NK Has Headers field
         ''' </summary>
         ''' <remarks></remarks>
-        Private _hasHeaders As String
+        Private _hasHeaders As Boolean
 
         ''' <summary>
         ''' NK Number of commands field
         ''' </summary>
         ''' <remarks></remarks>
         Private _numberOfCommands As String
-        Private _iNumberOfCommands As Integer
+        Private _errorCode As String = Nothing
         Private _commandDefs(99 * 2) As MessageFieldParser
         Private _commands As List(Of AHostCommand)
-        Private _responses As List(Of MessageResponse)
+        Private _responses As List(Of String)
 
         ''' <summary>
         ''' Constructor.
@@ -56,7 +68,7 @@ Namespace HostCommands.BuildIn
         ''' </remarks>
         Public Sub New()
             _commands = New List(Of AHostCommand)
-            _responses = New List(Of MessageResponse)
+            _responses = New List(Of String)
             MFPC = New MessageFieldParserCollection
             MFPC.AddMessageFieldParser(New MessageFieldParser(HAS_HEADERS, 1))
             MFPC.AddMessageFieldParser(New MessageFieldParser(NUMBER_OF_COMMANDS, 2))
@@ -79,60 +91,87 @@ Namespace HostCommands.BuildIn
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
 
             Dim CE As CommandExplorer = New HostCommands.CommandExplorer
+            Dim _iNumberOfCommands As Integer = 0
 
             MFPC.ParseMessage(msg)
-            _hasHeaders = MFPC.GetMessageFieldByName(HAS_HEADERS).FieldValue()
-            _numberOfCommands = MFPC.GetMessageFieldByName(NUMBER_OF_COMMANDS).FieldValue()
 
-            Dim MFPCSubCommands As New ThalesSim.Core.Message.MessageFieldParserCollection
-            MFPCSubCommands = GetMessageFieldParserCollection(_hasHeaders = "1")
-
+            'Parse Has Headers field, sending error 51 if is not valid
             Try
-                _iNumberOfCommands = Convert.ToInt32(_numberOfCommands)
-                If _iNumberOfCommands < 1 OrElse _iNumberOfCommands > 99 Then
-                    _iNumberOfCommands = -1
+                Dim sHasHeaders As String = MFPC.GetMessageFieldByName(HAS_HEADERS).FieldValue()
+                If sHasHeaders <> "0" And sHasHeaders <> "1" Then
+                    _errorCode = _51_INVALID_MESSAGE_HEADER
+                    Exit Sub
                 Else
-                    For i As Integer = 1 To _iNumberOfCommands * 2 Step 2
-                        Try
-                            'Parsing the command length
-                            _commandDefs(i - 1).ParseField(msg)
-                            Dim commandLength As Integer = Convert.ToInt32(_commandDefs(i - 1).FieldValue)
-                            'Sets the command length dynamicaly
-                            _commandDefs(i).Length = commandLength
-                            _commandDefs(i).ParseField(msg)
-
-                            Dim parsedCommand As AHostCommand = ParseMessage(CE, MFPCSubCommands, _commandDefs(i).FieldValue)
-                            If parsedCommand IsNot Nothing Then
-                                _commands.Add(parsedCommand)
-                                Dim response As MessageResponse = GetMessageResponse(CE, MFPCSubCommands, parsedCommand)
-
-                                If response IsNot Nothing Then
-                                    _responses.Add(response)
-                                Else
-                                    _iNumberOfCommands = -2
-                                    Exit Sub
-                                End If
-
-
-                            Else
-                                _iNumberOfCommands = -2
-                                Exit Sub
-                            End If
-                        Catch ex As Exceptions.XShortMessage
-                            _iNumberOfCommands = -2
-                            Exit Sub
-                        Catch ex As Exceptions.XNoDeterminerMatched
-                            _iNumberOfCommands = -2
-                            Exit Sub
-                        Catch ex As Exception
-                            _iNumberOfCommands = -2
-                            Exit Sub
-                        End Try
-                    Next
+                    _hasHeaders = MFPC.GetMessageFieldByName(HAS_HEADERS).FieldValue() = "1"
                 End If
             Catch ex As Exception
-                _iNumberOfCommands = -1
+                _errorCode = _51_INVALID_MESSAGE_HEADER
+                Exit Sub
             End Try
+
+            'Parse Number of commands field, sending error 52 if is not valid
+            'Number of commands field must be between 1 and 99.
+            Try
+                _numberOfCommands = MFPC.GetMessageFieldByName(NUMBER_OF_COMMANDS).FieldValue()
+                _iNumberOfCommands = Convert.ToInt32(_numberOfCommands)
+
+                If _iNumberOfCommands < 1 OrElse _iNumberOfCommands > 99 Then
+                    _errorCode = _52_INVALID_NUMBER_OF_COMMANDS
+                    Exit Sub
+                End If
+            Catch ex As Exception
+                _errorCode = _52_INVALID_NUMBER_OF_COMMANDS
+                Exit Sub
+            End Try
+
+            Dim MFPCSubCommands As New ThalesSim.Core.Message.MessageFieldParserCollection
+            MFPCSubCommands = GetMessageFieldParserCollection(_hasHeaders)
+
+            For i As Integer = 1 To _iNumberOfCommands * 2 Step 2
+                Try
+                    'Parsing the command length
+                    _commandDefs(i - 1).ParseField(msg)
+                    Dim commandLength As Integer = Convert.ToInt32(_commandDefs(i - 1).FieldValue)
+                    'Sets the command length dynamicaly
+                    _commandDefs(i).Length = commandLength
+                    _commandDefs(i).ParseField(msg)
+
+                    Dim parsedCommand As AHostCommand = ParseMessage(CE, MFPCSubCommands, _commandDefs(i).FieldValue)
+                    If parsedCommand IsNot Nothing Then
+                        _commands.Add(parsedCommand)
+                        Dim response As MessageResponse = GetMessageResponse(CE, MFPCSubCommands, parsedCommand)
+
+                        If response IsNot Nothing Then
+                            ' Saves the response, setting length and subcommand
+                            Dim subcommandResponse As String = response.MessageData
+                            Dim subcommandLength As String = String.Format("{0:0000}", subcommandResponse.Length)
+                            _responses.Add(subcommandLength + subcommandResponse)
+                        Else
+                            _errorCode = ErrorCodes._15_INVALID_INPUT_DATA
+                            Exit Sub
+                        End If
+
+
+                    Else
+                        _errorCode = ErrorCodes._15_INVALID_INPUT_DATA
+                        Exit Sub
+                    End If
+                Catch ex As Exceptions.XShortMessage
+                    _errorCode = ErrorCodes._15_INVALID_INPUT_DATA
+                    Exit Sub
+                Catch ex As Exceptions.XNoDeterminerMatched
+                    _errorCode = ErrorCodes._15_INVALID_INPUT_DATA
+                    Exit Sub
+                Catch ex As Exception
+                    _errorCode = ErrorCodes._15_INVALID_INPUT_DATA
+                    Exit Sub
+                End Try
+            Next
+
+            'If has more bytes left on command
+            If msg.CharsLeft > 0 Then
+                _errorCode = ErrorCodes._15_INVALID_INPUT_DATA
+            End If
 
         End Sub
 
@@ -142,7 +181,7 @@ Namespace HostCommands.BuildIn
             Dim commandCode As String = MFPC.GetMessageFieldByName(COMMAND_CODE).FieldValue
             Dim CC As ThalesSim.Core.HostCommands.CommandClass = CE.GetLoadedCommand(commandCode)
             response.AddElementFront(CC.ResponseCode)
-            If _hasHeaders = "1" Then
+            If _hasHeaders Then
                 response.AddElementFront(MFPC.GetMessageFieldByName(HEADER).FieldValue)
             End If
             Return response
@@ -159,25 +198,20 @@ Namespace HostCommands.BuildIn
 
             Dim mr As New MessageResponse
 
-            If _iNumberOfCommands = -1 Then
-                mr.AddElement(ErrorCodes._03_INVALID_NUMBER_OF_COMPONENTS)
-                Return mr
-            ElseIf _iNumberOfCommands = -2 Then
-                mr.AddElement(ErrorCodes._15_INVALID_INPUT_DATA)
+            If _errorCode IsNot Nothing Then
+                mr.AddElement(_errorCode)
                 Return mr
             End If
 
             ' Includes NK Error Code
             mr.AddElement(ErrorCodes._00_NO_ERROR)
 
+            ' Includes NK Number of commands
+            mr.AddElement(_numberOfCommands)
+
             'Includes Command Responses
             For index As Integer = 0 To _responses.Count - 1
-                Dim subcommandResponse As String = _responses(index).MessageData
-                'Includes subcommand response length
-                Dim subcommandLength As String = String.Format("{0:0000}", subcommandResponse.Length)
-                mr.AddElement(subcommandLength)
-                'Includes subcommand response
-                mr.AddElement(subcommandResponse)
+                mr.AddElement(_responses(index))
             Next
 
             Return mr

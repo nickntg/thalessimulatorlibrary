@@ -58,7 +58,7 @@ Namespace HostCommands.BuildIn
         ''' </remarks>
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
-            If CType(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE), Boolean) = True Then
+            If Convert.ToBoolean(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE)) = True Then
                 Log.Logger.MajorInfo("Exiting from AUTHORIZED state")
             Else
                 Log.Logger.MajorInfo("Already out of the AUTHORIZED state")

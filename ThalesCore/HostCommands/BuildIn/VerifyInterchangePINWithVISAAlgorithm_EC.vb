@@ -118,7 +118,7 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            If IsNumeric(_pvki) = False Then
+            If Integer.TryParse(_pvki, 16) = False Then
                 mr.AddElement(ErrorCodes._15_INVALID_INPUT_DATA)
                 Return mr
             End If

@@ -72,12 +72,12 @@ Public Class frmMain
 
     Private Sub cmdChangeAuth_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdChangeAuth.Click
         Resources.UpdateResource(Resources.AUTHORIZED_STATE, _
-                                 Not CType(Resources.GetResource(Resources.AUTHORIZED_STATE), Boolean))
+                                 Not Convert.ToBoolean(Resources.GetResource(Resources.AUTHORIZED_STATE)))
         UpdateAuthMode()
     End Sub
 
     Private Sub UpdateAuthMode()
-        Dim authMode As Boolean = CType(Resources.GetResource(Resources.AUTHORIZED_STATE), Boolean)
+        Dim authMode As Boolean = Convert.ToBoolean(Resources.GetResource(Resources.AUTHORIZED_STATE))
         If authMode Then
             sb.Panels(0).Text = "In authorized mode"
         Else

@@ -7,7 +7,7 @@
             Debug.WriteLine("Starting Thales Simulator...")
             Dim configurationAppSettings As System.Configuration.AppSettingsReader = New System.Configuration.AppSettingsReader
             o = New ThalesSim.Core.ThalesMain
-            o.StartUp(CType(configurationAppSettings.GetValue("ParameterFile", GetType(String)), String))
+            o.StartUp(Convert.ToString(configurationAppSettings.GetValue("ParameterFile", GetType(String))))
             Debug.WriteLine("Simulator started.")
         Catch ex As Exception
             o.ShutDown()

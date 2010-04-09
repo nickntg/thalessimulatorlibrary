@@ -184,7 +184,7 @@ Namespace HostCommands
             If requirement = KeyTypeTable.AuthorizedStateRequirement.NotAllowed Then
                 MR.AddElement(ErrorCodes._29_FUNCTION_NOT_PERMITTED)
                 Return False
-            ElseIf requirement = KeyTypeTable.AuthorizedStateRequirement.NeedsAuthorizedState AndAlso CType(Resources.GetResource(Resources.AUTHORIZED_STATE), Boolean) = False Then
+            ElseIf requirement = KeyTypeTable.AuthorizedStateRequirement.NeedsAuthorizedState AndAlso Convert.ToBoolean(Resources.GetResource(Resources.AUTHORIZED_STATE)) = False Then
                 MR.AddElement(ErrorCodes._17_HSM_IS_NOT_IN_THE_AUTHORIZED_STATE)
                 Return False
             Else
@@ -401,14 +401,14 @@ Namespace HostCommands
             While PVV.Length < 4
                 i = 0
                 While PVV.Length < 4 AndAlso i < stage2.Length
-                    If IsNumeric(stage2.Substring(i, 1)) Then PVV += stage2.Substring(i, 1)
+                    If Char.IsDigit(stage2.Chars(i)) Then PVV += stage2.Substring(i, 1)
                     i += 1
                 End While
                 If PVV.Length < 4 Then
                     For j As Integer = 0 To stage2.Length - 1
                         Dim newChar As String = " "
-                        If IsNumeric(stage2.Substring(j, 1)) = False Then
-                            newChar = Hex$(CLng("&H" + stage2.Substring(j, 1)) - 10)
+                        If Char.IsDigit(stage2.Chars(j)) = False Then
+                            newChar = (Convert.ToInt32(stage2.Substring(j, 1), 16) - 10).ToString("X")
                         End If
                         stage2 = stage2.Remove(j, 1)
                         stage2 = stage2.Insert(j, newChar)
@@ -441,7 +441,7 @@ Namespace HostCommands
 
             Dim CVV As String = "", i As Integer = 0
             While CVV.Length < 3
-                If IsNumeric(result.Substring(i, 1)) Then
+                If Char.IsDigit(result.Chars(i)) Then
                     CVV += result.Substring(i, 1)
                 End If
                 i += 1
@@ -477,7 +477,7 @@ Namespace HostCommands
 
             While dataStr.Length <> 16
                 If curIndex <= b.GetUpperBound(0) Then
-                    dataStr = dataStr + Hex$(b(curIndex)).PadLeft(2, "0"c)
+                    dataStr = dataStr + b(curIndex).ToString("X2")
                     curIndex += 1
                 Else
                     dataStr = dataStr.PadRight(16, "0"c)

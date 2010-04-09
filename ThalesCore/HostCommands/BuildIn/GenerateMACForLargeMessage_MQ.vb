@@ -103,7 +103,7 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            Dim msgLen As Integer = CInt("&H" + _msgLen)
+            Dim msgLen As Integer = Convert.ToInt32(_msgLen, 16)
             If msgLen <> _data.GetLength(0) Then
                 mr.AddElement(ErrorCodes._80_DATA_LENGTH_ERROR)
                 Return mr

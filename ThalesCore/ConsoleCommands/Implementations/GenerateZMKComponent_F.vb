@@ -46,7 +46,7 @@ Namespace ConsoleCommands
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Overrides Function ProcessMessage() As String
-            If CType(Resources.GetResource(Resources.AUTHORIZED_STATE), Boolean) = False Then
+            If Convert.ToBoolean(Resources.GetResource(Resources.AUTHORIZED_STATE)) = False Then
                 Return "NOT AUTHORIZED"
             End If
 

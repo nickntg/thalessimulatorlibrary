@@ -185,7 +185,7 @@ Namespace HostCommands
             Dim mr As New MessageResponse
 
             If NeedsAuthorizedMode = True Then
-                If CType(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE), Boolean) = False Then
+                If Convert.ToBoolean(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE)) = False Then
                     Log.Logger.MajorInfo("Can't run command while not in the AUTHORIZED state")
                     mr.AddElement(ErrorCodes._17_HSM_IS_NOT_IN_THE_AUTHORIZED_STATE)
                     Return mr

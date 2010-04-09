@@ -31,7 +31,7 @@ Namespace ConsoleCommands.Validators
         ''' throws a <see cref="Exceptions.XInvalidNumberOfComponents"/> exception.</remarks>
         Public Sub ValidateConsoleMessage(ByVal consoleMsg As String) Implements IConsoleDataValidator.ValidateConsoleMessage
             Try
-                Dim nbr As Integer = CInt(consoleMsg)
+                Dim nbr As Integer = Convert.ToInt32(consoleMsg)
                 If nbr < 2 OrElse nbr > 9 Then
                     Throw New Exceptions.XInvalidNumberOfComponents("INVALID NUMBER OF COMPONENTS")
                 End If
