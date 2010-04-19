@@ -194,6 +194,15 @@ Namespace HostCommands
         End Function
 
         ''' <summary>
+        ''' Determines whether the simulator is in the authorized state.
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Protected Function IsInAuthorizedState() As Boolean
+            Return Convert.ToBoolean(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE))
+        End Function
+
+        ''' <summary>
         ''' Generates a parser for multi-format keys.
         ''' </summary>
         ''' <remarks>

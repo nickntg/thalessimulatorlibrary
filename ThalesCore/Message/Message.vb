@@ -118,9 +118,7 @@ Namespace Message
         Public Function GetRemainingBytes() As Byte()
             Dim b() As Byte
             ReDim b(_data.Length - _curIndex - 1)
-            For i As Integer = _curIndex To _data.Length - 1
-                b(i - _curIndex) = _bData(i)
-            Next
+            Array.Copy(_bData, _curIndex, b, 0, b.GetLength(0))
             Return b
         End Function
 

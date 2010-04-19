@@ -24,7 +24,7 @@ Namespace Message
     ''' </remarks>
     Public Class MessageFieldParserCollection
 
-        Private _AL As New ArrayList
+        Private _AL As New List(Of MessageFieldParser)
 
         Public Sub New()
         End Sub
@@ -56,7 +56,7 @@ Namespace Message
         ''' Returns a <see cref="MessageFieldParser"/> object based on its index.
         ''' </remarks>
         Public Function GetMessageFieldByIndex(ByVal index As Integer) As MessageFieldParser
-            Return CType(_AL(index), MessageFieldParser)
+            Return _AL(index)
         End Function
 
         ''' <summary>
@@ -67,8 +67,8 @@ Namespace Message
         ''' </remarks>
         Public Function GetMessageFieldByName(ByVal fieldName As String) As MessageFieldParser
             For i As Integer = 0 To _AL.Count - 1
-                If CType(_AL.Item(i), MessageFieldParser).FieldName = fieldName Then
-                    Return CType(_AL.Item(i), MessageFieldParser)
+                If _AL(i).FieldName = fieldName Then
+                    Return _AL(i)
                 End If
             Next
             Return Nothing
@@ -85,15 +85,13 @@ Namespace Message
         Public Sub ParseMessage(ByVal msg As Message)
 
             For i As Integer = 0 To _AL.Count - 1
-                If CType(_AL.Item(i), MessageFieldParser).DependentField = "" Then
-                    CType(_AL.Item(i), MessageFieldParser).ParseField(msg)
+                If _AL.Item(i).DependentField = "" Then
+                    _AL.Item(i).ParseField(msg)
                 Else
                     For j As Integer = 0 To i - 1
-                        If CType(_AL.Item(j), MessageFieldParser).FieldName = _
-                           CType(_AL.Item(i), MessageFieldParser).DependentField Then
-                            If CType(_AL.Item(j), MessageFieldParser).FieldValue = _
-                               CType(_AL.Item(i), MessageFieldParser).DependentValue Then
-                                CType(_AL.Item(i), MessageFieldParser).ParseField(msg)
+                        If _AL.Item(j).FieldName = _AL.Item(i).DependentField Then
+                            If _AL.Item(j).FieldValue = _AL.Item(i).DependentValue Then
+                                _AL.Item(i).ParseField(msg)
                             End If
                             Exit For
                         End If
@@ -107,21 +105,19 @@ Namespace Message
             End If
 
             DumpFields()
-
         End Sub
 
         Private Sub DumpFields()
 
             For i As Integer = 0 To _AL.Count - 1
-                Dim o As MessageFieldParser = CType(_AL.Item(i), MessageFieldParser)
-                Select Case o.WhatFieldType
+                Select Case _AL(i).WhatFieldType
                     Case MessageFieldParser.FieldType.FixedLengthField
-                        Debug.WriteLine("Field " + o.FieldName + ", value " + o.FieldValue)
+                        Debug.WriteLine("Field " + _AL(i).FieldName + ", value " + _AL(i).FieldValue)
                     Case MessageFieldParser.FieldType.FixedLengthWithHeader
-                        Debug.WriteLine("Field " + o.FieldName + ", value=" + o.FieldValue + ", header=" + o.HeaderValue)
+                        Debug.WriteLine("Field " + _AL(i).FieldName + ", value=" + _AL(i).FieldValue + ", header=" + _AL(i).HeaderValue)
                     Case MessageFieldParser.FieldType.VariableLengthWithHeader
-                        Debug.WriteLine("Field " + o.FieldName + ", value=" + o.FieldValue + ", header=" + o.HeaderValue)
-                        Debug.WriteLine("Determiner used " + o.DeterminerName)
+                        Debug.WriteLine("Field " + _AL(i).FieldName + ", value=" + _AL(i).FieldValue + ", header=" + _AL(i).HeaderValue)
+                        Debug.WriteLine("Determiner used " + _AL(i).DeterminerName)
                 End Select
             Next
         End Sub

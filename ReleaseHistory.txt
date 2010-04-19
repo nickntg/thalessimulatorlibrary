@@ -14,6 +14,8 @@ XXXX/XX/XX: Version 0.8.6 beta released.
     - BC (Verify a terminal PIN using the comparison method).
     - BE (Verify an interchange PIN using the comparison method).
     - NK (Command chaining).
+* Updated some message handling classes to use generics instead of array
+  lists.
 * Tentatively added support for running under Mono 2.6.3. At this stage,
   a build script under Mono is not provided. Instead, the complete solution
   must be build under Windows using VS.2008 and resulting binaries should

@@ -73,7 +73,7 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            If Convert.ToBoolean(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE)) = False Then
+            If Not IsInAuthorizedState() Then
                 mr.AddElement(ErrorCodes._17_HSM_IS_NOT_IN_THE_AUTHORIZED_STATE)
                 Return mr
             End If

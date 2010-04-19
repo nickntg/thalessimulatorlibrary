@@ -158,7 +158,7 @@ Namespace HostCommands.BuildIn
                 mr.AddElement(ErrorCodes._00_NO_ERROR)
             Else
                 mr.AddElement(ErrorCodes._01_VERIFICATION_FAILURE)
-                If Convert.ToBoolean(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE)) = True Then
+                If IsInAuthorizedState() Then
                     mr.AddElement(calcDynamicCVV)
                 End If
             End If

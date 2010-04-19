@@ -80,7 +80,7 @@ Namespace HostCommands.BuildIn
 
             Dim ks As KeySchemeTable.KeyScheme
 
-            If Convert.ToBoolean(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE)) = False Then
+            If Not IsInAuthorizedState() Then
                 Log.Logger.MajorInfo("Can't print clear key while not in the AUTHORIZED state")
                 mr.AddElement(ErrorCodes._17_HSM_IS_NOT_IN_THE_AUTHORIZED_STATE)
                 Return mr

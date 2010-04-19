@@ -93,7 +93,7 @@ Namespace HostCommands
 
             Dim mr As New MessageResponse
             If NeedsAuthorizedState = True Then
-                If Convert.ToBoolean(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE)) = True Then
+                If IsInAuthorizedState() Then
                     mr.AddElement(ErrorCodes._00_NO_ERROR)
                 Else
                     Result = "Failed"
