@@ -52,7 +52,7 @@ Namespace Message
     ''' </remarks>
     Public Class MessageFieldDeterminerCollection
 
-        Private _AL As New ArrayList
+        Private _AL As New List(Of MessageFieldDeterminer)
 
         ''' <summary>
         ''' Returns a <see cref="MessageFieldDeterminer"/> object by its index.
@@ -61,7 +61,7 @@ Namespace Message
         ''' Returns a field determiner by its index.
         ''' </remarks>
         Public Function GetFieldDeterminer(ByVal index As Integer) As MessageFieldDeterminer
-            Return CType(_AL(index), MessageFieldDeterminer)
+            Return _AL(index)
         End Function
 
         ''' <summary>
@@ -94,8 +94,8 @@ Namespace Message
         ''' </remarks>
         Public Function FindDeterminerThatMatches(ByVal data As String) As MessageFieldDeterminer
             For i As Integer = 0 To _AL.Count - 1
-                If CType(_AL.Item(i), MessageFieldDeterminer).FieldMatches(data) Then
-                    Return CType(_AL.Item(i), MessageFieldDeterminer)
+                If _AL(i).FieldMatches(data) Then
+                    Return _AL(i)
                 End If
             Next
             Return Nothing
