@@ -21,7 +21,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_615C323E955CFC9A080C85D33B0304B9"
+        "MsmKey" = "8:_588A9209747FEB582B51D07233F107B0"
         "OwnerKey" = "8:_E913BF4207E248188D5EFBF63BCFBD39"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -40,7 +40,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_615C323E955CFC9A080C85D33B0304B9"
+        "OwnerKey" = "8:_588A9209747FEB582B51D07233F107B0"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -224,14 +224,14 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_615C323E955CFC9A080C85D33B0304B9"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_588A9209747FEB582B51D07233F107B0"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ThalesCore, Version=0.8.4.0, Culture=neutral, PublicKeyToken=3b1da66c080a0b02, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ThalesCore, Version=0.8.5.0, Culture=neutral, PublicKeyToken=3b1da66c080a0b02, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_615C323E955CFC9A080C85D33B0304B9"
+                    "_588A9209747FEB582B51D07233F107B0"
                     {
                     "Name" = "8:ThalesCore.dll"
                     "Attributes" = "3:512"
@@ -311,14 +311,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Thales Simulator Service"
-        "ProductCode" = "8:{D0EAAB43-9053-4DDD-B50C-5E633A102974}"
-        "PackageCode" = "8:{162B9C8A-F448-41DA-ADEC-6849D1B35906}"
+        "ProductCode" = "8:{2F2FD188-ADA2-4ABC-8CC6-A79BA928C85E}"
+        "PackageCode" = "8:{5F8E17BD-D57E-43C2-9361-F13DE8DD5631}"
         "UpgradeCode" = "8:{6A37A5EE-00E2-4006-9E93-C8DFD2E0CE14}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.8.5"
+        "ProductVersion" = "8:0.8.6"
         "Manufacturer" = "8:NTG"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

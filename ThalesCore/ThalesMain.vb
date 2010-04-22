@@ -173,12 +173,37 @@ Public Class ThalesMain
 
         ThalesSim.Core.Resources.CleanUp()
 
+        If Not ReadXMLFile(XMLParameterFile) Then
+            Logger.MajorError("Trying to load key/value file for Mono...")
+            If Not TryToReadValuePairFile(XMLParameterFile) Then
+                Logger.MajorDebug("Using default configuration...")
+                SetDefaultConfiguration()
+            End If
+        End If
+
+        'Parse the loaded host commands
+        Logger.MajorDebug("Searching for host command implementors...")
+        CE = New HostCommands.CommandExplorer
+        Logger.MinorInfo("Loaded commands dump" + vbCrLf + CE.GetLoadedCommands())
+
+        'Parse the loaded console commands
+        Logger.MajorDebug("Searching for console command implementors...")
+        CCE = New ConsoleCommands.ConsoleCommandExplorer
+        Logger.MinorInfo("Loaded console commands dump " + vbCrLf + CCE.GetLoadedCommands())
+    End Sub
+
+    ''' <summary>
+    ''' Attempts to read an XML file with the parameters and start the crypto.
+    ''' </summary>
+    ''' <param name="fileName">XML file name.</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function ReadXMLFile(ByVal fileName As String) As Boolean
         Try
             'Try to load from the configuration file.
             Logger.MajorDebug("Reading XML configuration...")
 
-            Dim reader As New Xml.XmlTextReader(XMLParameterFile)
-
+            Dim reader As New Xml.XmlTextReader(fileName)
             reader.WhitespaceHandling = Xml.WhitespaceHandling.None
             reader.MoveToContent()
             reader.Read()
@@ -201,34 +226,87 @@ Public Class ThalesMain
 
             reader.Close()
             reader = Nothing
+            Return True
         Catch ex As Exception
             Logger.MajorError("Error loading the configuration file")
             Logger.MajorError(ex.ToString)
-            Logger.MajorDebug("Using default configuration...")
-
-            port = 9998
-            consolePort = 9997
-            maxCons = 5
-            LMKFile = ""
-            VBsources = "."
-            Logger.CurrentLogLevel = Logger.LogLevel.Debug
-            CheckLMKParity = True
-
-            StartUpCore("0007-E000", _
-                        "0001", _
-                        True, _
-                        4)
+            Return False
         End Try
+    End Function
 
-        'Parse the loaded host commands
-        Logger.MajorDebug("Searching for host command implementors...")
-        CE = New HostCommands.CommandExplorer
-        Logger.MinorInfo("Loaded commands dump" + vbCrLf + CE.GetLoadedCommands())
+    ''' <summary>
+    ''' Attempts to read a key/value pair file with the parameters and start the crypto.
+    ''' </summary>
+    ''' <param name="fileName">File to read.</param>
+    ''' <remarks>This is used in order to read the parameters under Mono where, for some
+    ''' reason, we get an exception when trying to load the XML document from the reader.
+    ''' We expect a file with the following format:
+    ''' - A starting ; denotes a comment and is ignored.
+    ''' - Other lines must have a Key=Value format and we expect the folliwng keys:
+    '''   * Port
+    '''   * ConsolePort
+    '''   * MaxConnections
+    '''   * LMKStorageFile
+    '''   * VBSourceDirectory
+    '''   * LogLevel
+    '''   * CheckLMKParity
+    '''   * FirmwareNumber
+    '''   * DSPFirmwareNumber
+    '''   * StartInAuthorizedState
+    '''   * ClearPINLength
+    ''' </remarks>
+    Private Function TryToReadValuePairFile(ByVal fileName As String) As Boolean
+        Try
+            Dim list As New SortedList(Of String, String)
+            Using SR As IO.StreamReader = New IO.StreamReader(fileName, System.Text.Encoding.Default)
+                While SR.Peek > -1
+                    Dim s As String = SR.ReadLine
+                    If Not (String.IsNullOrEmpty(s) OrElse s.StartsWith(";"c)) Then
+                        Dim sSplit() As String = s.Split("="c)
+                        list.Add(sSplit(0).ToUpper, sSplit(1))
+                    End If
+                End While
+            End Using
 
-        'Parse the loaded console commands
-        Logger.MajorDebug("Searching for console command implementors...")
-        CCE = New ConsoleCommands.ConsoleCommandExplorer
-        Logger.MinorInfo("Loaded console commands dump " + vbCrLf + CCE.GetLoadedCommands())
+            port = Convert.ToInt32(list("PORT"))
+            consolePort = Convert.ToInt32(list("CONSOLEPORT"))
+            maxCons = Convert.ToInt32(list("MAXCONNECTIONS"))
+            LMKFile = list("LMKSTORAGEFILE")
+            VBsources = list("VBSOURCEDIRECTORY")
+            Logger.CurrentLogLevel = DirectCast([Enum].Parse(GetType(Logger.LogLevel), Convert.ToString(list("LOGLEVEL")), True), Logger.LogLevel)
+            CheckLMKParity = Convert.ToBoolean(list("CHECKLMKPARITY"))
+
+            StartUpCore(list("FIRMWARENUMBER"), _
+                        list("DSPFIRMWARENUMBER"), _
+                        Convert.ToBoolean(list("STARTINAUTHORIZEDSTATE")), _
+                        Convert.ToInt32(list("CLEARPINLENGTH")))
+
+            Return True
+        Catch ex As Exception
+            Logger.MajorError("Error loading key/value file")
+            Logger.MajorError(ex.ToString)
+            Return False
+        End Try
+    End Function
+
+    ''' <summary>
+    ''' Starts the crypto with default parameters.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub SetDefaultConfiguration()
+        Logger.MajorDebug("Using default configuration...")
+        port = 9998
+        consolePort = 9997
+        maxCons = 5
+        LMKFile = ""
+        VBsources = "."
+        Logger.CurrentLogLevel = Logger.LogLevel.Debug
+        CheckLMKParity = True
+
+        StartUpCore("0007-E000", _
+                    "0001", _
+                    True, _
+                    4)
     End Sub
 
     Private Sub StartUpCore(ByVal firmwareNumber As String, _
@@ -278,12 +356,11 @@ Public Class ThalesMain
         Dim fName As String = New IO.FileInfo(sourceFile).Name
         Logger.MajorVerbose("Compiling " + fName + "...")
         Try
-            Dim SR As New IO.StreamReader(sourceFile)
-            While SR.Peek > -1
-                vbSource += SR.ReadLine() + vbCrLf
-            End While
-            SR.Close()
-            SR = Nothing
+            Using SR As IO.StreamReader = New IO.StreamReader(sourceFile)
+                While SR.Peek > -1
+                    vbSource += SR.ReadLine() + vbCrLf
+                End While
+            End Using
         Catch ex As Exception
             Logger.MajorError("Exception raised while reading " + fName + vbCrLf + _
                                   ex.ToString())
