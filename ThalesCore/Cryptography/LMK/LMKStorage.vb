@@ -85,21 +85,20 @@ Namespace Cryptography.LMK
             ReDim _LMKs(MAX_LMKS - 1)
 
             Try
-                Dim SR As New System.IO.StreamReader(StorageFile)
-                While SR.Peek > -1
-                    Dim s As String = SR.ReadLine()
-                    If s <> "" AndAlso s.Trim.StartsWith(";") = False Then
-                        If Core.Utility.IsHexString(s) = True Then
-                            If s.Length = 32 Then
-                                _LMKs(i) = s
-                                '...and increase the index to read into the next LMK.
-                                i += 1
+                Using SR As IO.StreamReader = New IO.StreamReader(StorageFile)
+                    While SR.Peek > -1
+                        Dim s As String = SR.ReadLine()
+                        If s <> "" AndAlso s.Trim.StartsWith(";") = False Then
+                            If Core.Utility.IsHexString(s) = True Then
+                                If s.Length = 32 Then
+                                    _LMKs(i) = s
+                                    '...and increase the index to read into the next LMK.
+                                    i += 1
+                                End If
                             End If
                         End If
-                    End If
-                End While
-                SR.Close()
-                SR = Nothing
+                    End While
+                End Using
             Catch ex As Exception
                 ReDim _LMKs(-1)
             End Try
@@ -212,14 +211,12 @@ Namespace Cryptography.LMK
 
         Private Shared Sub WriteLMKs()
 
-            Dim SW As New System.IO.StreamWriter(_storageFile)
-            SW.WriteLine("; LMK Storage file")
-            For i As Integer = 0 To MAX_LMKS - 1
-                SW.WriteLine(_LMKs(i))
-            Next
-
-            SW.Close()
-            SW = Nothing
+            Using SW As IO.StreamWriter = New IO.StreamWriter(_storageFile)
+                SW.WriteLine("; LMK Storage file")
+                For i As Integer = 0 To MAX_LMKS - 1
+                    SW.WriteLine(_LMKs(i))
+                Next
+            End Using
 
         End Sub
 

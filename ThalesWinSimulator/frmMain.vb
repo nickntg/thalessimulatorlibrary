@@ -168,6 +168,13 @@ Public Class frmMain
     Private Sub frmMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         If IO.File.Exists("ThalesParameters.xml") Then
             txtParameters.Text = "ThalesParameters.xml"
+        Else
+            'See where we are...
+            Dim path As String = Reflection.Assembly.GetExecutingAssembly.Location
+            'If there are / characters in the path, we assume it's Mono.
+            If path.IndexOf("/") > -1 Then
+                txtParameters.Text = path.Replace("ThalesWinSimulator.exe", "ThalesMonoParameters.txt")
+            End If
         End If
     End Sub
 End Class

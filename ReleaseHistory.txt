@@ -1,7 +1,7 @@
 ﻿ThalesSim Release History
 =========================
 
-XXXX/XX/XX: Version 0.8.6 beta released.
+2010/04/23: Version 0.8.6 beta released.
 ----------------------------------------
 
 * Fixed a bug which caused check values generated from console commands
@@ -21,6 +21,9 @@ XXXX/XX/XX: Version 0.8.6 beta released.
   must be build under Windows using VS.2008 and resulting binaries should
   be copied to Linux for execution using Mono. The sole working distribution
   under which this was tested was openSUSE 11.2.
+* An alternative configuration file has been added for use with Mono 2.6.3.
+  This file contains key/value pairs with the simulator parameters and is
+  alternatively read if there is a problem parsing the XML file.
 
 2009/12/07: Version 0.8.5 beta released.
 ----------------------------------------

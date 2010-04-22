@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Tests for the ThalesSim core classes")> 
 <Assembly: AssemblyCompany("NTG")> 
 <Assembly: AssemblyProduct("ThalesCore.Tests")> 
-<Assembly: AssemblyCopyright("Copyright © NTG 2009")> 
+<Assembly: AssemblyCopyright("Copyright © NTG 2010")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: CLSCompliant(True)> 
@@ -33,5 +33,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("0.8.5.0")> 
-<Assembly: AssemblyFileVersion("0.8.5.0")> 
+<Assembly: AssemblyVersion("0.8.6.0")> 
+<Assembly: AssemblyFileVersion("0.8.6.0")> 

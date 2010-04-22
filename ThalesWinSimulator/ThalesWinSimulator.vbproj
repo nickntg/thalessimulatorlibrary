@@ -142,6 +142,7 @@
     <None Include="ThalesSim.snk" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\Debug\ThalesMonoParameters.txt" />
     <Content Include="bin\Debug\ThalesParameters.xml" />
     <Content Include="keys.ico" />
   </ItemGroup>
