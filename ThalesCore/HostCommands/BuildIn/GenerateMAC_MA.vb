@@ -31,9 +31,6 @@ Namespace HostCommands.BuildIn
     Public Class GenerateMAC_MA
         Inherits AHostCommand
 
-        Const TAK As String = "TAK"
-        Const DATA As String = "DATA"
-
         Private _tak As String
         Private _data() As Byte
 
@@ -44,8 +41,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the MA message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(TAK))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -56,9 +52,11 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _tak = MFPC.GetMessageFieldByName(TAK).FieldValue()
-            _data = msg.GetRemainingBytes()
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _tak = kvp.ItemCombination("TAC Scheme", "TAC")
+                _data = System.Text.ASCIIEncoding.Default.GetBytes(kvp.Item("Data"))
+            End If
         End Sub
 
         ''' <summary>
@@ -71,7 +69,8 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim clearTAK As String = Utility.DecryptUnderLMK(_tak, TAK, MFPC.GetMessageFieldByName(TAK).DeterminerName, LMKPairs.LMKPair.Pair16_17, "0")
+            Dim cryptTAK As New HexKey(_tak)
+            Dim clearTAK As String = Utility.DecryptUnderLMK(cryptTAK.ToString, cryptTAK.Scheme, LMKPairs.LMKPair.Pair16_17, "0")
             If Utility.IsParityOK(clearTAK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
@@ -87,16 +86,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

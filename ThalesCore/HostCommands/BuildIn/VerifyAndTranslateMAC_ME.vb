@@ -31,11 +31,6 @@ Namespace HostCommands.BuildIn
     Public Class VerifyAndTranslateMAC_ME
         Inherits AHostCommand
 
-        Const SOURCE_TAK As String = "SOURCE_TAK"
-        Const TARGET_TAK As String = "TARGET_TAK"
-        Const M_A_C As String = "M_A_C"
-        Const DATA As String = "DATA"
-
         Private _sourceTak As String
         Private _targetTak As String
         Private _mac As String
@@ -48,10 +43,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the ME message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(SOURCE_TAK))
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(TARGET_TAK))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(M_A_C, 8))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -62,11 +54,13 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _sourceTak = MFPC.GetMessageFieldByName(SOURCE_TAK).FieldValue()
-            _targetTak = MFPC.GetMessageFieldByName(TARGET_TAK).FieldValue()
-            _mac = MFPC.GetMessageFieldByName(M_A_C).FieldValue()
-            _data = msg.GetRemainingBytes()
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _sourceTak = kvp.ItemCombination("Source TAK Scheme", "Source TAK")
+                _targetTak = kvp.ItemCombination("Destination TAK Scheme", "Destination TAK")
+                _mac = kvp.Item("MAC")
+                _data = System.Text.ASCIIEncoding.Default.GetBytes(kvp.Item("Data"))
+            End If
         End Sub
 
         ''' <summary>
@@ -79,13 +73,15 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim sourceTAK As String = Utility.DecryptUnderLMK(_sourceTak, SOURCE_TAK, MFPC.GetMessageFieldByName(SOURCE_TAK).DeterminerName, LMKPairs.LMKPair.Pair16_17, "0")
+            Dim cryptSourceTAK As New HexKey(_sourceTak)
+            Dim sourceTAK As String = Utility.DecryptUnderLMK(cryptSourceTAK.ToString, cryptSourceTAK.Scheme, LMKPairs.LMKPair.Pair16_17, "0")
             If Utility.IsParityOK(sourceTAK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            Dim targetTAK As String = Utility.DecryptUnderLMK(_targetTak, TARGET_TAK, MFPC.GetMessageFieldByName(TARGET_TAK).DeterminerName, LMKPairs.LMKPair.Pair16_17, "0")
+            Dim cryptTargetTAK As New HexKey(_targetTak)
+            Dim targetTAK As String = Utility.DecryptUnderLMK(cryptTargetTAK.ToString, cryptTargetTAK.Scheme, LMKPairs.LMKPair.Pair16_17, "0")
             If Utility.IsParityOK(targetTAK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._11_DESTINATION_KEY_PARITY_ERROR)
                 Return mr
@@ -109,16 +105,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

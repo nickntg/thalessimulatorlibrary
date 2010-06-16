@@ -30,13 +30,10 @@ Namespace HostCommands.BuildIn
     Public Class GenerateTAK_HA
         Inherits AHostCommand
 
-        Const SOURCE_TMK As String = "SOURCE_TMK"
-
         Private _sourceTmk As String
         Private _del As String
         Private _keySchemeZMK As String
         Private _keySchemeLMK As String
-        Private _keyCheckValue As String
 
         ''' <summary>
         ''' Constructor.
@@ -45,12 +42,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the HA message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(SOURCE_TMK))
-
-            GenerateDelimiterParser()
-
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -61,12 +53,13 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _sourceTmk = MFPC.GetMessageFieldByName(SOURCE_TMK).FieldValue
-            _del = MFPC.GetMessageFieldByName(DELIMITER).FieldValue
-            _keySchemeZMK = MFPC.GetMessageFieldByName(KEY_SCHEME_ZMK).FieldValue
-            _keySchemeLMK = MFPC.GetMessageFieldByName(KEY_SCHEME_LMK).FieldValue
-            _keyCheckValue = MFPC.GetMessageFieldByName(KEY_CHECK_VALUE).FieldValue
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _sourceTmk = kvp.ItemCombination("TMK Scheme", "TMK")
+                _del = kvp.ItemOptional("Delimiter")
+                _keySchemeZMK = kvp.ItemOptional("Key Scheme TMK")
+                _keySchemeLMK = kvp.ItemOptional("Key Scheme LMK")
+            End If
         End Sub
 
         ''' <summary>
@@ -87,12 +80,12 @@ Namespace HostCommands.BuildIn
             Else
                 ks = KeySchemeTable.KeyScheme.SingleDESKey
                 tmkKs = KeySchemeTable.KeyScheme.SingleDESKey
-                _keyCheckValue = "0"
             End If
 
             Dim clearSource As String
 
-            clearSource = Utility.DecryptUnderLMK(_sourceTmk, SOURCE_TMK, MFPC.GetMessageFieldByName(SOURCE_TMK).DeterminerName, LMKPairs.LMKPair.Pair14_15, "0")
+            Dim cryptSource As New HexKey(_sourceTmk)
+            clearSource = Utility.DecryptUnderLMK(cryptSource.ToString, cryptSource.Scheme, LMKPairs.LMKPair.Pair14_15, "0")
             If Utility.IsParityOK(clearSource, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
@@ -115,16 +108,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

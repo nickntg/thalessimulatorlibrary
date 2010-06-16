@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Verifies a MAC.</CommandName>
+  <Request>MC</Request>
+  <Response>MD</Response>
+
+  <Field>
+    <Name>TAK</Name>
+    <IncludeFile>MultiFormatKey.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>MAC</Name>
+    <Length>8</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+  <Field>
+    <Name>Data</Name>
+    <Length>0</Length>
+    <Type>Binary</Type>
+  </Field>
+
+</CommandConfiguration>

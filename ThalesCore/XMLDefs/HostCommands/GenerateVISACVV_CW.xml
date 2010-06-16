@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Generates a VISA CVV.</CommandName>
+  <Request>CW</Request>
+  <Response>CX</Response>
+
+  <Field>
+    <Name>CVK</Name>
+    <IncludeFile>MultiFormatCVK.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Primary Account Number</Name>
+    <Length>1</Length>
+    <ParseUntilValue>;</ParseUntilValue>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Delimiter</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <ValidValue>;</ValidValue>
+  </Field>
+
+  <Field>
+    <Name>Expiration Date</Name>
+    <Length>4</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Service Code</Name>
+    <Length>3</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+</CommandConfiguration>

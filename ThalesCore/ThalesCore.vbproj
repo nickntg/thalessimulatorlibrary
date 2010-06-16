@@ -98,6 +98,8 @@
     <Compile Include="ConsoleCommands\Validators\KeySchemeValidator.vb" />
     <Compile Include="ConsoleCommands\Validators\KeyTypeValidator.vb" />
     <Compile Include="ConsoleCommands\ThalesConsoleCommandCode.vb" />
+    <Compile Include="Cryptography\DUKPT\DerivedKey.vb" />
+    <Compile Include="Cryptography\DUKPT\KeySerialNumber.vb" />
     <Compile Include="Exceptions\XDecryptError.vb" />
     <Compile Include="Exceptions\XEncryptError.vb" />
     <Compile Include="Exceptions\XFunctionNotPermitted.vb" />
@@ -121,10 +123,17 @@
     <Compile Include="HostCommands\AHostCommand.vb" />
     <Compile Include="HostCommands\BuildIn\CommandChaining_NK.vb" />
     <Compile Include="HostCommands\BuildIn\EchoTest_B2.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateBDK_BI.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateIBMOffset_DE.vb" />
     <Compile Include="HostCommands\BuildIn\HashDataBlock_GM.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslatePINFromDUKTPToZPK_CI.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifyDukptPINWithIBMAlgorithm_CK.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifyDukptPINWithVisaAlgorithm_CM.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyDynamicCVV_PM.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyInterchangePinUsingComparisonMethod_BE.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifyInterchangePINWithIBMAlgorithm_EA.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyTerminalPINUsingComparisonMethod_BC.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifyTerminalPINwithIBMAlgorithm_DA.vb" />
     <Compile Include="HostCommands\CommandClass.vb" />
     <Compile Include="HostCommands\CommandExplorer.vb" />
     <Compile Include="HostCommands\BuildIn\CancelAuthState_RA.vb" />
@@ -185,7 +194,7 @@
     <Compile Include="HostCommands\BuildIn\VerifySolicitationMailerCryptography_RC.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyTerminalPINWithVISAAlgorithm_DC.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyVISACVV_CY.vb" />
-    <None Include="HostCommands\Runtime\HSMDiagnostics_NC.vb" />
+    <Compile Include="HostCommands\BuildIn\HSMDiagnostics_NC.vb" />
     <Compile Include="Cryptography\DES.vb" />
     <Compile Include="ErrorCodes.vb" />
     <Compile Include="Cryptography\HexKey.vb" />
@@ -198,11 +207,17 @@
     <Compile Include="Log\ILogProcs.vb" />
     <Compile Include="Log\Logger.vb" />
     <Compile Include="Message\Message.vb" />
-    <Compile Include="Message\MessageFieldDeterminer.vb" />
-    <Compile Include="Message\MessageFieldDeterminerCollection.vb" />
-    <Compile Include="Message\MessageFieldParser.vb" />
-    <Compile Include="Message\MessageFieldParserCollection.vb" />
+    <None Include="Message\MessageFieldDeterminer.vb" />
+    <None Include="Message\MessageFieldDeterminerCollection.vb" />
+    <None Include="Message\MessageFieldParser.vb" />
+    <None Include="Message\MessageFieldParserCollection.vb" />
     <Compile Include="Message\MessageResponse.vb" />
+    <Compile Include="Message\XML\MessageField.vb" />
+    <Compile Include="Message\XML\MessageFields.vb" />
+    <Compile Include="Message\XML\MessageFieldsStore.vb" />
+    <Compile Include="Message\XML\MessageFieldTypes.vb" />
+    <Compile Include="Message\XML\MessageParser.vb" />
+    <Compile Include="Message\XML\MessageValues.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -249,9 +264,83 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="ThalesSim.snk" />
+    <None Include="XMLDefs\HostCommands\HostCommandDefinitions.xsd" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ThalesParameters.xml" />
+    <Content Include="XMLDefs\HostCommands\CommandChaining_NK.xml" />
+    <Content Include="XMLDefs\HostCommands\FormKeyFromEncryptedComponents_A4.xml" />
+    <Content Include="XMLDefs\HostCommands\FormZMKFromThreeComponents_GG.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateAndPrintComponent_A2.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateAndPrintSplitComponents_NE.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateAndPrintTMPTPKPVK_OE.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateAndPrintZMKComponent_OC.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateBDK_BI.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateCheckValue_BU.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateCheckValue_KA.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateCVKPair_AS.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateIBMOffset_DE.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateKey_A0.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateMACForLargeMessage_MQ.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateMAC_MA.xml" />
+    <Content Include="XMLDefs\HostCommands\GeneratePVKPair_FG.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateRandomPIN_JA.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateTAK_HA.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateTMKTPKPVK_HC.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateVISACVV_CW.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateVISAPVV_DG.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateZEKorZAK_FI.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateZPK_IA.xml" />
+    <Content Include="XMLDefs\HostCommands\HashDataBlock_GM.xml" />
+    <Content Include="XMLDefs\HostCommands\HSMStatus_NO.xml" />
+    <Content Include="XMLDefs\HostCommands\ImportKey_A6.xml" />
+    <Content Include="XMLDefs\HostCommands\MultiFormatCVK.xml" />
+    <Content Include="XMLDefs\HostCommands\ExportKey_A8.xml" />
+    <Content Include="XMLDefs\HostCommands\EchoTest_B2.xml" />
+    <Content Include="XMLDefs\HostCommands\FormZMKFromTwoToNineComponents_GY.xml" />
+    <Content Include="XMLDefs\HostCommands\KeyScheme.xml" />
+    <Content Include="XMLDefs\HostCommands\LargeMultiFormatKey.xml" />
+    <Content Include="XMLDefs\HostCommands\MultiFormatZMK.xml" />
+    <Content Include="XMLDefs\HostCommands\MultiFormatKey.xml" />
+    <Content Include="XMLDefs\HostCommands\PINBlockFormat.xml" />
+    <Content Include="XMLDefs\HostCommands\SetHSMDelay_LG.xml" />
+    <Content Include="XMLDefs\HostCommands\SingleCommand.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateCVKFromLMKToZMK_AU.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateCVKFromZMKToLMK_AW.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateKeyScheme_B0.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslatePINFromDUKPTToZPK_CI.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslatePINFromLMKToZPK_JG.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslatePINFromTPKToLMK_JC.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslatePINFromTPKToZPK_CA.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslatePINFromVISAToThales_BQ.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslatePINFromZPKToLMK_JE.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslatePINFromZPKToZPK_CC.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateTAKFromLMKToTMK_AG.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateTAKFromLMKToZMK_MG.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateTAKFromZMKToLMK_MI.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateTMKTPKPVKFromLMKToTMKTPKPVK_AE.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateTMKTPKPVKFromLMKToZMK_FE.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateTMPTPKPVKFromZMKToLMK_FC.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateZEKORZAKFromLMKToZMK_FM.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateZEKORZAKFromZMKToLMK_FK.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateZMKFromZMKToLMK_BY.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateZPKFromLMKToZMK_GC.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateZPKFromZMKToLMK_FA.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyAndTranslateMAC_ME.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyDukptPINWithIBMAlgorithm_CK.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyDukptPINWithVISAAlgorithm_CM.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyDynamicCVV_PM.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyInterchangePinUsingComparisonMethod_BE.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyInterchangePINWithIBMAlgorithm_EA.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyInterchangePINWithVISAAlgorithm_EC.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyMAC_MC.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyTerminalPinUsingComparisonMethod_BC.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyTerminalPINwithIBMAlgorithm_DA.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyTerminalPINWithVISAAlgorithm_DC.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyVISACVV_CY.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="HostCommands\Runtime\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

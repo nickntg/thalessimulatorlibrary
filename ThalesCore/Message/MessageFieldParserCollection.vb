@@ -22,7 +22,7 @@ Namespace Message
     ''' <remarks>
     ''' This class is designed to help a caller parse a complete message to discrete fields.
     ''' </remarks>
-    Public Class MessageFieldParserCollection
+    <Obsolete()> Public Class MessageFieldParserCollection
 
         Private _AL As New List(Of MessageFieldParser)
 

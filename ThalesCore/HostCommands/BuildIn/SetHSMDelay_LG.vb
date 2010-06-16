@@ -30,8 +30,6 @@ Namespace HostCommands.BuildIn
     Public Class SetHSMDelay_LG
         Inherits AHostCommand
 
-        Const DELAY As String = "DELAY"
-
         Private _delay As String = ""
 
         ''' <summary>
@@ -41,8 +39,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the LG message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(New MessageFieldParser(DELAY, 3))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -53,8 +50,10 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _delay = MFPC.GetMessageFieldByName(DELAY).FieldValue
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _delay = kvp.Item("Delay")
+            End If
         End Sub
 
         ''' <summary>
@@ -71,15 +70,6 @@ Namespace HostCommands.BuildIn
             Return mr
         End Function
 
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
-        End Function
     End Class
 
 End Namespace

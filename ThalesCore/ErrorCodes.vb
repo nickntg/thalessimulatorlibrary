@@ -283,6 +283,18 @@ Public Class ErrorCodes
     Public Const _42_DES_FAILURE As String = "42"
 
     ''' <summary>
+    ''' Error code 51 
+    ''' </summary>
+    ''' <remarks>Invalid message header</remarks>
+    Public Const _51_INVALID_MESSAGE_HEADER As String = "51"
+
+    ''' <summary>
+    ''' Error code 52.
+    ''' </summary>
+    ''' <remarks>Invalid Number of Commands field.</remarks>
+    Public Const _52_INVALID_NUMBER_OF_COMMANDS As String = "52"
+
+    ''' <summary>
     ''' Racal error code 80.
     ''' </summary>
     ''' <remarks>
@@ -354,6 +366,8 @@ Public Class ErrorCodes
                                                New ThalesError("40", "Invalid firmware checksum"), _
                                                New ThalesError("41", "Internal hardware/software error"), _
                                                New ThalesError("42", "DES failure"), _
+                                               New ThalesError("51", "Invalid message header"), _
+                                               New ThalesError("52", "Invalid number of command fields"), _
                                                New ThalesError("80", "Data length error"), _
                                                New ThalesError("90", "Data parity error"), _
                                                New ThalesError("91", "LRC error"), _

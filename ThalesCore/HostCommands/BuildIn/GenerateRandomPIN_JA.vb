@@ -30,11 +30,6 @@ Namespace HostCommands.BuildIn
     Public Class GenerateRandomPIN_JA
         Inherits AHostCommand
 
-        Const ACCOUNT_NBR As String = "ACCOUNT_NUMBER"
-        Const PIN_LEN As String = "PIN_LENGTH"
-        Const PIN_LEN_EXISTS As String = "PIN_EXISTS"
-        Const PIN_LEN_NO_EXISTS As String = "PIN_DOESNT_EXIST"
-
         Private _acct As String
         Private _pinLen As String
 
@@ -45,12 +40,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the JA message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(New MessageFieldParser(ACCOUNT_NBR, 12))
-            Dim MFDC As New MessageFieldDeterminerCollection
-            MFDC.AddFieldDeterminer(New MessageFieldDeterminer(PIN_LEN_EXISTS, 1, 2))
-            MFDC.AddFieldDeterminer(New MessageFieldDeterminer(PIN_LEN_NO_EXISTS, "", 0))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(PIN_LEN, MFDC))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -61,9 +51,11 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _acct = MFPC.GetMessageFieldByName(ACCOUNT_NBR).FieldValue
-            _pinLen = MFPC.GetMessageFieldByName(PIN_LEN).FieldValue()
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _acct = kvp.Item("Account Number")
+                _pinLen = kvp.ItemOptional("PIN Length")
+            End If
         End Sub
 
         ''' <summary>
@@ -78,17 +70,6 @@ Namespace HostCommands.BuildIn
 
             If _pinLen = "" Then
                 _pinLen = Convert.ToString(Convert.ToInt32(Core.Resources.GetResource(Core.Resources.CLEAR_PIN_LENGTH)))
-            Else
-                If Integer.TryParse(_pinLen, Nothing) = False Then
-                    mr.AddElement(ErrorCodes._15_INVALID_INPUT_DATA)
-                    Return mr
-                End If
-
-                If Convert.ToInt32(Core.Resources.GetResource(Core.Resources.CLEAR_PIN_LENGTH)) < Convert.ToInt32(_pinLen) OrElse _
-                   Convert.ToInt32(_pinLen) < 4 Then
-                    mr.AddElement(ErrorCodes._24_PIN_IS_FEWER_THAN_4_OR_MORE_THAN_12_DIGITS_LONG)
-                    Return mr
-                End If
             End If
 
             Dim PIN As String = GetRandomPIN(Convert.ToInt32(_pinLen))
@@ -101,16 +82,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

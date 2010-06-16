@@ -83,9 +83,9 @@ Public Class Utility
     ''' </remarks>
     Public Shared Sub ByteArrayToHexString(ByVal bData() As Byte, ByRef s As String)
 
-        Dim i As Integer, sb As New Text.StringBuilder
+        Dim sb As New Text.StringBuilder
 
-        For i = 0 To bData.GetUpperBound(0)
+        For i As Integer = 0 To bData.GetUpperBound(0)
             sb.AppendFormat("{0:X2}", bData(i))
         Next
         s = sb.ToString
@@ -101,10 +101,9 @@ Public Class Utility
     ''' or <b>Parity</b> is set to no parity, the key is not changed to enforce any bit parity.
     ''' </remarks>
     Public Shared Function RandomKey(ByVal EnforceParity As Boolean, ByVal Parity As ParityCheck) As String
-        Dim i As Integer
         Dim s As String, sb As New Text.StringBuilder
 
-        For i = 1 To 16
+        For i As Integer = 1 To 16
             sb.AppendFormat("{0:X1}", rndMachine.Next(0, 16))
         Next
         s = sb.ToString
@@ -244,6 +243,92 @@ Public Class Utility
     End Function
 
     ''' <summary>
+    ''' Performs an OR operation on two hexadecimal strings with an offset.
+    ''' </summary>
+    ''' <remarks>
+    ''' Performs an OR operation on two hexadecimal strings. OR operation continues
+    ''' up to the length of the first string parameter.
+    ''' </remarks>
+    Public Shared Function ORHexStringsFull(ByVal b As String, ByVal mask As String, ByVal offset As Integer) As String
+        Dim l As Integer
+        Dim i As Integer
+        Dim s As String = b
+        Dim z(s.Length) As Char
+        z = s.ToCharArray()
+        l = Math.Min(b.Length - offset, mask.Length)
+        For i = 0 To l - 1
+            z(offset) = Convert.ToChar(String.Format("{0:X}", Convert.ToInt32(s.Substring(offset, 1), 16) Or Convert.ToInt32(mask.Substring(i, 1), 16)))
+            offset += 1
+        Next
+        s = z
+        Return s
+    End Function
+
+    ''' <summary>
+    ''' Performs a Shift Right operation on a hexadecimal string.
+    ''' </summary>
+    ''' <remarks>
+    ''' Performs a Shift Right operation on a hexadecimal string.
+    ''' </remarks>
+    Public Shared Function SHRHexString(ByRef b As String) As String
+        Dim r As Integer = Convert.ToInt32(b, 16)
+        r = r >> 1
+        Dim s As String = b
+
+        s = String.Format("{0:X}", r).PadLeft(b.Length, "0"c)
+        Return s
+    End Function
+
+    ''' <summary>
+    ''' Performs an AND operation on two hexadecimal strings.
+    ''' </summary>
+    ''' <remarks>
+    ''' Performs an AND operation on two hexadecimal strings. OR operation continues
+    ''' up to the length of the first string parameter.
+    ''' </remarks>
+    Public Shared Function ANDHexStrings(ByVal b As String, ByVal mask As String) As String
+        Return ANDHexStringsOffset(b, mask, 0)
+    End Function
+
+    ''' <summary>
+    ''' Performs an AND operation on two hexadecimal strings with an offset.
+    ''' </summary>
+    ''' <remarks>
+    ''' Performs an AND operation on two hexadecimal strings. OR operation continues
+    ''' up to the length of the first string parameter.
+    ''' </remarks>
+    Public Shared Function ANDHexStringsOffset(ByVal b As String, ByVal mask As String, ByVal offset As Integer) As String
+        Dim l As Integer
+        Dim s As String = b
+        Dim z(s.Length) As Char
+
+        z = s.ToCharArray()
+        l = Math.Min(b.Length - offset, mask.Length)
+
+        For i As Integer = 0 To l - 1
+            z(offset) = Convert.ToChar(String.Format("{0:X}", (Convert.ToInt32(s.Substring(offset, 1), 16) And Convert.ToInt32(mask.Substring(i, 1), 16))))
+            offset += 1
+        Next
+        s = z
+        Return s
+    End Function
+
+    ''' <summary>
+    ''' Performs check for any non-zero in a byte array.
+    ''' </summary>
+    ''' <remarks>
+    ''' Performs check for any non-zero in a byte array
+    ''' </remarks>
+    Private Shared Function arrayNotZero(ByVal b() As Byte) As Boolean
+        For i As Integer = 0 To b.Length - 1
+            If b(i) <> 0 Then
+                Return True
+            End If
+        Next
+        Return False
+    End Function
+
+    ''' <summary>
     ''' Converts a hexadecimal string to binary.
     ''' </summary>
     ''' <remarks>
@@ -271,6 +356,48 @@ Public Class Utility
         Return r
     End Function
 
+    Public Shared Function AddNoCarry(ByVal str1 As String, ByVal str2 As String) As String
+        Dim output As String = ""
+        For cnt As Integer = 0 To str1.Length - 1
+            output = output + Convert.ToString((Convert.ToInt32(str1.Substring(cnt, 1)) + Convert.ToInt32(str2.Substring(cnt, 1))) Mod 10)
+        Next
+        Return output
+    End Function
+
+    Public Shared Function SubtractNoBorrow(ByVal str1 As String, ByVal str2 As String) As String
+        Dim output As String = ""
+        Dim i As Integer
+        For cnt As Integer = 0 To str1.Length - 1
+            i = Convert.ToInt32(str1.Substring(cnt, 1)) - Convert.ToInt32(str2.Substring(cnt, 1))
+            '    i = Asc(str1.Chars(cnt)) - Asc(str2.Chars(cnt))
+            If i < 0 Then
+                i = 10 + i
+            End If
+            output = output + Convert.ToString(i)
+        Next
+        Return output
+    End Function
+
+    ''' <summary>
+    ''' Decimalises a string.
+    ''' </summary>
+    ''' <remarks>
+    ''' Decimalises a string.
+    ''' </remarks>
+    Public Shared Function Decimalise(ByVal undecimalisedString As String, ByVal decimalisationTable As String) As String
+        Dim output As String = ""
+        For cnt As Integer = 0 To undecimalisedString.Length - 1
+            Dim ch As Char = undecimalisedString.Chars(cnt)
+            If ch >= "0"c And ch <= "9"c Then
+                output = output + ch
+            Else
+                Dim rep_index As Integer = (System.Text.ASCIIEncoding.Default.GetBytes(ch)(0) - 65) + 10
+                output = output + decimalisationTable.Chars(rep_index)
+            End If
+        Next
+        Return output
+    End Function
+
     ''' <summary>
     ''' Removes a key type code from a hex string.
     ''' </summary>
@@ -278,7 +405,7 @@ Public Class Utility
     ''' Removes a key type code from a hex string.
     ''' </remarks>
     Public Shared Function RemoveKeyType(ByVal keyString As String) As String
-        If keyString Is Nothing OrElse keyString = "" Then Return keyString
+        If String.IsNullOrEmpty(keyString) Then Return keyString
         If keyString.StartsWith(Core.KeySchemeTable.GetKeySchemeValue(KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi)) OrElse _
            keyString.StartsWith(Core.KeySchemeTable.GetKeySchemeValue(KeySchemeTable.KeyScheme.DoubleLengthKeyVariant)) OrElse _
            keyString.StartsWith(Core.KeySchemeTable.GetKeySchemeValue(KeySchemeTable.KeyScheme.SingleDESKey)) OrElse _
@@ -368,72 +495,6 @@ Public Class Utility
     End Function
 
     ''' <summary>
-    ''' Decrypts a key encrypted under an LMK pair and a variant.
-    ''' </summary>
-    ''' <remarks>
-    ''' This method decrypts a key encrypted under an LMK pair and a variant. The key
-    ''' length is found by the name of the determiner that matched the key.
-    ''' </remarks>
-    Public Shared Function DecryptUnderLMK(ByVal encryptedKey As String, _
-                                           ByVal KeyPrefix As String, ByVal DeterminerName As String, _
-                                           ByVal LMKKeyPair As LMKPairs.LMKPair, _
-                                           ByVal variantNumber As String) As String
-
-        Select Case DeterminerName
-            Case KeyPrefix + DOUBLE_VARIANT
-                Return DecryptUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, LMKKeyPair, variantNumber)
-            Case KeyPrefix + DOUBLE_X917
-                Return DecryptUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, LMKKeyPair, variantNumber)
-            Case KeyPrefix + TRIPLE_VARIANT
-                Return DecryptUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.TripleLengthKeyVariant, LMKKeyPair, variantNumber)
-            Case KeyPrefix + TRIPLE_X917
-                Return DecryptUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.TripleLengthKeyAnsi, LMKKeyPair, variantNumber)
-            Case KeyPrefix + PLAIN_DOUBLE
-                Return DecryptUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, LMKKeyPair, variantNumber)
-            Case KeyPrefix + PLAIN_SINGLE
-                Return DecryptUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.SingleDESKey, LMKKeyPair, variantNumber)
-            Case Else
-                Throw New InvalidOperationException("Invalid key prefix [" + KeyPrefix + "]")
-        End Select
-
-    End Function
-
-    ''' <summary>
-    ''' Decrypts an ZMK.
-    ''' </summary>
-    ''' <remarks>
-    ''' The ZMK is assumed to be a single-length key encrypted under LMK 04-05.
-    ''' </remarks>
-    Public Shared Function DecryptEncryptedZMK(ByVal encryptedKey As String) As String
-        Return DecryptEncryptedZMK(encryptedKey, "", PLAIN_SINGLE)
-    End Function
-
-    ''' <summary>
-    ''' Decrypts a ZMK.
-    ''' </summary>
-    ''' <remarks>
-    ''' The ZMK type is determined by the determiner that matched the field.
-    ''' </remarks>
-    Public Shared Function DecryptEncryptedZMK(ByVal encryptedKey As String, ByVal keyPrefix As String, ByVal DeterminerName As String) As String
-        Select Case DeterminerName
-            Case keyPrefix + DOUBLE_VARIANT
-                Return DecryptZMKEncryptedUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, 0)
-            Case keyPrefix + DOUBLE_X917
-                Return DecryptZMKEncryptedUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, 0)
-            Case keyPrefix + TRIPLE_VARIANT
-                Return DecryptZMKEncryptedUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.TripleLengthKeyVariant, 0)
-            Case keyPrefix + TRIPLE_X917
-                Return DecryptZMKEncryptedUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.TripleLengthKeyAnsi, 0)
-            Case keyPrefix + PLAIN_DOUBLE
-                Return DecryptZMKEncryptedUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, 0)
-            Case keyPrefix + PLAIN_SINGLE
-                Return DecryptZMKEncryptedUnderLMK(encryptedKey, KeySchemeTable.KeyScheme.SingleDESKey, 0)
-            Case Else
-                Throw New InvalidOperationException("Invalid key prefix [" + keyPrefix + "]")
-        End Select
-    End Function
-
-    ''' <summary>
     ''' Decrypts a ZMK encrypted under LMK pair 04-05 and a variant.
     ''' </summary>
     ''' <remarks>
@@ -477,6 +538,35 @@ Public Class Utility
 
         Return result
 
+    End Function
+
+    ''' <summary>
+    ''' Appends a directory separator to a path, if one is needed.
+    ''' </summary>
+    ''' <param name="path">Path name.</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function AppendDirectorySeparator(ByVal path As String) As String
+        Dim endChar As Char
+        If path.IndexOf("\"c) > -1 Then
+            endChar = "\"c
+        Else
+            endChar = "/"c
+        End If
+        If path.EndsWith(endChar) Then
+            Return path
+        Else
+            Return path + endChar
+        End If
+    End Function
+
+    ''' <summary>
+    ''' Returns the current time, format HH:MM:SS.mmm.
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function getTimeMMHHSSmmmm() As String
+        Return Now.Hour.ToString.PadLeft(2, "0"c) + ":" + Now.Minute.ToString.PadLeft(2, "0"c) + ":" + Now.Second.ToString.PadLeft(2, "0"c) + "." + Now.Millisecond.ToString.PadLeft(3, "0"c)
     End Function
 
 End Class

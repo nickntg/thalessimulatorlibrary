@@ -100,6 +100,15 @@ Namespace Message
         End Sub
 
         ''' <summary>
+        ''' Decreases the positioning index.
+        ''' </summary>
+        ''' <param name="count">Number of bytes/characters to backtrack.</param>
+        ''' <remarks></remarks>
+        Public Sub DecreaseIndex(ByVal count As Integer)
+            _curIndex -= count
+        End Sub
+
+        ''' <summary>
         ''' Returns a substring of the message.
         ''' </summary>
         ''' <remarks>

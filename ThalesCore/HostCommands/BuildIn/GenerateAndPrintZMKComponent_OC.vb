@@ -41,7 +41,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the OC message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -52,8 +52,11 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            _keyType = "000"
-            _keyScheme = "Z"
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _keyType = "000"
+                _keyScheme = kvp.ItemOptional("Key Scheme LMK")
+            End If
         End Sub
 
         ''' <summary>
@@ -74,6 +77,23 @@ Namespace HostCommands.BuildIn
                 mr.AddElement(ErrorCodes._17_HSM_IS_NOT_IN_THE_AUTHORIZED_STATE)
                 Return mr
             End If
+
+            Select Case CType(Resources.GetResource(Resources.DOUBLE_LENGTH_ZMKS), Boolean)
+                Case False
+                    If _keyScheme = "" Then
+                        _keyScheme = "Z"
+                    ElseIf _keyScheme <> "Z" Then
+                        mr.AddElement(ErrorCodes._26_INVALID_KEY_SCHEME)
+                        Return mr
+                    End If
+                Case True
+                    If _keyScheme = "" Then
+                        _keyScheme = "X"
+                    ElseIf _keyScheme = "Z" Then
+                        mr.AddElement(ErrorCodes._26_INVALID_KEY_SCHEME)
+                        Return mr
+                    End If
+            End Select
 
             If ValidateKeyTypeCode(_keyType, LMKKeyPair, var, mr) = False Then Return mr
             If ValidateKeySchemeCode(_keyScheme, ks, mr) = False Then Return mr

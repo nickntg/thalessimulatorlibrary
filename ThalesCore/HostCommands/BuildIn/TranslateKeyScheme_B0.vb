@@ -30,10 +30,6 @@ Namespace HostCommands.BuildIn
     Public Class TranslateKeyScheme_B0
         Inherits AHostCommand
 
-        Const KEY_TYPE As String = "KEY_TYPE"
-        Const KEY As String = "KEY"
-        Const KEY_SCHEME As String = "KEY_SCHEME"
-
         Private _keyType As String = ""
         Private _keyScheme As String = ""
         Private _key As String = ""
@@ -45,10 +41,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the B0 message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(New MessageFieldParser(KEY_TYPE, 3))
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(KEY))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(KEY_SCHEME, 1))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -59,10 +52,12 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _keyType = MFPC.GetMessageFieldByName(KEY_TYPE).FieldValue
-            _keyScheme = MFPC.GetMessageFieldByName(KEY_SCHEME).FieldValue
-            _key = MFPC.GetMessageFieldByName(KEY).FieldValue
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _key = kvp.ItemCombination("Key Scheme", "Key")
+                _keyType = kvp.Item("Key Type")
+                _keyScheme = kvp.Item("Key Scheme (LMK)")
+            End If
         End Sub
 
         ''' <summary>
@@ -87,7 +82,8 @@ Namespace HostCommands.BuildIn
             If ValidateKeyTypeCode(_keyType, LMKKeyPair, var, mr) = False Then Return mr
             If ValidateKeySchemeCode(_keyScheme, ks, mr) = False Then Return mr
 
-            Dim clearKey As String = Utility.DecryptUnderLMK(_key, KEY, MFPC.GetMessageFieldByName(KEY).DeterminerName, LMKKeyPair, var)
+            Dim cryptSourceKey As New HexKey(_key)
+            Dim clearKey As String = Utility.DecryptUnderLMK(cryptSourceKey.ToString, cryptSourceKey.Scheme, LMKKeyPair, var)
             If Utility.IsParityOK(clearKey, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
@@ -123,16 +119,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

@@ -29,9 +29,6 @@ Imports ThalesSim.Core.Log
 Public Class ThalesMain
     Implements ILogProcs
 
-    Private Const HEADER As String = "HEADER"
-    Private Const COMMAND_CODE As String = "COMMAND_CODE"
-
     Private port As Integer
     Private consolePort As Integer
     Private maxCons As Integer
@@ -40,6 +37,8 @@ Public Class ThalesMain
     Private LMKFile As String
     Private VBsources As String
     Private CheckLMKParity As Boolean
+    Private HostDefsDir As String
+    Private DoubleLengthZMKs As Boolean
 
     'Listening thread for hosts
     Private LT As Threading.Thread
@@ -218,6 +217,8 @@ Public Class ThalesMain
             VBsources = Convert.ToString(GetParameterValue(doc, "VBSourceDirectory"))
             Logger.CurrentLogLevel = DirectCast([Enum].Parse(GetType(Logger.LogLevel), Convert.ToString(GetParameterValue(doc, "LogLevel")), True), Logger.LogLevel)
             CheckLMKParity = Convert.ToBoolean(GetParameterValue(doc, "CheckLMKParity"))
+            HostDefsDir = Convert.ToString(GetParameterValue(doc, "XMLHostDefinitionsDirectory"))
+            DoubleLengthZMKs = Convert.ToBoolean(GetParameterValue(doc, "DoubleLengthZMKs"))
 
             StartUpCore(Convert.ToString(GetParameterValue(doc, "FirmwareNumber")), _
                         Convert.ToString(GetParameterValue(doc, "DSPFirmwareNumber")), _
@@ -248,6 +249,7 @@ Public Class ThalesMain
     '''   * MaxConnections
     '''   * LMKStorageFile
     '''   * VBSourceDirectory
+    '''   * XMLHostDefinitionsDirectory
     '''   * LogLevel
     '''   * CheckLMKParity
     '''   * FirmwareNumber
@@ -275,6 +277,11 @@ Public Class ThalesMain
             VBsources = list("VBSOURCEDIRECTORY")
             Logger.CurrentLogLevel = DirectCast([Enum].Parse(GetType(Logger.LogLevel), Convert.ToString(list("LOGLEVEL")), True), Logger.LogLevel)
             CheckLMKParity = Convert.ToBoolean(list("CHECKLMKPARITY"))
+            HostDefsDir = list("XMLHOSTDEFINITIONSDIRECTORY")
+            DoubleLengthZMKs = Convert.ToBoolean(list("DOUBLELENGTHZMKS"))
+
+            If HostDefsDir = "" Then HostDefsDir = IO.Directory.GetCurrentDirectory
+            If VBsources = "" Then VBsources = IO.Directory.GetCurrentDirectory
 
             StartUpCore(list("FIRMWARENUMBER"), _
                         list("DSPFIRMWARENUMBER"), _
@@ -299,9 +306,11 @@ Public Class ThalesMain
         consolePort = 9997
         maxCons = 5
         LMKFile = ""
-        VBsources = "."
+        VBsources = IO.Directory.GetCurrentDirectory
         Logger.CurrentLogLevel = Logger.LogLevel.Debug
         CheckLMKParity = True
+        HostDefsDir = IO.Directory.GetCurrentDirectory
+        DoubleLengthZMKs = True
 
         StartUpCore("0007-E000", _
                     "0001", _
@@ -321,6 +330,12 @@ Public Class ThalesMain
         Resources.AddResource(Resources.MAX_CONS, maxCons)
         Resources.AddResource(Resources.AUTHORIZED_STATE, startInAuthorizedState)
         Resources.AddResource(Resources.CLEAR_PIN_LENGTH, clearPINLength)
+        Resources.AddResource(Resources.DOUBLE_LENGTH_ZMKS, DoubleLengthZMKs)
+
+        'Make sure it ends with a directory separator, both for Windows and Linux.
+        HostDefsDir = Utility.AppendDirectorySeparator(HostDefsDir)
+
+        Resources.AddResource(Resources.HOST_COMMANDS_XML_DEFS, HostDefsDir)
 
         If LMKFile = "" Then
             Logger.MajorInfo("No LMK storage file specified, creating new keys")
@@ -654,10 +669,6 @@ Public Class ThalesMain
     'Host date event
     Private Sub WCMessageArrived(ByVal sender As TCP.WorkerClient, ByRef b() As Byte, ByVal len As Integer)
 
-        Dim MFPC As New ThalesSim.Core.Message.MessageFieldParserCollection
-        MFPC.AddMessageFieldParser(New ThalesSim.Core.Message.MessageFieldParser(HEADER, 4))
-        MFPC.AddMessageFieldParser(New ThalesSim.Core.Message.MessageFieldParser(COMMAND_CODE, 2))
-
         Dim msg As New ThalesSim.Core.Message.Message(b)
 
         Logger.MajorVerbose("Client: " + sender.ClientIP + vbCrLf + _
@@ -665,57 +676,70 @@ Public Class ThalesMain
 
         Try
             Logger.MajorDebug("Parsing header and code of message " + msg.MessageData + "...")
-            MFPC.ParseMessage(msg)
 
-            Logger.MajorDebug("Searching for implementor of " + MFPC.GetMessageFieldByName(COMMAND_CODE).FieldValue + "...")
-            Dim CC As ThalesSim.Core.HostCommands.CommandClass = CE.GetLoadedCommand(MFPC.GetMessageFieldByName(COMMAND_CODE).FieldValue)
+            Dim messageHeader As String = msg.GetSubstring(4)
+            msg.AdvanceIndex(4)
+            Dim commandCode As String = msg.GetSubstring(2)
+            msg.AdvanceIndex(2)
+
+            Logger.MajorDebug("Searching for implementor of " + commandCode + "...")
+            Dim CC As ThalesSim.Core.HostCommands.CommandClass = CE.GetLoadedCommand(commandCode)
 
             If CC Is Nothing Then
-                Logger.MajorError("No implementor for " + MFPC.GetMessageFieldByName(COMMAND_CODE).FieldValue + "." + vbCrLf + _
-                                      "Disconnecting client.")
+                Logger.MajorError("No implementor for " + commandCode + "." + vbCrLf + _
+                                  "Disconnecting client.")
                 sender.TermClient()
             Else
                 Logger.MajorDebug("Found implementor " + CC.DeclaringType.FullName() + ", instantiating...")
                 Dim o As ThalesSim.Core.HostCommands.AHostCommand
-                'o = Activator.CreateInstance(CC.AssemblyName, CC.DeclaringType).Unwrap()
                 o = CType(Activator.CreateInstance(CC.DeclaringType), HostCommands.AHostCommand)
 
                 Dim retMsg As ThalesSim.Core.Message.MessageResponse
-                Dim retMsgAfterIO As ThalesSim.Core.Message.MessageResponse
+                Dim retMsgAfterIO As ThalesSim.Core.Message.MessageResponse = Nothing
 
                 Try
                     If CheckLMKParity = False OrElse Cryptography.LMK.LMKStorage.CheckLMKStorage() = True Then
+                        Logger.MinorInfo("=== [" + commandCode + "], starts " + Utility.getTimeMMHHSSmmmm + " =======")
+
                         Logger.MajorDebug("Calling AcceptMessage()...")
                         o.AcceptMessage(msg)
 
-                        DumpMinorRequest(MFPC)
                         Logger.MinorVerbose(o.DumpFields())
 
-                        Logger.MajorDebug("Calling ConstructResponse()...")
-                        retMsg = o.ConstructResponse()
-                        Logger.MajorDebug("Calling ConstructResponseAfterOperationComplete()...")
-                        retMsgAfterIO = o.ConstructResponseAfterOperationComplete()
+                        If o.XMLParseResult <> ErrorCodes._00_NO_ERROR Then
+                            Logger.MajorDebug("Error condition encountered during message parsing.")
+                            Logger.MajorDebug(String.Format("Error code {0} will be returned without calling ConstructResponse().", o.XMLParseResult))
+                            retMsg = New Core.Message.MessageResponse
+                            retMsg.AddElement(o.XMLParseResult)
+                        Else
+                            Logger.MajorDebug("Calling ConstructResponse()...")
+                            retMsg = o.ConstructResponse()
+                            Logger.MajorDebug("Calling ConstructResponseAfterOperationComplete()...")
+                            retMsgAfterIO = o.ConstructResponseAfterOperationComplete()
+                        End If
 
                         Logger.MajorDebug("Attaching header/response code to response...")
                         retMsg.AddElementFront(CC.ResponseCode)
-                        retMsg.AddElementFront(MFPC.GetMessageFieldByName(HEADER).FieldValue)
+                        retMsg.AddElementFront(messageHeader)
 
                         Logger.MajorVerbose("Sending: " + retMsg.MessageData())
                         sender.send(retMsg.MessageData())
 
-                        If Not (retMsgAfterIO Is Nothing) Then
+                        If retMsgAfterIO IsNot Nothing Then
                             Logger.MajorDebug("Attaching header/response code to response after I/O...")
                             retMsgAfterIO.AddElementFront(CC.ResponseCodeAfterIO)
-                            retMsgAfterIO.AddElementFront(MFPC.GetMessageFieldByName(HEADER).FieldValue)
+                            retMsgAfterIO.AddElementFront(messageHeader)
                             Logger.MajorVerbose("Sending: " + retMsgAfterIO.MessageData())
                             sender.send(retMsgAfterIO.MessageData())
                         End If
+
+                        Logger.MinorInfo("=== [" + commandCode + "],   ends " + Utility.getTimeMMHHSSmmmm + " =======" + vbCrLf)
                     Else
                         Logger.MajorError("LMK parity error")
                         retMsg = New Message.MessageResponse
                         retMsg.AddElementFront(Core.ErrorCodes._13_MASTER_KEY_PARITY_ERROR)
                         retMsg.AddElementFront(CC.ResponseCode)
-                        retMsg.AddElementFront(MFPC.GetMessageFieldByName(HEADER).FieldValue)
+                        retMsg.AddElementFront(messageHeader)
                         sender.send(retMsg.MessageData())
                     End If
 
@@ -742,13 +766,6 @@ Public Class ThalesMain
             sender.TermClient()
         End Try
 
-    End Sub
-
-    Private Sub DumpMinorRequest(ByVal MFPC As ThalesSim.Core.Message.MessageFieldParserCollection)
-        For i As Integer = 0 To MFPC.MessageFieldCount - 1
-            Dim o As Message.MessageFieldParser = MFPC.GetMessageFieldByIndex(i)
-            Logger.MinorVerbose("Field " + o.FieldName + ", value " + o.FieldValue)
-        Next
     End Sub
 
     Private Sub GetMajor(ByVal s As String) Implements Log.ILogProcs.GetMajor

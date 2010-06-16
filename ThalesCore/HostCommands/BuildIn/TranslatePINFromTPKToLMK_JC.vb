@@ -31,11 +31,6 @@ Namespace HostCommands.BuildIn
     Public Class TranslatePINFromTPKToLMK_JC
         Inherits AHostCommand
 
-        Const SOURCE_TPK As String = "SOURCE_TPK"
-        Const PIN_BLOCK As String = "PIN_BLOCK"
-        Const PB_FORMAT As String = "SOURCE_PB_FORMAT"
-        Const ACCT_NBR As String = "ACCOUNT_NUMBER"
-
         Private _acct As String
         Private _sourceKey As String
         Private _pb As String
@@ -48,11 +43,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the JC message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(SOURCE_TPK))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(PIN_BLOCK, 16))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(PB_FORMAT, 2))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(ACCT_NBR, 12))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -63,11 +54,13 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _sourceKey = MFPC.GetMessageFieldByName(SOURCE_TPK).FieldValue()
-            _pb = MFPC.GetMessageFieldByName(PIN_BLOCK).FieldValue()
-            _PBFormat = MFPC.GetMessageFieldByName(PB_FORMAT).FieldValue()
-            _acct = MFPC.GetMessageFieldByName(ACCT_NBR).FieldValue()
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _sourceKey = kvp.ItemCombination("TPK Scheme", "TPK")
+                _pb = kvp.Item("PIN Block")
+                _PBFormat = kvp.Item("PIN Block Format Code")
+                _acct = kvp.Item("Account Number")
+            End If
         End Sub
 
         ''' <summary>
@@ -80,7 +73,8 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim clearTPK As String = Utility.DecryptUnderLMK(_sourceKey, SOURCE_TPK, MFPC.GetMessageFieldByName(SOURCE_TPK).DeterminerName, LMKPairs.LMKPair.Pair14_15, "0")
+            Dim cryptTPK As New HexKey(_sourceKey)
+            Dim clearTPK As String = Utility.DecryptUnderLMK(cryptTPK.ToString, cryptTPK.Scheme, LMKPairs.LMKPair.Pair14_15, "0")
             If Utility.IsParityOK(clearTPK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
@@ -112,16 +106,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

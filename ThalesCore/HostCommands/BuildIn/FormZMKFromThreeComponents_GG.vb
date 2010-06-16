@@ -30,15 +30,10 @@ Namespace HostCommands.BuildIn
     Public Class FormZMKFromThreeComponents_GG
         Inherits AHostCommand
 
-        Const COMPONENT_A As String = "COMPONENT_A"
-        Const COMPONENT_B As String = "COMPONENT_B"
-        Const COMPONENT_C As String = "COMPONENT_C"
-
         Private _keyA As String
         Private _keyB As String
         Private _keyC As String
         Private _del As String
-        Private _keySchemeZMK As String
         Private _keySchemeLMK As String
         Private _keyCheckValue As String
 
@@ -49,14 +44,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the GG message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-
-            MFPC.AddMessageFieldParser(GenerateZMKKeyParser(COMPONENT_A, 90))
-            MFPC.AddMessageFieldParser(GenerateZMKKeyParser(COMPONENT_B, 60))
-            MFPC.AddMessageFieldParser(GenerateZMKKeyParser(COMPONENT_C, 30))
-
-            GenerateDelimiterParser()
-
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -67,14 +55,15 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _keyA = MFPC.GetMessageFieldByName(COMPONENT_A).FieldValue
-            _keyB = MFPC.GetMessageFieldByName(COMPONENT_B).FieldValue
-            _keyC = MFPC.GetMessageFieldByName(COMPONENT_C).FieldValue
-            _del = MFPC.GetMessageFieldByName(DELIMITER).FieldValue
-            _keySchemeZMK = MFPC.GetMessageFieldByName(KEY_SCHEME_ZMK).FieldValue
-            _keySchemeLMK = MFPC.GetMessageFieldByName(KEY_SCHEME_LMK).FieldValue
-            _keyCheckValue = MFPC.GetMessageFieldByName(KEY_CHECK_VALUE).FieldValue
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _keyA = kvp.Item("ZMK Component #1")
+                _keyB = kvp.Item("ZMK Component #2")
+                _keyC = kvp.Item("ZMK Component #3")
+                _del = kvp.ItemOptional("Delimiter")
+                _keySchemeLMK = kvp.ItemOptional("Key Scheme LMK")
+                _keyCheckValue = kvp.ItemOptional("Key Check Value Type")
+            End If
         End Sub
 
         ''' <summary>
@@ -94,42 +83,38 @@ Namespace HostCommands.BuildIn
             End If
 
             Dim ks As KeySchemeTable.KeyScheme
+            Dim cryptA As HexKey, cryptB As HexKey, cryptC As HexKey
+            Dim clearA As String, clearB As String, clearC As String, clearKey As String
+
+            cryptA = New HexKey(_keyA)
+            cryptB = New HexKey(_keyB)
+            cryptC = New HexKey(_keyC)
 
             If _del = DELIMITER_VALUE Then
                 If ValidateKeySchemeCode(_keySchemeLMK, ks, mr) = False Then Return mr
-                If _keySchemeZMK <> "0" Then
-                    mr.AddElement(ErrorCodes._26_INVALID_KEY_SCHEME)
-                    Return mr
-                End If
                 If ks = KeySchemeTable.KeyScheme.TripleLengthKeyAnsi OrElse _
                    ks = KeySchemeTable.KeyScheme.TripleLengthKeyVariant Then
                     mr.AddElement(ErrorCodes._26_INVALID_KEY_SCHEME)
                     Return mr
                 End If
             Else
-                If MFPC.GetMessageFieldByName(COMPONENT_A).DeterminerName = COMPONENT_A + PLAIN_DOUBLE Then
-                    ks = KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi
-                Else
-                    ks = KeySchemeTable.KeyScheme.SingleDESKey
-                End If
+                ks = cryptA.Scheme
                 _keyCheckValue = "0"
             End If
 
-            Dim clearA As String, clearB As String, clearC As String, clearKey As String
-
-            clearA = Utility.DecryptUnderLMK(_keyA, COMPONENT_A, MFPC.GetMessageFieldByName(COMPONENT_A).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
+            clearA = Utility.DecryptUnderLMK(cryptA.ToString, ks, LMKPairs.LMKPair.Pair04_05, "0") 'Utility.DecryptUnderLMK(_keyA, COMPONENT_A, MFPC.GetMessageFieldByName(COMPONENT_A).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
             If Utility.IsParityOK(clearA, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            clearB = Utility.DecryptUnderLMK(_keyB, COMPONENT_B, MFPC.GetMessageFieldByName(COMPONENT_B).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
+            clearB = Utility.DecryptUnderLMK(cryptB.ToString, ks, LMKPairs.LMKPair.Pair04_05, "0") 'Utility.DecryptUnderLMK(_keyB, COMPONENT_B, MFPC.GetMessageFieldByName(COMPONENT_B).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
             If Utility.IsParityOK(clearB, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._11_DESTINATION_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            clearC = Utility.DecryptUnderLMK(_keyC, COMPONENT_C, MFPC.GetMessageFieldByName(COMPONENT_C).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
+            clearC = Utility.DecryptUnderLMK(cryptC.ToString, ks, LMKPairs.LMKPair.Pair04_05, "0") 'Utility.DecryptUnderLMK(_keyC, COMPONENT_C, MFPC.GetMessageFieldByName(COMPONENT_C).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
             If Utility.IsParityOK(clearC, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._11_DESTINATION_KEY_PARITY_ERROR)
                 Return mr
@@ -161,16 +146,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

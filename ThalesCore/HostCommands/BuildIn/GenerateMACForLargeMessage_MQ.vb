@@ -31,13 +31,6 @@ Namespace HostCommands.BuildIn
     Public Class GenerateMACForLargeMessage_MQ
         Inherits AHostCommand
 
-        Const BLOCK_NBR As String = "BLOCK_NBR"
-        Const ZAKKEY As String = "ZAK"
-        Const IV_1 As String = "IV_1"
-        Const IV_2 As String = "IV_2"
-        Const DATA As String = "DATA"
-        Const MSG_LEN As String = "MSG_LEN"
-
         Private _blockNbr As String
         Private _zak As String
         Private _iv As String
@@ -51,18 +44,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the MQ message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(New MessageFieldParser(BLOCK_NBR, 1))
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(ZAKKEY))
-            Dim P_IV1 As New MessageFieldParser(IV_1, 16)
-            P_IV1.DependentField = BLOCK_NBR
-            P_IV1.DependentValue = "2"
-            MFPC.AddMessageFieldParser(P_IV1)
-            Dim P_IV2 As New MessageFieldParser(IV_2, 16)
-            P_IV2.DependentField = BLOCK_NBR
-            P_IV2.DependentValue = "3"
-            MFPC.AddMessageFieldParser(P_IV2)
-            MFPC.AddMessageFieldParser(New MessageFieldParser(MSG_LEN, 3))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -73,18 +55,15 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _blockNbr = MFPC.GetMessageFieldByName(BLOCK_NBR).FieldValue()
-            _zak = MFPC.GetMessageFieldByName(ZAKKEY).FieldValue()
-            If _blockNbr = "2" Then
-                _iv = MFPC.GetMessageFieldByName(IV_1).FieldValue()
-            ElseIf _blockNbr = "3" Then
-                _iv = MFPC.GetMessageFieldByName(IV_2).FieldValue()
-            Else
-                _iv = ZEROES
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _blockNbr = kvp.Item("Message Block Number")
+                _zak = kvp.ItemCombination("ZAK Scheme", "ZAK")
+                _iv = kvp.ItemOptional("IV")
+                If _iv = "" Then _iv = ZEROES
+                _msgLen = kvp.Item("Message Length")
+                _data = System.Text.ASCIIEncoding.Default.GetBytes(kvp.Item("Message Block"))
             End If
-            _msgLen = MFPC.GetMessageFieldByName(MSG_LEN).FieldValue()
-            _data = msg.GetRemainingBytes()
         End Sub
 
         ''' <summary>
@@ -97,7 +76,8 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim zak As String = Utility.DecryptUnderLMK(_zak, ZAKKEY, MFPC.GetMessageFieldByName(ZAKKEY).DeterminerName, LMKPairs.LMKPair.Pair26_27, "0")
+            Dim cryptZAK As New HexKey(_zak)
+            Dim zak As String = Utility.DecryptUnderLMK(cryptZAK.ToString, cryptZAK.Scheme, LMKPairs.LMKPair.Pair26_27, "0")
             If Utility.IsParityOK(zak, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
@@ -119,16 +99,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

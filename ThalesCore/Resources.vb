@@ -82,6 +82,18 @@ Public Class Resources
     ''' <remarks></remarks>
     Public Const CONSOLE_PORT As String = "CONSOLE_PORT"
 
+    ''' <summary>
+    ''' Resource name for host commands XML definitions.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const HOST_COMMANDS_XML_DEFS As String = "HOST_COMMANDS_XML_DEFS"
+
+    ''' <summary>
+    ''' Resource name for double length ZMKs flag.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const DOUBLE_LENGTH_ZMKS As String = "DOUBLE_LENGTH_ZMKS"
+
     Private Shared _lst As New SortedList(Of String, Object)
 
     ''' <summary>

@@ -24,7 +24,7 @@ Namespace Message
     ''' of this class can be combined in a <see cref="MessageFieldParserCollection"/> in order
     ''' to parse a whole message to discrete elements.
     ''' </remarks>
-    Public Class MessageFieldParser
+    <Obsolete()> Public Class MessageFieldParser
 
         ''' <summary>
         ''' Defines a field type.

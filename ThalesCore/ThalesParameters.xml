@@ -19,6 +19,9 @@
 		<!-- Directory that contains VB sources to compile and use as racal commands
 		     in runtime -->
 		<VBSourceDirectory value="..\..\..\ThalesCore\HostCommands\Runtime" />
+
+    <!-- Directory where XML host command definitions reside -->
+    <XMLHostDefinitionsDirectory value="..\..\..\ThalesCore\XMLDefs\HostCommands" />
 		
 		<!-- Log level -->
 		<LogLevel value="5" />
@@ -37,6 +40,10 @@
 		
 		<!-- Set to True to start the simulator in the Authorized State -->
 		<StartInAuthorizedState value="True" />
+
+    <!-- Set to True if we'll be using double-length ZMKs. This is configured
+         using the CS HSM command. -->
+    <DoubleLengthZMKs value="True" />
 		
 	</Parameters>
 

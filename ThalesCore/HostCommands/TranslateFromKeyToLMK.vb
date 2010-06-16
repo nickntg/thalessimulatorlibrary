@@ -29,28 +29,13 @@ Namespace HostCommands
     Public MustInherit Class TranslateFromKeyToLMK
         Inherits AHostCommand
 
-        ''' <summary>
-        ''' Source key string.
-        ''' </summary>
-        ''' <remarks>
-        ''' Source key string.
-        ''' </remarks>
-        Protected Const SOURCE_KEY As String = "SOURCE_KEY"
-
-        ''' <summary>
-        ''' Target key string.
-        ''' </summary>
-        ''' <remarks>
-        ''' Target key string.
-        ''' </remarks>
-        Protected Const TARGET_KEY As String = "TARGET_KEY"
-
         Private _sourceKEY As String
         Private _targetKEY As String
         Private _del As String
-        Private _keySchemeZMK As String
         Private _keySchemeLMK As String
         Private _keyCheckValue As String
+        Private _sourceKeyScheme As KeySchemeTable.KeyScheme
+        Private _targetKeyScheme As KeySchemeTable.KeyScheme
 
         ''' <summary>
         ''' Source LMK pair.
@@ -143,7 +128,7 @@ Namespace HostCommands
         ''' The constructor sets up the message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
+            ReadXMLDefinitions()
             InitFields()
         End Sub
 
@@ -165,13 +150,24 @@ Namespace HostCommands
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _sourceKEY = MFPC.GetMessageFieldByName(SOURCE_KEY).FieldValue
-            _targetKEY = MFPC.GetMessageFieldByName(TARGET_KEY).FieldValue
-            _del = MFPC.GetMessageFieldByName(DELIMITER).FieldValue
-            _keySchemeZMK = MFPC.GetMessageFieldByName(KEY_SCHEME_ZMK).FieldValue
-            _keySchemeLMK = MFPC.GetMessageFieldByName(KEY_SCHEME_LMK).FieldValue
-            _keyCheckValue = MFPC.GetMessageFieldByName(KEY_CHECK_VALUE).FieldValue
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _sourceKEY = kvp.ItemCombination("ZMK Scheme", "ZMK")
+                _targetKEY = kvp.ItemCombination("Key Scheme", "Key")
+                _del = kvp.ItemOptional("Delimiter")
+                _keySchemeLMK = kvp.ItemOptional("Key Scheme LMK")
+                _keyCheckValue = kvp.ItemOptional("Key Check Value Type")
+                If kvp.ItemOptional("ZMK Scheme") <> "" Then
+                    _sourceKeyScheme = KeySchemeTable.GetKeySchemeFromValue(kvp.ItemOptional("ZMK Scheme"))
+                Else
+                    _sourceKeyScheme = KeySchemeTable.KeyScheme.Unspecified
+                End If
+                If kvp.ItemOptional("Key Scheme") <> "" Then
+                    _targetKeyScheme = KeySchemeTable.GetKeySchemeFromValue(kvp.ItemOptional("Key Scheme"))
+                Else
+                    _targetKeyScheme = KeySchemeTable.KeyScheme.Unspecified
+                End If
+            End If
         End Sub
 
         ''' <summary>
@@ -192,28 +188,18 @@ Namespace HostCommands
                 End If
             End If
 
-            Dim LMKks As KeySchemeTable.KeyScheme, KeyKs As KeySchemeTable.KeyScheme
+            Dim LMKks As KeySchemeTable.KeyScheme
 
             If _del = DELIMITER_VALUE Then
                 If ValidateKeySchemeCode(_keySchemeLMK, LMKks, mr) = False Then Return mr
-                If ValidateKeySchemeCode(_keySchemeZMK, KeyKs, mr) = False Then Return mr
             Else
-                Select Case MFPC.GetMessageFieldByName(TARGET_KEY).DeterminerName
-                    Case TARGET_KEY + DOUBLE_VARIANT, TARGET_KEY + DOUBLE_X917
-                        LMKks = KeySchemeTable.KeyScheme.DoubleLengthKeyVariant
-                    Case TARGET_KEY + TRIPLE_VARIANT, TARGET_KEY + TRIPLE_X917
-                        LMKks = KeySchemeTable.KeyScheme.TripleLengthKeyVariant
-                    Case TARGET_KEY + PLAIN_DOUBLE
-                        LMKks = KeySchemeTable.KeyScheme.Unspecified
-                    Case Else
-                        LMKks = KeySchemeTable.KeyScheme.SingleDESKey
-                End Select
+                LMKks = _targetKeyScheme
                 _keyCheckValue = "0"
             End If
 
             Dim clearSource As String, clearTarget As String
-
-            clearSource = Utility.DecryptUnderLMK(_sourceKEY, SOURCE_KEY, MFPC.GetMessageFieldByName(SOURCE_KEY).DeterminerName, SourceLMK, SourceVariant)
+            Dim cryptSource As New HexKey(_sourceKEY)
+            clearSource = Utility.DecryptUnderLMK(cryptSource.ToString, cryptSource.Scheme, SourceLMK, SourceVariant)
             If Utility.IsParityOK(clearSource, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
@@ -221,12 +207,9 @@ Namespace HostCommands
 
             'This catered only for single-length key situations (see http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=70958).
             'clearTarget = TripleDES.TripleDESDecrypt(New HexKey(clearSource), _targetKEY)
-            clearTarget = DecryptUnderZMK(clearSource, _targetKEY, KeyKs)
 
-            'If the resulting key has a scheme, remove it.
-            If clearTarget.Length Mod 8 <> 0 Then
-                clearTarget = clearTarget.Substring(1)
-            End If
+            clearTarget = DecryptUnderZMK(clearSource, Utility.RemoveKeyType(_targetKEY), _targetKeyScheme) ' KeySchemeTable.KeyScheme.DoubleLengthKeyVariant)
+            clearTarget = Utility.RemoveKeyType(clearTarget)
 
             Dim finalTarget As String = clearTarget
             If AllowBadParity = True Then
@@ -294,16 +277,6 @@ Namespace HostCommands
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

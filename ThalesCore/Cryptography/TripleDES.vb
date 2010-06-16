@@ -32,7 +32,7 @@ Namespace Cryptography
         ''' </remarks>
         Public Shared Function TripleDESEncrypt(ByVal key As HexKey, ByVal data As String) As String
 
-            If data Is Nothing AndAlso data.Length <> 16 AndAlso data.Length <> 32 AndAlso data.Length <> 48 Then Throw New Exceptions.XInvalidData("Invalid data for 3DEncrypt with variant")
+            If (data Is Nothing) OrElse (data.Length <> 16 AndAlso data.Length <> 32 AndAlso data.Length <> 48) Then Throw New Exceptions.XInvalidData("Invalid data for 3DEncrypt")
 
             Dim result As String
             If data.Length = 16 Then
@@ -63,7 +63,7 @@ Namespace Cryptography
         ''' Performs a decryption operation.
         ''' </remarks>
         Public Shared Function TripleDESDecrypt(ByVal key As HexKey, ByVal data As String) As String
-            If data Is Nothing AndAlso data.Length <> 16 AndAlso data.Length <> 32 AndAlso data.Length <> 48 Then Throw New Exceptions.XInvalidData("Invalid data for 3DEncrypt with variant")
+            If (data Is Nothing) OrElse (data.Length <> 16 AndAlso data.Length <> 32 AndAlso data.Length <> 48) Then Throw New Exceptions.XInvalidData("Invalid data for 3DEncrypt")
 
             Dim result As String
             If data.Length = 16 Then
@@ -95,7 +95,7 @@ Namespace Cryptography
         ''' </remarks>
         Public Shared Function TripleDESEncryptVariant(ByVal key As HexKey, ByVal data As String) As String
 
-            If data Is Nothing AndAlso data.Length <> 32 AndAlso data.Length <> 48 Then Throw New Exceptions.XInvalidData("Invalid data for 3DEncrypt with variant")
+            If data Is Nothing OrElse (data.Length <> 32 AndAlso data.Length <> 48) Then Throw New Exceptions.XInvalidData("Invalid data for 3DEncrypt with variant")
 
             Dim result1 As String, result2 As String, result3 As String = "", orgKeyPartB As String
             If data.Length = 32 Then
@@ -124,7 +124,7 @@ Namespace Cryptography
         ''' </remarks>
         Public Shared Function TripleDESDecryptVariant(ByVal key As HexKey, ByVal data As String) As String
 
-            If data Is Nothing AndAlso data.Length <> 32 AndAlso data.Length <> 48 Then Throw New Exceptions.XInvalidData("Invalid data for 3DDecrypt with variant")
+            If data Is Nothing OrElse (data.Length <> 32 AndAlso data.Length <> 48) Then Throw New Exceptions.XInvalidData("Invalid data for 3DDecrypt with variant")
 
             Dim result1 As String = "", result2 As String = "", result3 As String = "", orgKeyPartB As String
             If data.Length = 32 Then

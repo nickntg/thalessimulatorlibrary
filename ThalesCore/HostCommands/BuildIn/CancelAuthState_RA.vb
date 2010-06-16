@@ -31,25 +31,6 @@ Namespace HostCommands.BuildIn
         Inherits AHostCommand
 
         ''' <summary>
-        ''' Constructor.
-        ''' </summary>
-        ''' <remarks>
-        ''' The constructor sets up the RA message parsing fields (so it does nothing).
-        ''' </remarks>
-        Public Sub New()
-        End Sub
-
-        ''' <summary>
-        ''' Parses the request message.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method parses the command message. The message header and message command
-        ''' code are <b>not</b> part of the message.
-        ''' </remarks>
-        Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-        End Sub
-
-        ''' <summary>
         ''' Creates the response message.
         ''' </summary>
         ''' <remarks>
@@ -68,15 +49,6 @@ Namespace HostCommands.BuildIn
             Return mr
         End Function
 
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
-        End Function
     End Class
 
 End Namespace

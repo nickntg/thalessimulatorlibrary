@@ -26,11 +26,8 @@ Namespace HostCommands.BuildIn
     Public Class EchoTest_B2
         Inherits AHostCommand
 
-        Const DATA_LENGTH As String = "DATA_LENGTH"
-
         Private _dataLength As String
         Private _data As String
-        Private _errorCode As String
 
         ''' <summary>
         ''' Constructor.
@@ -39,10 +36,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the B2 message parsing fields.
         ''' </remarks>
         Public Sub New()
-
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(New MessageFieldParser(DATA_LENGTH, 4))
-
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -53,28 +47,25 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _dataLength = kvp.Item("Length")
 
-            Dim CE As CommandExplorer = New HostCommands.CommandExplorer
+                Dim iDataLength As Integer = Convert.ToInt32(_dataLength, 16)
 
-            MFPC.ParseMessage(msg)
+                Try
+                    If msg.CharsLeft() < iDataLength Then
+                        XMLParseResult = ErrorCodes._80_DATA_LENGTH_ERROR
+                    ElseIf msg.CharsLeft() > iDataLength Then
+                        XMLParseResult = ErrorCodes._15_INVALID_INPUT_DATA
+                    Else
+                        _data = msg.GetSubstring(iDataLength)
+                    End If
 
-            ' Get's the message hex length
-            _dataLength = MFPC.GetMessageFieldByName(DATA_LENGTH).FieldValue()
-            Dim iDataLength As Integer = Convert.ToInt32(_dataLength, 16)
-
-            Try
-                If msg.CharsLeft() < iDataLength Then
-                    _errorCode = ErrorCodes._80_DATA_LENGTH_ERROR
-                ElseIf msg.CharsLeft() > iDataLength Then
-                    _errorCode = ErrorCodes._15_INVALID_INPUT_DATA
-                Else
-                    _data = msg.GetSubstring(iDataLength)
-                End If
-
-            Catch ex As Exception
-                _errorCode = ErrorCodes._80_DATA_LENGTH_ERROR
-            End Try
-
+                Catch ex As Exception
+                    XMLParseResult = ErrorCodes._80_DATA_LENGTH_ERROR
+                End Try
+            End If
         End Sub
 
         ''' <summary>
@@ -85,13 +76,7 @@ Namespace HostCommands.BuildIn
         ''' are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Function ConstructResponse() As MessageResponse
-
             Dim mr As New MessageResponse
-
-            If _errorCode IsNot Nothing Then
-                mr.AddElement(_errorCode)
-                Return mr
-            End If
 
             ' Includes B2 Error Code
             mr.AddElement(ErrorCodes._00_NO_ERROR)
@@ -100,16 +85,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As MessageResponse
-            Return Nothing
         End Function
 
     End Class

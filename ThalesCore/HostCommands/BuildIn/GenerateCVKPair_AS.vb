@@ -31,7 +31,6 @@ Namespace HostCommands.BuildIn
         Inherits AHostCommand
 
         Private _del As String
-        Private _keySchemeZMK As String
         Private _keySchemeLMK As String
         Private _keyCheckValue As String
 
@@ -42,10 +41,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the AS message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-
-            GenerateDelimiterParser()
-
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -56,11 +52,12 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _del = MFPC.GetMessageFieldByName(DELIMITER).FieldValue
-            _keySchemeZMK = MFPC.GetMessageFieldByName(KEY_SCHEME_ZMK).FieldValue
-            _keySchemeLMK = MFPC.GetMessageFieldByName(KEY_SCHEME_LMK).FieldValue
-            _keyCheckValue = MFPC.GetMessageFieldByName(KEY_CHECK_VALUE).FieldValue
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _del = kvp.ItemOptional("Delimiter")
+                _keySchemeLMK = kvp.ItemOptional("Key Scheme LMK")
+                _keyCheckValue = kvp.ItemOptional("Key Check Value Type")
+            End If
         End Sub
 
         ''' <summary>
@@ -73,14 +70,13 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim ks As KeySchemeTable.KeyScheme, zmkKs As KeySchemeTable.KeyScheme
+            Dim ks As KeySchemeTable.KeyScheme
             Dim useKs As KeySchemeTable.KeyScheme
 
             If _del = DELIMITER_VALUE Then
                 If ValidateKeySchemeCode(_keySchemeLMK, ks, mr) = False Then Return mr
-                If ValidateKeySchemeCode(_keySchemeZMK, zmkKs, mr) = False Then Return mr
 
-                If ks <> KeySchemeTable.KeyScheme.DoubleLengthKeyVariant AndAlso ks <> KeySchemeTable.KeyScheme.TripleLengthKeyVariant AndAlso ks <> KeySchemeTable.KeyScheme.Unspecified Then
+                If ks <> KeySchemeTable.KeyScheme.DoubleLengthKeyVariant AndAlso ks <> KeySchemeTable.KeyScheme.Unspecified Then
                     mr.AddElement(ErrorCodes._26_INVALID_KEY_SCHEME)
                     Return mr
                 End If
@@ -127,16 +123,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

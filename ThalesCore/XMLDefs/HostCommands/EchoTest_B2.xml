@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Echo received data back to the user</CommandName>
+  <Request>B2</Request>
+  <Response>B3</Response>
+
+  <Field>
+    <Name>Length</Name>
+    <Length>4</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+</CommandConfiguration>
