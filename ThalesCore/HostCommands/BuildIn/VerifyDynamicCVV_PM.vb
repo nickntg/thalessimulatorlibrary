@@ -32,18 +32,14 @@ Namespace HostCommands.BuildIn
     Public Class VerifyDynamicCVV_PM
         Inherits AHostCommand
 
-        Const SCHEME_ID As String = "SCHEME_ID"
-        Const VERSION_ID As String = "VERSION_ID"
-        Const MKDCVV As String = "MKDCVV"
-        Const KEY_DERIVATION_METHOD As String = "KEY_DER_METHOD"
-        Const PAN As String = "PAN"
-
         Const SCHEME_VISA As String = "0"
         Const SCHEME_MASTERCARD As String = "1"
         Const VERSION_VISA As String = "0"
         Const VERSION_MASTERCARD_PAYPASS_IVCVC3PROVIDED As String = "0"
         Const VERSION_MASTERCARD_PAYPASS_PSNANDIVCVC3PROVIDED As String = "1"
         Const VERSION_MASTERCARD_PAYPASS_PANANDTRACKPROVIDED As String = "2"
+        Const KEY_DERIVATION_METHOD_A As String = "A"
+        Const KEY_DERIVATION_METHOD_B As String = "B"
 
         Private _schemeID As String
         Private _versionID As String
@@ -66,14 +62,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the PM message parsing fields.
         ''' </remarks>
         Public Sub New()
-            'We're only adding the common fields for now.
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(New MessageFieldParser(SCHEME_ID, 1))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(VERSION_ID, 1))
-            MFPC.AddMessageFieldParser(GeneratePVKKeyParser(MKDCVV))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(KEY_DERIVATION_METHOD, 1))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(PAN, DELIMITER_VALUE))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(DELIMITER, 1))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -84,43 +73,32 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _schemeID = MFPC.GetMessageFieldByName(SCHEME_ID).FieldValue
-            _versionID = MFPC.GetMessageFieldByName(VERSION_ID).FieldValue
-            _cryptIMK = MFPC.GetMessageFieldByName(MKDCVV).FieldValue
-            _keyDerivationMethod = MFPC.GetMessageFieldByName(KEY_DERIVATION_METHOD).FieldValue
-            _PANstr = MFPC.GetMessageFieldByName(PAN).FieldValue
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _schemeID = kvp.Item("Scheme ID")
+                _versionID = kvp.Item("Version")
+                _cryptIMK = kvp.ItemCombination("MK-DCVV Scheme", "MK-DCVV")
+                _keyDerivationMethod = kvp.Item("Key Derivation Method")
+                _PANstr = kvp.Item("PAN")
+                _PANSequenceNo = kvp.Item("PAN Sequence No")
+                _TrackLength = Convert.ToInt32(kvp.Item("Track Data Length"))
+                _TrackData = kvp.Item("Track Data")
+                _UN = kvp.Item("Unpredictable Number")
+                _ATC = kvp.Item("ATC")
+                _dCVV = kvp.Item("DCVV")
 
-            'Parsing the currently implemented case manually.
-            If _schemeID = SCHEME_MASTERCARD AndAlso _versionID = VERSION_MASTERCARD_PAYPASS_PANANDTRACKPROVIDED Then
-                Try
-                    _PANSequenceNo = msg.GetSubstring(2)
-                    msg.AdvanceIndex(2)
-                    _TrackLength = Convert.ToInt32(msg.GetSubstring(3))
-                    msg.AdvanceIndex(3)
-                    _TrackData = msg.GetSubstring(_TrackLength)
-                    msg.AdvanceIndex(_TrackLength)
-                    _UN = msg.GetSubstring(8)
-                    msg.AdvanceIndex(8)
-                    _ATC = msg.GetSubstring(5)
-                    msg.AdvanceIndex(5)
+                'An X in the dynamic CVV means ignore. We'll replace it out.
+                _dCVV = _dCVV.Replace("X", "")
 
-                    'An X in the dynamic CVV means ignore. We'll replace it out.
-                    _dCVV = msg.GetSubstring(5).Replace("X", "")
+                'We want the ATC in hexadecimal.
+                Dim ATC As Integer = Convert.ToInt32(_ATC)
+                Utility.ByteArrayToHexString(New Byte() {Convert.ToByte(ATC \ 256), Convert.ToByte(ATC Mod 256)}, _ATCHex)
 
-                    'We want the ATC in hexadecimal.
-                    Dim ATC As Integer = Convert.ToInt32(_ATC)
-                    Utility.ByteArrayToHexString(New Byte() {Convert.ToByte(ATC \ 256), Convert.ToByte(ATC Mod 256)}, _ATCHex)
-
-                    'Track data is in binary. We want a hex string with this data.
-                    _TrackClearData = ""
-                    For i As Integer = 0 To _TrackData.Length - 1
-                        _TrackClearData = _TrackClearData + Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetBytes(_TrackData.Substring(i, 1))(0).ToString("X2")
-                    Next
-                Catch ex As Exception
-                    'Currently assuming that an error means that a short message was send.
-                    Throw New Exceptions.XShortMessage("Short message")
-                End Try
+                'Track data is in binary. We want a hex string with this data.
+                _TrackClearData = ""
+                For i As Integer = 0 To _TrackData.Length - 1
+                    _TrackClearData = _TrackClearData + Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetBytes(_TrackData.Substring(i, 1))(0).ToString("X2")
+                Next
             End If
         End Sub
 
@@ -135,45 +113,39 @@ Namespace HostCommands.BuildIn
 
             Dim mr As New MessageResponse
 
-            'Currently implemented only for Mastercard Paypass.
-            If _schemeID <> SCHEME_MASTERCARD Then
-                mr.AddElement(ErrorCodes._41_INTERNAL_HARDWARE_SOFTWARE_ERROR)
-                Return mr
-            End If
-
-            'Currently implemented only for Mastercard Paypass with PAN and track data provided.
-            If _versionID <> VERSION_MASTERCARD_PAYPASS_PANANDTRACKPROVIDED Then
-                mr.AddElement(ErrorCodes._41_INTERNAL_HARDWARE_SOFTWARE_ERROR)
+            'Key derivation method B is allowed only if the PAN is larger than 16 digits.
+            If _keyDerivationMethod = KEY_DERIVATION_METHOD_B AndAlso _PANstr.Length <= 16 Then
+                mr.AddElement(ErrorCodes._15_INVALID_INPUT_DATA)
                 Return mr
             End If
 
             Dim cryptIMK As New HexKey(_cryptIMK)
-            Dim clearIMK As New HexKey(Utility.DecryptUnderLMK(_cryptIMK, MKDCVV, MFPC.GetMessageFieldByName(MKDCVV).DeterminerName, LMKPairs.LMKPair.Pair28_29, "7"))
+            Dim clearIMK As New HexKey(Utility.DecryptUnderLMK(cryptIMK.ToString, cryptIMK.Scheme, LMKPairs.LMKPair.Pair28_29, "7"))
+
+            Log.Logger.MinorInfo("Crypt IMK: " + cryptIMK.ToString)
+            Log.Logger.MinorInfo("Clear IMK: " + clearIMK.ToString)
+            Log.Logger.MinorInfo("Passed dCVV: " + _dCVV)
 
             Dim calcDynamicCVV As String = CalculateDynamicCVV_MastercardPaypass(clearIMK, _PANstr, _PANSequenceNo, _TrackClearData, _UN, _ATCHex)
             If calcDynamicCVV.Length > _dCVV.Length Then
                 calcDynamicCVV = calcDynamicCVV.Substring(calcDynamicCVV.Length - _dCVV.Length)
             End If
+
             If calcDynamicCVV = _dCVV Then
+                Log.Logger.MinorInfo("dCVV verification successful")
                 mr.AddElement(ErrorCodes._00_NO_ERROR)
             Else
+                Dim calcdCVV As String = calcDynamicCVV
+                Log.Logger.MinorInfo("dCVV verification failed")
+                Log.Logger.MinorInfo("Expected dCVV: " + calcdCVV)
+
                 mr.AddElement(ErrorCodes._01_VERIFICATION_FAILURE)
                 If IsInAuthorizedState() Then
-                    mr.AddElement(calcDynamicCVV)
+                    mr.AddElement(calcdCVV)
                 End If
             End If
 
             Return mr
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
         ''' <summary>
@@ -190,7 +162,14 @@ Namespace HostCommands.BuildIn
         Private Function CalculateDynamicCVV_MastercardPaypass(ByVal IMK As Cryptography.HexKey, ByVal PAN As String, ByVal PANSequenceNo As String, _
                                                                ByVal trackData As String, ByVal UN As String, ByVal ATC As String) As String
             'Find the derived key.
-            Dim KD As Cryptography.HexKey = GetDerivedKey(IMK, PAN, PANSequenceNo)
+            Dim KD As Cryptography.HexKey = Nothing
+
+            If _keyDerivationMethod = KEY_DERIVATION_METHOD_A Then
+                KD = GetDerivedKey_OptionA(IMK, PAN, PANSequenceNo)
+            Else
+                KD = GetDerivedKey_OptionB(IMK, PAN, PANSequenceNo)
+            End If
+
             'Generate the MAC to get the IVCVC3.
             Dim IV As String = GetIVMac(trackData, KD)
             'Append MAC+UN+ATC.
@@ -210,8 +189,8 @@ Namespace HostCommands.BuildIn
         ''' <param name="PAN">PAN.</param>
         ''' <param name="PANSequenceNo">PAN sequence number.</param>
         ''' <returns></returns>
-        ''' <remarks></remarks>
-        Private Function GetDerivedKey(ByVal IMK As Cryptography.HexKey, ByVal PAN As String, ByVal PANSequenceNo As String) As Cryptography.HexKey
+        ''' <remarks>This implements the key derivation method A.</remarks>
+        Private Function GetDerivedKey_OptionA(ByVal IMK As Cryptography.HexKey, ByVal PAN As String, ByVal PANSequenceNo As String) As Cryptography.HexKey
             'Add sequence number to PAN and pad to at least 16 digits. 
             'Then get the rightmost sixteen digits to form an 8-byte block.
             Dim Y As String = PAN + PANSequenceNo
@@ -220,6 +199,65 @@ Namespace HostCommands.BuildIn
             End If
             Y = Y.Substring(Y.Length - 16)
 
+            Return GetDerivedKeyFromPreparedPAN(IMK, Y)
+        End Function
+
+        ''' <summary>
+        ''' Calculates the derived key using the initial key, the PAN and the sequence number.
+        ''' This method is called when the PAN is larger than 16 digits.
+        ''' </summary>
+        ''' <param name="IMK">Initial key.</param>
+        ''' <param name="PAN">PAN.</param>
+        ''' <param name="PANSequenceNo">PAN sequence number.</param>
+        ''' <returns></returns>
+        ''' <remarks>This implements the key derivation method B.</remarks>
+        Private Function GetDerivedKey_OptionB(ByVal IMK As Cryptography.HexKey, ByVal PAN As String, ByVal PANSequenceNo As String) As Cryptography.HexKey
+            Dim Y As String = PAN + PANSequenceNo
+
+            'Pad to an even length.
+            If PAN.Length Mod 2 = 1 Then
+                Y = Y + "0"c
+            End If
+
+            'Hash Y.
+            Dim hash As Security.Cryptography.HashAlgorithm = New Security.Cryptography.SHA1Managed
+            Dim result() As Byte = hash.ComputeHash(Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetBytes(Y))
+
+            'Get hex result.
+            Dim resultStr As String = ""
+            Utility.ByteArrayToHexString(result, resultStr)
+
+            'Keep values A, B, C, D, E and F here.
+            Dim undecimalized As String = ""
+
+            'Try to get to the first 16 decimal characters.
+            Y = ""
+            For i As Integer = 0 To resultStr.Length - 1
+                If Char.IsDigit(resultStr.Chars(i)) Then
+                    Y = Y + resultStr.Chars(i)
+                    If Y.Length = 16 Then Exit For
+                Else
+                    undecimalized = undecimalized + resultStr.Chars(i)
+                End If
+            Next
+
+            'If more are needed, do the decimalization and get the rest.
+            If Y.Length < 16 Then
+                Dim decimalized As String = Utility.Decimalise(undecimalized, "012345")
+                Y = Y + decimalized.Substring(0, 16 - Y.Length)
+            End If
+
+            Return GetDerivedKeyFromPreparedPAN(IMK, Y)
+        End Function
+
+        ''' <summary>
+        ''' Calculates the derived key using the initial key given a massaged PAN.
+        ''' </summary>
+        ''' <param name="IMK">Initial key.</param>
+        ''' <param name="Y">Prepared PAN from OptionA or OptionB methods.</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Private Function GetDerivedKeyFromPreparedPAN(ByVal IMK As Cryptography.HexKey, ByVal Y As String) As Cryptography.HexKey
             'Left key is the result of encrypting Y with the IMK.
             Dim ZL As String = Cryptography.TripleDES.TripleDESEncrypt(IMK, Y)
             'Right key is the result of encrypting Y XOR FFs with the IMK.

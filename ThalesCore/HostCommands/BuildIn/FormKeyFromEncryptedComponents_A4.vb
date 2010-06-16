@@ -30,15 +30,10 @@ Namespace HostCommands.BuildIn
     Public Class FormKeyFromEncryptedComponents_A4
         Inherits AHostCommand
 
-        Const NUMBER_COMPONENTS As String = "NBR_COMPONENTS"
-        Const KEY_TYPE_CODE As String = "KEY_TYPE_CODE"
-        Const COMPONENT As String = "COMPONENT_"
-
         Private _nbrComponents As String = ""
         Private _iNbrComponents As Integer
         Private _keyTypeCode As String = ""
         Private _lmkScheme As String = ""
-        Private _defs(8) As MessageFieldParser
         Private _comps(8) As String
 
         ''' <summary>
@@ -48,16 +43,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the A4 message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-
-            MFPC.AddMessageFieldParser(New MessageFieldParser(NUMBER_COMPONENTS, 1))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(KEY_TYPE_CODE, 3))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(KEY_SCHEME_LMK, 1))
-
-            For i As Integer = 1 To 8
-                _defs(i - 1) = generatemultikeyparser(COMPONENT + i.ToString())
-            Next
-
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -68,36 +54,16 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _keyTypeCode = MFPC.GetMessageFieldByName(KEY_TYPE_CODE).FieldValue
-            _lmkScheme = MFPC.GetMessageFieldByName(KEY_SCHEME_LMK).FieldValue
-            _nbrComponents = MFPC.GetMessageFieldByName(NUMBER_COMPONENTS).FieldValue
-
-            Try
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _nbrComponents = kvp.Item("Number of Components")
+                _keyTypeCode = kvp.Item("Key Type")
+                _lmkScheme = kvp.Item("Key Scheme (LMK)")
                 _iNbrComponents = Convert.ToInt32(_nbrComponents)
-                If _iNbrComponents < 2 OrElse _iNbrComponents > 9 Then
-                    _iNbrComponents = -1
-                Else
-                    For i As Integer = 1 To _iNbrComponents
-                        Try
-                            _defs(i - 1).ParseField(msg)
-                            _comps(i - 1) = _defs(i - 1).FieldValue
-                        Catch ex As Exceptions.XShortMessage
-                            _iNbrComponents = -2
-                            Exit Sub
-                        Catch ex As Exceptions.XNoDeterminerMatched
-                            _iNbrComponents = -2
-                            Exit Sub
-                        Catch ex As Exception
-                            _iNbrComponents = -2
-                            Exit Sub
-                        End Try
-                    Next
-                End If
-            Catch ex As Exception
-                _iNbrComponents = -1
-            End Try
-
+                For i As Integer = 1 To _iNbrComponents
+                    _comps(i - 1) = kvp.Item("Key Component #" + i.ToString)
+                Next
+            End If
         End Sub
 
         ''' <summary>
@@ -116,14 +82,6 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            If _iNbrComponents = -1 Then
-                mr.AddElement(ErrorCodes._03_INVALID_NUMBER_OF_COMPONENTS)
-                Return mr
-            ElseIf _iNbrComponents = -2 Then
-                mr.AddElement(ErrorCodes._15_INVALID_INPUT_DATA)
-                Return mr
-            End If
-
             Dim LMKKeyPair As LMKPairs.LMKPair, var As Integer
             Dim ks As KeySchemeTable.KeyScheme
 
@@ -131,9 +89,10 @@ Namespace HostCommands.BuildIn
             If ValidateKeySchemeCode(_lmkScheme, ks, mr) = False Then Return mr
 
             Dim clearKeys(8) As String, clearKey As String = ""
+            Dim sourceKs As KeySchemeTable.KeyScheme = New HexKey(_comps(0)).Scheme
 
             For i As Integer = 1 To _iNbrComponents
-                clearKeys(i - 1) = Utility.DecryptUnderLMK(_comps(i - 1), COMPONENT + i.ToString(), _defs(i - 1).DeterminerName, LMKKeyPair, var.ToString)
+                clearKeys(i - 1) = Utility.DecryptUnderLMK(_comps(i - 1), sourceKs, LMKKeyPair, var.ToString)
                 If Utility.IsParityOK(clearKeys(i - 1), Utility.ParityCheck.OddParity) = False Then
                     mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                     Return mr
@@ -160,16 +119,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

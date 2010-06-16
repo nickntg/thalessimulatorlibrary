@@ -28,12 +28,6 @@ Namespace HostCommands.BuildIn
     Public Class VerifyTerminalPinUsingComparisonMethod_BC
         Inherits AHostCommand
 
-        Const TPK As String = "TPK"
-        Const PIN_BLOCK As String = "PIN_BLOCK"
-        Const PIN_BLOCK_FORMAT As String = "PIN_BLOCK_FORMAT"
-        Const ACCT_NBR As String = "ACCOUNT_NUMBER"
-        Const PIN_HOST_STORAGE As String = "PIN_HOST_STORAGE"
-
         Private _tpk As String
         Private _pinBlock As String
         Private _pinBlockFormat As String
@@ -47,12 +41,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the BE message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(TPK))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(PIN_BLOCK, 16))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(PIN_BLOCK_FORMAT, 2))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(ACCT_NBR, 12))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(PIN_HOST_STORAGE, 5))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -63,12 +52,14 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _tpk = MFPC.GetMessageFieldByName(TPK).FieldValue()
-            _pinBlock = MFPC.GetMessageFieldByName(PIN_BLOCK).FieldValue()
-            _pinBlockFormat = MFPC.GetMessageFieldByName(PIN_BLOCK_FORMAT).FieldValue()
-            _acct = MFPC.GetMessageFieldByName(ACCT_NBR).FieldValue()
-            _pinDatabase = MFPC.GetMessageFieldByName(PIN_HOST_STORAGE).FieldValue()
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _tpk = kvp.ItemCombination("TPK Scheme", "TPK")
+                _pinBlock = kvp.Item("PIN Block")
+                _pinBlockFormat = kvp.Item("PIN Block Format Code")
+                _acct = kvp.Item("Account Number")
+                _pinDatabase = kvp.Item("PIN")
+            End If
         End Sub
 
         ''' <summary>
@@ -82,7 +73,9 @@ Namespace HostCommands.BuildIn
             Dim mr As New MessageResponse
 
             ' Get's clear ZPK
-            Dim clearTPK As String = Utility.DecryptUnderLMK(_tpk, TPK, MFPC.GetMessageFieldByName(TPK).DeterminerName, LMKPairs.LMKPair.Pair14_15, "0")
+            ' Get's clear ZPK
+            Dim cryptTPK As New HexKey(_tpk)
+            Dim clearTPK As String = Utility.DecryptUnderLMK(cryptTPK.ToString, cryptTPK.Scheme, LMKPairs.LMKPair.Pair14_15, "0")
             If Utility.IsParityOK(clearTPK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
@@ -120,16 +113,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

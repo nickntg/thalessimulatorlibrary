@@ -1,6 +1,24 @@
 ﻿ThalesSim Release History
 =========================
 
+2010/06/16: Version 0.9 beta released.
+--------------------------------------
+* The message parsing mechanism for host commands has been completely redesigned
+  in order to use XML configuration files. The goal is to provide both greater
+  flexibility and easier creation when implementing new and/or complex host
+  commands.
+* Fixed a bug where the DC command returned a DE response instead of DD.
+* Added a console version of the simulator.
+* Implemented EMV Key Derivation Method B, added it to the PM command.
+* The following host commands have been added:
+    - BI (Generate a BDK).
+    - DE (Generate an IBM offset).
+    - CI (Translate PIN from DUKPT to ZPK.
+    - CK (Verify a DUKPT PIN using the VISA method).
+    - CM (Verify a DUKPT PIN using the IBM method).
+    - EA (Verify an interchange PIN using the IBM method).
+    - DA (Verify a terminal PIN using the IBM method).
+
 2010/04/23: Version 0.8.6 beta released.
 ----------------------------------------
 

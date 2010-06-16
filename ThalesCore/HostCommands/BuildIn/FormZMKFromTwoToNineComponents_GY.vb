@@ -30,15 +30,10 @@ Namespace HostCommands.BuildIn
     Public Class FormZMKFromTwoToNineComponents_GY
         Inherits AHostCommand
 
-        Const NUMBER_COMPONENTS As String = "NBR_COMPONENTS"
-        Const COMPONENT As String = "COMPONENT_"
-
         Private _nbrComponents As String = ""
         Private _iNbrComponents As Integer
-        Private _zmkScheme As String
         Private _lmkScheme As String = ""
         Private _keyCheckValue As String
-        Private _defs(8) As MessageFieldParser
         Private _comps(8) As String
 
         ''' <summary>
@@ -48,10 +43,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the GY message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-
-            MFPC.AddMessageFieldParser(New MessageFieldParser(NUMBER_COMPONENTS, 1))
-
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -62,55 +54,16 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _nbrComponents = MFPC.GetMessageFieldByName(NUMBER_COMPONENTS).FieldValue()
-
-            Try
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _nbrComponents = kvp.Item("Number of Components")
                 _iNbrComponents = Convert.ToInt32(_nbrComponents)
-
-                For i As Integer = 1 To 8
-                    If msg.CharsLeft() / _iNbrComponents > 20 Then
-                        _defs(i - 1) = GenerateZMKKeyParser(COMPONENT + i.ToString(), 1)
-                    Else
-                        _defs(i - 1) = GenerateZMKKeyParser(COMPONENT + i.ToString(), 9999)
-                    End If
+                For i As Integer = 1 To _iNbrComponents
+                    _comps(i - 1) = kvp.Item("ZMK Component #" + i.ToString)
                 Next
-
-                If _iNbrComponents < 2 OrElse _iNbrComponents > 9 Then
-                    _iNbrComponents = -1
-                    Exit Sub
-                Else
-                    For i As Integer = 1 To _iNbrComponents
-                        Try
-                            _defs(i - 1).ParseField(msg)
-                            _comps(i - 1) = _defs(i - 1).FieldValue
-                        Catch ex As Exceptions.XShortMessage
-                            _iNbrComponents = -2
-                            Exit Sub
-                        Catch ex As Exceptions.XNoDeterminerMatched
-                            _iNbrComponents = -2
-                            Exit Sub
-                        Catch ex As Exception
-                            _iNbrComponents = -2
-                            Exit Sub
-                        End Try
-                    Next
-                End If
-            Catch ex As Exception
-                _iNbrComponents = -1
-                Exit Sub
-            End Try
-
-            MFPC = New MessageFieldParserCollection
-
-            GenerateDelimiterParser()
-
-            MFPC.ParseMessage(msg)
-
-            _zmkScheme = MFPC.GetMessageFieldByName(KEY_SCHEME_ZMK).FieldValue
-            _lmkScheme = MFPC.GetMessageFieldByName(KEY_SCHEME_LMK).FieldValue
-            _keyCheckValue = MFPC.GetMessageFieldByName(KEY_CHECK_VALUE).FieldValue
-
+                _lmkScheme = kvp.ItemOptional("Key Scheme LMK")
+                _keyCheckValue = kvp.ItemOptional("Key Check Value Type")
+            End If
         End Sub
 
         ''' <summary>
@@ -129,24 +82,12 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            If _iNbrComponents = -1 Then
-                mr.AddElement(ErrorCodes._03_INVALID_NUMBER_OF_COMPONENTS)
-                Return mr
-            ElseIf _iNbrComponents = -2 Then
-                mr.AddElement(ErrorCodes._15_INVALID_INPUT_DATA)
-                Return mr
-            End If
-
             Dim lmkKs As KeySchemeTable.KeyScheme
 
-            If _lmkScheme <> "" AndAlso _zmkScheme <> "" Then
+            If _lmkScheme <> "" Then
                 If ValidateKeySchemeCode(_lmkScheme, lmkKs, mr) = False Then Return mr
-                If _zmkScheme <> "0" Then
-                    mr.AddElement(ErrorCodes._15_INVALID_INPUT_DATA)
-                    Return mr
-                End If
             Else
-                If _defs(0).DeterminerName = COMPONENT + "1" + PLAIN_DOUBLE Then
+                If _comps(0).Length = 32 Then
                     lmkKs = KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi
                 Else
                     lmkKs = KeySchemeTable.KeyScheme.SingleDESKey
@@ -154,9 +95,10 @@ Namespace HostCommands.BuildIn
             End If
 
             Dim clearKeys(8) As String, clearKey As String = ""
+            Dim sourceKs As KeySchemeTable.KeyScheme = New HexKey(_comps(0)).Scheme
 
             For i As Integer = 1 To _iNbrComponents
-                clearKeys(i - 1) = Utility.DecryptUnderLMK(_comps(i - 1), COMPONENT + i.ToString(), _defs(i - 1).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
+                clearKeys(i - 1) = Utility.DecryptUnderLMK(_comps(i - 1), sourceKs, LMKPairs.LMKPair.Pair04_05, "0")
                 If Utility.IsParityOK(clearKeys(i - 1), Utility.ParityCheck.OddParity) = False Then
                     If i = 1 Then
                         mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
@@ -203,16 +145,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

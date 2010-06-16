@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Verifies a DUKPT PIN using the IBM algorithm.</CommandName>
+  <Request>CK</Request>
+  <Response>CL</Response>
+
+  <Field>
+    <Name>BDK</Name>
+    <IncludeFile>MultiFormatCVK.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>PVK</Name>
+    <IncludeFile>MultiFormatKey.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>KSN Descriptor</Name>
+    <Length>3</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+  <Field>
+    <Name>Key Serial Number</Name>
+    <Length>20</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+  <Field>
+    <Name>Encrypted Block</Name>
+    <Length>16</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+  <Field>
+    <Name>Check Length</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Account Number</Name>
+    <Length>12</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Decimalisation Table</Name>
+    <Length>16</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+  <Field>
+    <Name>PIN Validation</Name>
+    <Length>12</Length>
+    <Type>Character</Type>
+  </Field>
+
+  <Field>
+    <Name>Offset</Name>
+    <Length>12</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+</CommandConfiguration>

@@ -50,7 +50,7 @@ Namespace Message
     ''' </example>
     ''' </P>
     ''' </remarks>
-    Public Class MessageFieldDeterminerCollection
+    <Obsolete()> Public Class MessageFieldDeterminerCollection
 
         Private _AL As New List(Of MessageFieldDeterminer)
 

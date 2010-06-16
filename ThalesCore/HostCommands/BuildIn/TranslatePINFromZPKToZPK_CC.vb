@@ -31,21 +31,12 @@ Namespace HostCommands.BuildIn
     Public Class TranslatePINFromZPKToZPK_CC
         Inherits AHostCommand
 
-        Const SOURCE_ZPK As String = "SOURCE_ZPK"
-        Const TARGET_ZPK As String = "TARGET_ZPK"
-        Const MAX_PIN_LEN As String = "MAX_PIN_LEN"
-        Const PIN_BLOCK As String = "PIN_BLOCK"
-        Const SOURCE_PB_FORMAT As String = "SOURCE_PB_FORMAT"
-        Const TARGET_PB_FORMAT As String = "TARGET_PB_FORMAT"
-        Const ACCT_NBR As String = "ACCOUNT_NUMBER"
-
         Private _acct As String
         Private _sourceKey As String
         Private _targetKey As String
         Private _pb As String
         Private _sourcePBFormat As String
         Private _targetPBFormat As String
-        Private _maxPinLen As String
 
         ''' <summary>
         ''' Constructor.
@@ -54,14 +45,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the CC message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(SOURCE_ZPK))
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(TARGET_ZPK))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(MAX_PIN_LEN, 2))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(PIN_BLOCK, 16))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(SOURCE_PB_FORMAT, 2))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(TARGET_PB_FORMAT, 2))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(ACCT_NBR, 12))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -72,14 +56,15 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _sourceKey = MFPC.GetMessageFieldByName(SOURCE_ZPK).FieldValue()
-            _targetKey = MFPC.GetMessageFieldByName(TARGET_ZPK).FieldValue()
-            _maxPinLen = MFPC.GetMessageFieldByName(MAX_PIN_LEN).FieldValue()
-            _pb = MFPC.GetMessageFieldByName(PIN_BLOCK).FieldValue()
-            _sourcePBFormat = MFPC.GetMessageFieldByName(SOURCE_PB_FORMAT).FieldValue()
-            _targetPBFormat = MFPC.GetMessageFieldByName(TARGET_PB_FORMAT).FieldValue()
-            _acct = MFPC.GetMessageFieldByName(ACCT_NBR).FieldValue()
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _sourceKey = kvp.ItemCombination("Source ZPK Scheme", "Source ZPK")
+                _targetKey = kvp.ItemCombination("Destination ZPK Scheme", "Destination ZPK")
+                _pb = kvp.Item("Source PIN Block")
+                _sourcePBFormat = kvp.Item("Source PIN Block Format Code")
+                _targetPBFormat = kvp.Item("Destination PIN Block Format Code")
+                _acct = kvp.Item("Account Number")
+            End If
         End Sub
 
         ''' <summary>
@@ -92,18 +77,15 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            If _maxPinLen <> "12" Then
-                mr.AddElement(ErrorCodes._15_INVALID_INPUT_DATA)
-                Return mr
-            End If
-
-            Dim clearZPK1 As String = Utility.DecryptUnderLMK(_sourceKey, SOURCE_ZPK, MFPC.GetMessageFieldByName(SOURCE_ZPK).DeterminerName, LMKPairs.LMKPair.Pair06_07, "0")
+            Dim cryptZPK1 As New HexKey(_sourceKey)
+            Dim clearZPK1 As String = Utility.DecryptUnderLMK(cryptZPK1.ToString, cryptZPK1.Scheme, LMKPairs.LMKPair.Pair06_07, "0")
             If Utility.IsParityOK(clearZPK1, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            Dim clearZPK2 As String = Utility.DecryptUnderLMK(_targetKey, TARGET_ZPK, MFPC.GetMessageFieldByName(TARGET_ZPK).DeterminerName, LMKPairs.LMKPair.Pair06_07, "0")
+            Dim cryptZPK2 As New HexKey(_targetKey)
+            Dim clearZPK2 As String = Utility.DecryptUnderLMK(cryptZPK2.ToString, cryptZPK2.Scheme, LMKPairs.LMKPair.Pair06_07, "0")
             If Utility.IsParityOK(clearZPK2, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._11_DESTINATION_KEY_PARITY_ERROR)
                 Return mr
@@ -146,16 +128,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

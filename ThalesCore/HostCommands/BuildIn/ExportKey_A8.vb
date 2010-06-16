@@ -30,10 +30,6 @@ Namespace HostCommands.BuildIn
     Public Class ExportKey_A8
         Inherits AHostCommand
 
-        Const KEY_TYPE As String = "KEY_TYPE"
-        Const ZMK As String = "ZMK"
-        Const KEY As String = "KEY"
-
         Private _keyType As String = ""
         Private _zmk As String = ""
         Private _key As String = ""
@@ -46,13 +42,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the A0 message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(New MessageFieldParser(KEY_TYPE, 3))
-
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(ZMK))
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(KEY))
-
-            MFPC.AddMessageFieldParser(New MessageFieldParser(KEY_SCHEME_ZMK, 1))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -63,11 +53,13 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _keyType = MFPC.GetMessageFieldByName(KEY_TYPE).FieldValue
-            _key = MFPC.GetMessageFieldByName(KEY).FieldValue
-            _zmk = MFPC.GetMessageFieldByName(ZMK).FieldValue
-            _zmkScheme = MFPC.GetMessageFieldByName(KEY_SCHEME_ZMK).FieldValue
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _keyType = kvp.Item("Key Type")
+                _zmk = kvp.ItemCombination("ZMK Scheme", "ZMK")
+                _key = kvp.ItemCombination("Key Scheme", "Key")
+                _zmkScheme = kvp.Item("Key Scheme ZMK")
+            End If
         End Sub
 
         ''' <summary>
@@ -88,48 +80,35 @@ Namespace HostCommands.BuildIn
 
             If ValidateFunctionRequirement(KeyTypeTable.KeyFunction.Export, LMKKeyPair, var, mr) = False Then Return mr
 
-            Dim clearZMK As String = Utility.DecryptUnderLMK(_zmk, ZMK, MFPC.GetMessageFieldByName(ZMK).DeterminerName, LMKPairs.LMKPair.Pair04_05, var)  'DecryptEncryptedZMK(_zmk, ZMK, MFPC.GetMessageFieldByName(ZMK).DeterminerName)
+            Dim cryptZMK As New HexKey(_zmk)
+            Dim clearZMK As String = Utility.DecryptUnderLMK(cryptZMK.ToString, cryptZMK.Scheme, LMKPairs.LMKPair.Pair04_05, var)
             If Utility.IsParityOK(clearZMK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            'Dim clearKey As String = DecryptUnderLMK(_key, KeySchemeTable.KeyScheme.SingleDESKey, LMKKeyPair, var)
-            Dim clearKey As String
-            If MFPC.GetMessageFieldByName(KEY).HeaderValue() = "" Then
-                clearKey = Utility.DecryptUnderLMK(_key, KeySchemeTable.KeyScheme.SingleDESKey, LMKKeyPair, var)
-            Else
-                clearKey = Utility.DecryptUnderLMK(_key, KeySchemeTable.GetKeySchemeFromValue(MFPC.GetMessageFieldByName(KEY).HeaderValue()), LMKKeyPair, var)
-            End If
+            Dim cryptKey As New HexKey(_key)
+            Dim clearKey As String = Utility.DecryptUnderLMK(cryptKey.ToString, cryptKey.Scheme, LMKKeyPair, var)
+
             If Utility.IsParityOK(clearKey, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._11_DESTINATION_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            Dim cryptKey As String = Utility.EncryptUnderZMK(clearZMK, Utility.RemoveKeyType(clearKey), zmk_ks)
+            Dim cryptFinalKey As String = Utility.EncryptUnderZMK(clearZMK, Utility.RemoveKeyType(clearKey), zmk_ks)
             Dim checkValue As String = TripleDES.TripleDESEncrypt(New HexKey(clearKey), ZEROES)
 
             Log.Logger.MinorInfo("ZMK (clear): " + clearZMK)
             Log.Logger.MinorInfo("Key (clear): " + clearKey)
-            Log.Logger.MinorInfo("Key (ZMK): " + cryptKey)
+            Log.Logger.MinorInfo("Key (ZMK): " + cryptFinalKey)
             Log.Logger.MinorInfo("Check value: " + checkValue.Substring(0, 6))
 
             mr.AddElement(ErrorCodes._00_NO_ERROR)
-            mr.AddElement(cryptKey)
+            mr.AddElement(cryptFinalKey)
             mr.AddElement(checkValue.Substring(0, 6))
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

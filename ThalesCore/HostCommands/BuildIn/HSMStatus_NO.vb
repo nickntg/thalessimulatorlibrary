@@ -28,13 +28,10 @@ Namespace HostCommands.BuildIn
     Public Class HSMStatus_NO
         Inherits AHostCommand
 
-        Const MODE_FLAG As String = "MODE_FLAG"
-
         Private _modeFlag As String
 
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(New MessageFieldParser(MODE_FLAG, 2))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -45,8 +42,10 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _modeFlag = mfpc.GetMessageFieldByName(MODE_FLAG).FieldValue
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _modeFlag = kvp.Item("Mode Flag")
+            End If
         End Sub
 
         ''' <summary>
@@ -68,16 +67,6 @@ Namespace HostCommands.BuildIn
                 mr.AddElement(Convert.ToString(Core.Resources.GetResource(Core.Resources.DSP_FIRMWARE_NUMBER)))
             End If
             Return mr
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

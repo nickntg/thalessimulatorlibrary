@@ -31,9 +31,6 @@ Namespace HostCommands.BuildIn
     Public Class HashDataBlock_GM
         Inherits AHostCommand
 
-        Const HASH_ID As String = "HASH_ID"
-        Const DATA_LEN As String = "DATA_LEN"
-
         Const SHA1 As String = "01"
         Const MD5 As String = "02"
         Const ISO_10118_2 As String = "03"
@@ -52,9 +49,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the GM message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(New MessageFieldParser(HASH_ID, 2))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(DATA_LEN, 5))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -65,11 +60,15 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _hashID = MFPC.GetMessageFieldByName(HASH_ID).FieldValue
-            Dim dataLen As Integer = Convert.ToInt32(MFPC.GetMessageFieldByName(DATA_LEN).FieldValue)
-            _bytes = msg.GetRemainingBytes
-            ReDim Preserve _bytes(dataLen - 1)
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _hashID = kvp.Item("Hash Identifier")
+                Dim dataLen As String = kvp.Item("Data Length")
+                _bytes = System.Text.ASCIIEncoding.Default.GetBytes(kvp.Item("Message Data"))
+                If Convert.ToInt32(dataLen) <> _bytes.GetLength(0) Then
+                    XMLParseResult = ErrorCodes._80_DATA_LENGTH_ERROR
+                End If
+            End If
         End Sub
 
         ''' <summary>
@@ -82,18 +81,6 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
 
             Dim mr As New MessageResponse
-
-            'Check hash identifiers
-            If _hashID <> SHA1 AndAlso _
-               _hashID <> MD5 AndAlso _
-               _hashID <> ISO_10118_2 AndAlso _
-               _hashID <> SHA_224 AndAlso _
-               _hashID <> SHA_256 AndAlso _
-               _hashID <> SHA_384 AndAlso _
-               _hashID <> SHA_512 Then
-                mr.AddElement(ErrorCodes._05_INVALID_HASH_IDENTIFIER)
-                Return mr
-            End If
 
             'Currently not implemented for ISO 10118-2 and SHA-224.
             If _hashID = ISO_10118_2 OrElse _hashID = SHA_224 Then
@@ -122,16 +109,6 @@ Namespace HostCommands.BuildIn
             mr.AddElement(resultStr)
 
             Return mr
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

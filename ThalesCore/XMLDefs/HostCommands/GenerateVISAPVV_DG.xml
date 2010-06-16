@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Generates a 4-digit VISA PVV.</CommandName>
+  <Request>DG</Request>
+  <Response>DH</Response>
+
+  <Field>
+    <Name>PVK</Name>
+    <IncludeFile>MultiFormatCVK.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>PIN</Name>
+    <Length>CLEAR_PIN_LENGTH</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Account Number</Name>
+    <Length>12</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>PVKI</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+  </Field>
+  
+  <Field>
+    <Name>Delimiter</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <ValidValue>;</ValidValue>
+  </Field>
+
+</CommandConfiguration>

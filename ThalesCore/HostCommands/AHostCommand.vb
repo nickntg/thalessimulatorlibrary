@@ -30,15 +30,15 @@ Namespace HostCommands
     ''' </remarks>
     Public Class AHostCommand
 
-        ''' <summary>
-        ''' Format placeholder.
-        ''' </summary>
-        ''' <remarks>
-        ''' This variable is used to hold the request message definition. At this level,
-        ''' the request message is comprised of everything except the header and the
-        ''' command code.
-        ''' </remarks>
-        Protected MFPC As ThalesSim.Core.Message.MessageFieldParserCollection
+        '''' <summary>
+        '''' Format placeholder.
+        '''' </summary>
+        '''' <remarks>
+        '''' This variable is used to hold the request message definition. At this level,
+        '''' the request message is comprised of everything except the header and the
+        '''' command code.
+        '''' </remarks>
+        'Protected MFPC As ThalesSim.Core.Message.MessageFieldParserCollection
 
         ''' <summary>
         ''' Printer data.
@@ -48,6 +48,66 @@ Namespace HostCommands
         ''' attached printer.
         ''' </remarks>
         Protected _PrinterData As String = ""
+
+        ''' <summary>
+        ''' XML message fields.
+        ''' </summary>
+        ''' <remarks></remarks>
+        Protected _msgFields As XML.MessageFields
+
+        ''' <summary>
+        ''' XML parsing result.
+        ''' </summary>
+        ''' <remarks></remarks>
+        Protected _XMLParseResult As String = ErrorCodes._00_NO_ERROR
+
+        ''' <summary>
+        ''' Parsed key-value pairs.
+        ''' </summary>
+        ''' <remarks></remarks>
+        Protected kvp As New XML.MessageKeyValuePairs
+
+        ''' <summary>
+        ''' Get/set the message fields definitions to be parsed.
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Property XMLMessageFields() As XML.MessageFields
+            Get
+                Return _msgFields
+            End Get
+            Set(ByVal value As XML.MessageFields)
+                _msgFields = value
+            End Set
+        End Property
+
+        ''' <summary>
+        ''' Get/set the result of the XML parsing.
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Property XMLParseResult() As String
+            Get
+                Return _XMLParseResult
+            End Get
+            Set(ByVal value As String)
+                _XMLParseResult = value
+            End Set
+        End Property
+
+        ''' <summary>
+        ''' Get the message key/value pairs.
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public ReadOnly Property KeyValuePairs() As XML.MessageKeyValuePairs
+            Get
+                Return kvp
+            End Get
+        End Property
 
         ''' <summary>
         ''' Returns data printed by this command.
@@ -106,7 +166,7 @@ Namespace HostCommands
         ''' This method is called after <see cref="HostCommands.AHostCommand.ConstructResponseAfterOperationComplete"/>.
         ''' </remarks>
         Public Overridable Sub Terminate()
-            MFPC = Nothing
+            'MFPC = Nothing
         End Sub
 
         ''' <summary>
@@ -116,12 +176,7 @@ Namespace HostCommands
         ''' This method returns a text dump of the message fields and their values.
         ''' </remarks>
         Public Function DumpFields() As String
-            Dim s As String = ""
-            For i As Integer = 0 To MFPC.MessageFieldCount - 1
-                Dim o As Message.MessageFieldParser = MFPC.GetMessageFieldByIndex(i)
-                s = s + "Field " + o.FieldName + ", value " + o.FieldValue + vbCrLf
-            Next
-            Return s
+            Return kvp.ToString
         End Function
 
         ''' <summary>
@@ -201,119 +256,6 @@ Namespace HostCommands
         Protected Function IsInAuthorizedState() As Boolean
             Return Convert.ToBoolean(Core.Resources.GetResource(Core.Resources.AUTHORIZED_STATE))
         End Function
-
-        ''' <summary>
-        ''' Generates a parser for multi-format keys.
-        ''' </summary>
-        ''' <remarks>
-        ''' Several Thales commands have key inputs that have the form 16H or 1A+32H or 1A+48H. This
-        ''' method creates an appropriate parser for this type of keys.
-        ''' </remarks>
-        Protected Function GenerateMultiKeyParser(ByVal keyName As String) As MessageFieldParser
-            Dim MFDC_Key As New MessageFieldDeterminerCollection
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + DOUBLE_X917, _
-                                                                   KeySchemeTable.GetKeySchemeValue(KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi), _
-                                                                   32))
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + TRIPLE_X917, _
-                                                                   KeySchemeTable.GetKeySchemeValue(KeySchemeTable.KeyScheme.TripleLengthKeyAnsi), _
-                                                                   48))
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + DOUBLE_VARIANT, _
-                                                                   KeySchemeTable.GetKeySchemeValue(KeySchemeTable.KeyScheme.DoubleLengthKeyVariant), _
-                                                                   32))
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + TRIPLE_VARIANT, _
-                                                                   KeySchemeTable.GetKeySchemeValue(KeySchemeTable.KeyScheme.TripleLengthKeyVariant), _
-                                                                   48))
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + PLAIN_SINGLE, "", 16))
-            Return New MessageFieldParser(keyName, MFDC_Key)
-        End Function
-
-        ''' <summary>
-        ''' Generates a parser for ZMK keys.
-        ''' </summary>
-        ''' <remarks>
-        ''' Some Thales commands have ZMK key inputs that have the form 16H or 32H. This method
-        ''' creates an appropriate parser for this type of key.
-        ''' </remarks>
-        Protected Function GenerateZMKKeyParser(ByVal keyName As String, ByVal msgLen As Integer) As MessageFieldParser
-            Dim MFDC_Key As New MessageFieldDeterminerCollection
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + PLAIN_DOUBLE, msgLen, 32))
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + PLAIN_SINGLE, "", 16))
-            Return New MessageFieldParser(keyName, MFDC_Key)
-        End Function
-
-        ''' <summary>
-        ''' Generates a parser for ZMK keys.
-        ''' </summary>
-        ''' <remarks>
-        ''' Some Thales commands have ZMK key inputs of the form 16H or 32H or 1A+32H or 1A+48H.
-        ''' This method creates an appropriate parser for this type of key.
-        ''' </remarks>
-        Protected Function GenerateLongZMKKeyParser(ByVal keyName As String, ByVal msgLen As Integer) As MessageFieldParser
-            Dim MFDC_Key As New MessageFieldDeterminerCollection
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + DOUBLE_X917, _
-                                                                   KeySchemeTable.GetKeySchemeValue(KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi), _
-                                                                   32))
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + TRIPLE_X917, _
-                                                                   KeySchemeTable.GetKeySchemeValue(KeySchemeTable.KeyScheme.TripleLengthKeyAnsi), _
-                                                                   48))
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + DOUBLE_VARIANT, _
-                                                                   KeySchemeTable.GetKeySchemeValue(KeySchemeTable.KeyScheme.DoubleLengthKeyVariant), _
-                                                                   32))
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + TRIPLE_VARIANT, _
-                                                                   KeySchemeTable.GetKeySchemeValue(KeySchemeTable.KeyScheme.TripleLengthKeyVariant), _
-                                                                   48))
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + PLAIN_DOUBLE, msgLen, 32))
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + PLAIN_SINGLE, "", 16))
-            Return New MessageFieldParser(keyName, MFDC_Key)
-        End Function
-
-        ''' <summary>
-        ''' Generates a parser for a PVK pair.
-        ''' </summary>
-        ''' <remarks>
-        ''' PVK parameters are of the form 32H or 1A+32H.
-        ''' </remarks>
-        Protected Function GeneratePVKKeyParser(ByVal keyName As String) As MessageFieldParser
-            Dim MFDC_Key As New MessageFieldDeterminerCollection
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + DOUBLE_X917, _
-                                                                   KeySchemeTable.GetKeySchemeValue(KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi), _
-                                                                   32))
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + DOUBLE_VARIANT, _
-                                                                   KeySchemeTable.GetKeySchemeValue(KeySchemeTable.KeyScheme.DoubleLengthKeyVariant), _
-                                                                   32))
-            MFDC_Key.AddFieldDeterminer(New MessageFieldDeterminer(keyName + PLAIN_DOUBLE, "", 32))
-            Return New MessageFieldParser(keyName, MFDC_Key)
-        End Function
-
-        ''' <summary>
-        ''' Generates parsers for common fields that follow a delimiter.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method generates several parsers that are used to parse a delimiter,
-        ''' and optional key scheme ZMK, key scheme LMK and key check value characters.
-        ''' </remarks>
-        Protected Sub GenerateDelimiterParser()
-            Dim MFDC_Del As New MessageFieldDeterminerCollection
-            MFDC_Del.AddFieldDeterminer(New MessageFieldDeterminer(DELIMITER_EXISTS, 1, 1))
-            MFDC_Del.AddFieldDeterminer(New MessageFieldDeterminer(DELIMITER_NOT_EXISTS, "", 0))
-            Dim P_Del As MessageFieldParser = New MessageFieldParser(DELIMITER, MFDC_Del)
-            MFPC.AddMessageFieldParser(P_Del)
-
-            Dim P_ZmkScheme As New MessageFieldParser(KEY_SCHEME_ZMK, 1)
-            P_ZmkScheme.DependentField = DELIMITER
-            P_ZmkScheme.DependentValue = DELIMITER_VALUE
-            MFPC.AddMessageFieldParser(P_ZmkScheme)
-
-            Dim P_LmkScheme As New MessageFieldParser(KEY_SCHEME_LMK, 1)
-            P_LmkScheme.DependentField = DELIMITER
-            P_LmkScheme.DependentValue = DELIMITER_VALUE
-            MFPC.AddMessageFieldParser(P_LmkScheme)
-
-            Dim P_KeyCheckVal As New MessageFieldParser(KEY_CHECK_VALUE, 1)
-            P_KeyCheckVal.DependentField = DELIMITER
-            P_KeyCheckVal.DependentValue = DELIMITER_VALUE
-            MFPC.AddMessageFieldParser(P_KeyCheckVal)
-        End Sub
 
         ''' <summary>
         ''' Decrypts data encrypted under a ZMK.
@@ -516,6 +458,29 @@ Namespace HostCommands
         ''' </remarks>
         Protected Sub ClearPrinterData()
             _PrinterData = ""
+        End Sub
+
+        ''' <summary>
+        ''' Reads the message field definitions using
+        ''' the class name to look for the xml file.
+        ''' </summary>
+        ''' <remarks></remarks>
+        Protected Sub ReadXMLDefinitions()
+            ReadXMLDefinitions(Me.GetType.Name + ".xml")
+        End Sub
+
+        ''' <summary>
+        ''' Reads the message field definitions using
+        ''' a specific xml file name.
+        ''' </summary>
+        ''' <param name="fileName"></param>
+        ''' <remarks></remarks>
+        Protected Sub ReadXMLDefinitions(ByVal fileName As String)
+            XMLMessageFields = XML.MessageFieldsStore.Item(Me.GetType.Name)
+            If XMLMessageFields Is Nothing Then
+                XMLMessageFields = XML.MessageFields.ReadXMLFields(fileName)
+                XML.MessageFieldsStore.Add(Me.GetType.Name, XMLMessageFields)
+            End If
         End Sub
 
     End Class

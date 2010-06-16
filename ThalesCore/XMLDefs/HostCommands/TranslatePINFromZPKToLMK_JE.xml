@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Translates a PIN from ZPK to LMK encryption.</CommandName>
+  <Request>JE</Request>
+  <Response>JF</Response>
+
+  <Field>
+    <Name>ZPK</Name>
+    <IncludeFile>MultiFormatKey.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>PIN Block</Name>
+    <Length>16</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+  <Field>
+    <Name>PIN Block Format Code</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Account Number</Name>
+    <Length>12</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+</CommandConfiguration>

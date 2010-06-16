@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Generates a VISA CVK pair.</CommandName>
+  <Request>AS</Request>
+  <Response>AT</Response>
+
+  <Field>
+    <Name>Delimiter</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <ValidValue>;</ValidValue>
+  </Field>
+
+  <Field>
+    <Name>Reserved</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+    <DependentField>Delimiter</DependentField>
+    <DependentValue>;</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
+    <ValidValue>0</ValidValue>
+    <RejectionCodeIfInvalid>26</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>Key Scheme LMK</Name>
+    <IncludeFile>KeyScheme.xml</IncludeFile>
+    <DependentField>Delimiter</DependentField>
+    <DependentValue>;</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
+  </Field>
+
+  <Field>
+    <Name>Key Check Value Type</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+    <DependentField>Delimiter</DependentField>
+    <DependentValue>;</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>    
+  </Field>
+
+</CommandConfiguration>

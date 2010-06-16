@@ -38,9 +38,6 @@ Namespace HostCommands.BuildIn
         ''' LMK pair translation and print string definitions.
         ''' </remarks>
         Public Overrides Sub InitFields()
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(SOURCE_KEY))
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(TARGET_KEY))
-            GenerateDelimiterParser()
             SourceLMK = LMKPairs.LMKPair.Pair14_15
             targetlmk = LMKPairs.LMKPair.Pair16_17
             str1 = "TMK (clear): "

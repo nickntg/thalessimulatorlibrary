@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Allows multiple commands to be sent as a bundle.</CommandName>
+  <Request>NK</Request>
+  <Response>NL</Response>
+
+  <Field>
+    <Name>Header Flag</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+    <ValidValue>0</ValidValue>
+    <ValidValue>1</ValidValue>
+    <RejectionCodeIfInvalid>51</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>Number Of Commands</Name>
+    <Length>2</Length>
+    <Type>Character</Type>
+  </Field>
+
+  <Field>
+    <Name>SubCommand</Name>
+    <IncludeFile>SingleCommand.xml</IncludeFile>
+    <Repetitions>Number Of Commands</Repetitions>
+    <StaticRepetitions>true</StaticRepetitions>
+  </Field>
+
+</CommandConfiguration>

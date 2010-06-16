@@ -30,8 +30,6 @@ Namespace HostCommands.BuildIn
     Public Class TranslateZEKORZAKFromLMKToZMK_FM
         Inherits TranslateFromLMKToKey
 
-        Private Const CMD_FLAG As String = "CMD_FLAG"
-
         Private _cmdFlag As String
 
         ''' <summary>
@@ -42,10 +40,6 @@ Namespace HostCommands.BuildIn
         ''' LMK pair translation and print string definitions.
         ''' </remarks>
         Public Overrides Sub InitFields()
-            MFPC.AddMessageFieldParser(New MessageFieldParser(CMD_FLAG, 1))
-            MFPC.AddMessageFieldParser(GenerateLongZMKKeyParser(SOURCE_KEY, 60))
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(TARGET_KEY))
-            GenerateDelimiterParser()
             SourceLMK = LMKPairs.LMKPair.Pair04_05
             str1 = "ZMK (clear): "
             str2 = "ZEK/ZAK (clear): "
@@ -60,7 +54,7 @@ Namespace HostCommands.BuildIn
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
             MyBase.AcceptMessage(msg)
-            _cmdFlag = MFPC.GetMessageFieldByName(CMD_FLAG).FieldValue
+            _cmdFlag = kvp.Item("Flag")
         End Sub
 
         ''' <summary>

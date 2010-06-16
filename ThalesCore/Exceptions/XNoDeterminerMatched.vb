@@ -21,7 +21,7 @@ Namespace Exceptions
     ''' </summary>
     ''' <remarks>
     ''' This exception is raised if during parsing of a field that uses a
-    ''' <see cref="Message.MessageFieldDeterminerCollection"/>, no determiner
+    ''' Message.MessageFieldDeterminerCollection, no determiner
     ''' matches to the message contents.
     ''' </remarks>
     Public Class XNoDeterminerMatched

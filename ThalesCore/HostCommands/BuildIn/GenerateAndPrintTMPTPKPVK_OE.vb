@@ -31,7 +31,6 @@ Namespace HostCommands.BuildIn
         Inherits AHostCommand
 
         Private _keyScheme As String = "Z"
-        Private _keyCheckValue As String = "0"
         Private _result As String = ""
 
         ''' <summary>
@@ -41,7 +40,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the OE message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -52,19 +51,9 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-
-            Dim delFound As Boolean = False
-            While msg.CharsLeft > 0 AndAlso delFound = False
-                If msg.GetSubstring(1) = "|" Then
-                    delFound = True
-                End If
-                msg.AdvanceIndex(1)
-            End While
-            If delFound = True Then
-                msg.AdvanceIndex(1)
-                _keyScheme = msg.GetSubstring(1)
-                msg.AdvanceIndex(1)
-                _keyCheckValue = msg.GetSubstring(1)
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _keyScheme = kvp.Item("Key Scheme LMK")
             End If
         End Sub
 

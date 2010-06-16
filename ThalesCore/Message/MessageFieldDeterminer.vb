@@ -34,7 +34,7 @@ Namespace Message
     ''' and decide the field's length. An example of this is the A0 Thales command, where the ZMK key length
     ''' can be 16 or 32 hexadecimal characters.</P>
     ''' </remarks>
-    Public Class MessageFieldDeterminer
+    <Obsolete()> Public Class MessageFieldDeterminer
 
         Private _headerValue As String
         Private _fieldLength As Integer

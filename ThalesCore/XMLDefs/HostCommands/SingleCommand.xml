@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- This file includes the necessary definitions that parse an NK subcommand. -->
+<NKSubCommand>
+
+  <Field>
+    <Name>#replace# Length</Name>
+    <Length>4</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>#replace# Data</Name>
+    <Length>1</Length>
+    <DynamicFieldLength>#replace# Length</DynamicFieldLength>
+    <Type>Character</Type>
+  </Field>
+
+</NKSubCommand>

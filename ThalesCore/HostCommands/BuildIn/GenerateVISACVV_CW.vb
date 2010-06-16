@@ -31,11 +31,6 @@ Namespace HostCommands.BuildIn
     Public Class GenerateVISACVV_CW
         Inherits AHostCommand
 
-        Const CVK_PAIR As String = "CVK_PAIR"
-        Const ACCT_NBR As String = "ACCOUNT_NUMBER"
-        Const EXPIRATION As String = "EXPIRATION"
-        Const SVC As String = "SVC"
-
         Private _acct As String
         Private _cvkPair As String
         Private _expiration As String
@@ -48,12 +43,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the CW message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(GeneratePVKKeyParser(CVK_PAIR))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(ACCT_NBR, DELIMITER_VALUE))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(DELIMITER, 1))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(EXPIRATION, 4))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(SVC, 3))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -64,11 +54,13 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _acct = MFPC.GetMessageFieldByName(ACCT_NBR).FieldValue()
-            _cvkPair = MFPC.GetMessageFieldByName(CVK_PAIR).FieldValue()
-            _expiration = MFPC.GetMessageFieldByName(EXPIRATION).FieldValue()
-            _svc = MFPC.GetMessageFieldByName(SVC).FieldValue()
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _cvkPair = kvp.ItemCombination("CVK Scheme", "CVK")
+                _acct = kvp.Item("Primary Account Number")
+                _expiration = kvp.Item("Expiration Date")
+                _svc = kvp.Item("Service Code")
+            End If
         End Sub
 
         ''' <summary>
@@ -81,7 +73,8 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim clearCVK As String = Utility.DecryptUnderLMK(_cvkPair, CVK_PAIR, MFPC.GetMessageFieldByName(CVK_PAIR).DeterminerName, LMKPairs.LMKPair.Pair14_15, "4")
+            Dim cryptCVK As New HexKey(_cvkPair)
+            Dim clearCVK As String = Utility.DecryptUnderLMK(cryptCVK.ToString, cryptCVK.Scheme, LMKPairs.LMKPair.Pair14_15, "4")
             If Utility.IsParityOK(clearCVK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
@@ -97,16 +90,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

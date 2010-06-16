@@ -38,11 +38,8 @@ Namespace HostCommands.BuildIn
         ''' LMK pair translation and print string definitions.
         ''' </remarks>
         Public Overrides Sub InitFields()
-            MFPC.AddMessageFieldParser(GenerateLongZMKKeyParser(SOURCE_KEY, 60))
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(TARGET_KEY))
-            GenerateDelimiterParser()
             SourceLMK = LMKPairs.LMKPair.Pair04_05
-            targetlmk = LMKPairs.LMKPair.Pair16_17
+            TargetLMK = LMKPairs.LMKPair.Pair16_17
             str1 = "ZMK (clear): "
             str2 = "TAK (clear): "
             str3 = "TAK (TMK): "

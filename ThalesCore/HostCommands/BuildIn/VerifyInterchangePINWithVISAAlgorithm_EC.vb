@@ -31,14 +31,6 @@ Namespace HostCommands.BuildIn
     Public Class VerifyInterchangePINWithVISAAlgorithm_EC
         Inherits AHostCommand
 
-        Const ZPK As String = "ZPK"
-        Const PVK_PAIR As String = "PVK_PAIR"
-        Const PIN_BLOCK As String = "PIN_BLOCK"
-        Const PINBLOCKFORMAT As String = "PIN_BLOCK_FORMAT"
-        Const ACCT_NBR As String = "ACCOUNT_NUMBER"
-        Const PVKI As String = "PVKI"
-        Const PVV As String = "PVV"
-
         Private _acct As String
         Private _pinBlock As String
         Private _pinBlockFormat As String
@@ -54,14 +46,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the EC message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(GenerateMultiKeyParser(ZPK))
-            MFPC.AddMessageFieldParser(GeneratePVKKeyParser(PVK_PAIR))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(PIN_BLOCK, 16))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(PINBLOCKFORMAT, 2))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(ACCT_NBR, 12))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(PVKI, 1))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(PVV, 4))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -72,14 +57,16 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _acct = MFPC.GetMessageFieldByName(ACCT_NBR).FieldValue()
-            _pinBlock = MFPC.GetMessageFieldByName(PIN_BLOCK).FieldValue()
-            _pinBlockFormat = MFPC.GetMessageFieldByName(PINBLOCKFORMAT).FieldValue()
-            _pvki = MFPC.GetMessageFieldByName(PVKI).FieldValue()
-            _pvkPair = MFPC.GetMessageFieldByName(PVK_PAIR).FieldValue()
-            _zpk = MFPC.GetMessageFieldByName(ZPK).FieldValue()
-            _pvv = MFPC.GetMessageFieldByName(PVV).FieldValue()
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _zpk = kvp.ItemCombination("ZPK Scheme", "ZPK")
+                _pvkPair = kvp.ItemCombination("PVK Scheme", "PVK")
+                _pinBlock = kvp.Item("PIN Block")
+                _pinBlockFormat = kvp.Item("PIN Block Format Code")
+                _acct = kvp.Item("Account Number")
+                _pvki = kvp.Item("PVKI")
+                _pvv = kvp.Item("PVV")
+            End If
         End Sub
 
         ''' <summary>
@@ -92,13 +79,15 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim clearPVK As String = Utility.DecryptUnderLMK(_pvkPair, PVK_PAIR, MFPC.GetMessageFieldByName(PVK_PAIR).DeterminerName, LMKPairs.LMKPair.Pair14_15, "0")
+            Dim cryptPVK As New HexKey(_pvkPair)
+            Dim clearPVK As String = Utility.DecryptUnderLMK(cryptPVK.ToString, cryptPVK.Scheme, LMKPairs.LMKPair.Pair14_15, "0")
             If Utility.IsParityOK(clearPVK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._11_DESTINATION_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            Dim clearZPK As String = Utility.DecryptUnderLMK(_zpk, ZPK, MFPC.GetMessageFieldByName(ZPK).DeterminerName, LMKPairs.LMKPair.Pair06_07, "0")
+            Dim cryptZPK As New HexKey(_zpk)
+            Dim clearZPK As String = Utility.DecryptUnderLMK(cryptZPK.ToString, cryptZPK.Scheme, LMKPairs.LMKPair.Pair06_07, "0")
             If Utility.IsParityOK(clearZPK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
@@ -139,16 +128,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

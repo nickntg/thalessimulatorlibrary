@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Encrypts a key under ZMK for transmission</CommandName>
+  <Request>A8</Request>
+  <Response>A9</Response>
+
+  <Field>
+    <Name>Key Type</Name>
+    <Length>3</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+  
+  <Field>
+    <Name>ZMK</Name>
+    <IncludeFile>MultiFormatZMK.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Key</Name>
+    <IncludeFile>MultiFormatKey.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Key Scheme ZMK</Name>
+    <IncludeFile>KeyScheme.xml</IncludeFile>
+  </Field>
+
+</CommandConfiguration>

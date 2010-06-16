@@ -30,8 +30,6 @@ Namespace HostCommands.BuildIn
     Public Class GeneratePVKPair_FG
         Inherits AHostCommand
 
-        Const SOURCE_ZMK As String = "SOURCE_ZMK"
-
         Private _sourceZmk As String
         Private _del As String
         Private _keySchemeZMK As String
@@ -45,12 +43,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the FG message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-
-            MFPC.AddMessageFieldParser(GenerateLongZMKKeyParser(SOURCE_ZMK, 30))
-
-            GenerateDelimiterParser()
-
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -61,12 +54,14 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _sourceZmk = MFPC.GetMessageFieldByName(SOURCE_ZMK).FieldValue
-            _del = MFPC.GetMessageFieldByName(DELIMITER).FieldValue
-            _keySchemeZMK = MFPC.GetMessageFieldByName(KEY_SCHEME_ZMK).FieldValue
-            _keySchemeLMK = MFPC.GetMessageFieldByName(KEY_SCHEME_LMK).FieldValue
-            _keyCheckValue = MFPC.GetMessageFieldByName(KEY_CHECK_VALUE).FieldValue
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _sourceZmk = kvp.ItemCombination("ZMK Scheme", "ZMK")
+                _del = kvp.ItemOptional("Delimiter")
+                _keySchemeZMK = kvp.ItemOptional("Key Scheme ZMK")
+                _keySchemeLMK = kvp.ItemOptional("Key Scheme LMK")
+                _keyCheckValue = kvp.ItemOptional("Key Check Value Type")
+            End If
         End Sub
 
         ''' <summary>
@@ -103,7 +98,8 @@ Namespace HostCommands.BuildIn
 
             Dim clearSource As String
 
-            clearSource = Utility.DecryptUnderLMK(_sourceZmk, SOURCE_ZMK, MFPC.GetMessageFieldByName(SOURCE_ZMK).DeterminerName, LMKPairs.LMKPair.Pair04_05, "0")
+            Dim cryptZMK As New HexKey(_sourceZmk)
+            clearSource = Utility.DecryptUnderLMK(cryptZMK.ToString, cryptZMK.Scheme, LMKPairs.LMKPair.Pair04_05, "0")
             If Utility.IsParityOK(clearSource, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
@@ -147,16 +143,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

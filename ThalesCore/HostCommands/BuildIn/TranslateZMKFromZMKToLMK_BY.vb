@@ -38,11 +38,8 @@ Namespace HostCommands.BuildIn
         ''' print strings, authorized and parity flags.
         ''' </remarks>
         Public Overrides Sub InitFields()
-            MFPC.AddMessageFieldParser(GenerateLongZMKKeyParser(SOURCE_KEY, 60))
-            MFPC.AddMessageFieldParser(GenerateLongZMKKeyParser(TARGET_KEY, 30))
-            GenerateDelimiterParser()
             SourceLMK = LMKPairs.LMKPair.Pair04_05
-            targetlmk = LMKPairs.LMKPair.Pair04_05
+            TargetLMK = LMKPairs.LMKPair.Pair04_05
             str1 = "ZMKi (clear): "
             str2 = "ZMK (clear): "
             str3 = "Key (LMK): "

@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Verifies a dynamic CVV</CommandName>
+  <Request>PM</Request>
+  <Response>PN</Response>
+
+  <!-- This definition will need additional work when
+       the complete command is implemented. -->
+
+  <Field>
+    <Name>Scheme ID</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+    <ValidValue>1</ValidValue>
+    <RejectionCodeIfInvalid>41</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>Version</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+    <ValidValue>2</ValidValue>
+    <RejectionCodeIfInvalid>41</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>MK-DCVV</Name>
+    <IncludeFile>MultiFormatCVK.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Key Derivation Method</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+  </Field>
+
+  <Field>
+    <Name>PAN</Name>
+    <Length>1</Length>
+    <ParseUntilValue>;</ParseUntilValue>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Delimiter</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+  </Field>
+
+  <Field>
+    <Name>PAN Sequence No</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Track Data Length</Name>
+    <Length>3</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Track Data</Name>
+    <Length>1</Length>
+    <DynamicFieldLength>Track Data Length</DynamicFieldLength>
+    <Type>Binary</Type>
+  </Field>
+
+  <Field>
+    <Name>Unpredictable Number</Name>
+    <Length>8</Length>
+    <Type>Character</Type>
+  </Field>
+
+  <Field>
+    <Name>ATC</Name>
+    <Length>5</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>DCVV</Name>
+    <Length>5</Length>
+    <Type>Character</Type>
+  </Field>
+
+</CommandConfiguration>

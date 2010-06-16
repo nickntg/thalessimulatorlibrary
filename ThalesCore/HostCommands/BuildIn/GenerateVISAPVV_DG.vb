@@ -31,11 +31,6 @@ Namespace HostCommands.BuildIn
     Public Class GenerateVISAPVV_DG
         Inherits AHostCommand
 
-        Const PVK_PAIR As String = "PVK_PAIR"
-        Const PIN As String = "PIN"
-        Const ACCT_NBR As String = "ACCOUNT_NUMBER"
-        Const PVKI As String = "PVKI"
-
         Private _acct As String
         Private _pin As String
         Private _pvkPair As String
@@ -48,12 +43,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the DG message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(GeneratePVKKeyParser(PVK_PAIR))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(PIN, _
-                           Convert.ToInt32(Core.Resources.GetResource(Core.Resources.CLEAR_PIN_LENGTH)) + 1))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(ACCT_NBR, 12))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(PVKI, 1))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -64,11 +54,13 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _acct = MFPC.GetMessageFieldByName(ACCT_NBR).FieldValue()
-            _pin = MFPC.GetMessageFieldByName(PIN).FieldValue()
-            _pvki = MFPC.GetMessageFieldByName(PVKI).FieldValue()
-            _pvkPair = MFPC.GetMessageFieldByName(PVK_PAIR).FieldValue()
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _acct = kvp.Item("Account Number")
+                _pin = kvp.Item("PIN")
+                _pvki = kvp.Item("PVKI")
+                _pvkPair = kvp.ItemCombination("PVK Scheme", "PVK")
+            End If
         End Sub
 
         ''' <summary>
@@ -81,7 +73,8 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim clearPVK As String = Utility.DecryptUnderLMK(_pvkPair, PVK_PAIR, MFPC.GetMessageFieldByName(PVK_PAIR).DeterminerName, LMKPairs.LMKPair.Pair14_15, "0")
+            Dim cryptPVK As New HexKey(_pvkPair)
+            Dim clearPVK As String = utility.DecryptUnderLMK(cryptPVK.ToString,cryptpvk.Scheme,LMKPairs.LMKPair.Pair14_15,"0")
             If Utility.IsParityOK(clearPVK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes._10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
@@ -109,16 +102,6 @@ Namespace HostCommands.BuildIn
 
             Return mr
 
-        End Function
-
-        ''' <summary>
-        ''' Creates the response message after printer I/O is concluded.
-        ''' </summary>
-        ''' <remarks>
-        ''' This method returns <b>Nothing</b> as no printer I/O is related with this command.
-        ''' </remarks>
-        Public Overrides Function ConstructResponseAfterOperationComplete() As Message.MessageResponse
-            Return Nothing
         End Function
 
     End Class

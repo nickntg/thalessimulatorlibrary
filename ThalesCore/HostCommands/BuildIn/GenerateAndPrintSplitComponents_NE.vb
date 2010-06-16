@@ -30,9 +30,6 @@ Namespace HostCommands.BuildIn
     Public Class GenerateAndPrintSplitComponents_NE
         Inherits AHostCommand
 
-        Const KEY_TYPE As String = "KEY_TYPE"
-        Const KEY_SCHEME As String = "KEY_SCHEME"
-
         Private _keyType As String = ""
         Private _keyScheme As String = ""
         Private _result As String = ""
@@ -44,9 +41,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the NE message parsing fields.
         ''' </remarks>
         Public Sub New()
-            MFPC = New MessageFieldParserCollection
-            MFPC.AddMessageFieldParser(New MessageFieldParser(KEY_TYPE, 3))
-            MFPC.AddMessageFieldParser(New MessageFieldParser(KEY_SCHEME, 1))
+            ReadXMLDefinitions()
         End Sub
 
         ''' <summary>
@@ -57,9 +52,11 @@ Namespace HostCommands.BuildIn
         ''' code are <b>not</b> part of the message.
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
-            MFPC.ParseMessage(msg)
-            _keyType = MFPC.GetMessageFieldByName(KEY_TYPE).FieldValue
-            _keyScheme = MFPC.GetMessageFieldByName(KEY_SCHEME).FieldValue
+            XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
+            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+                _keyType = kvp.Item("Key Type")
+                _keyScheme = kvp.Item("Key Scheme LMK")
+            End If
         End Sub
 
         ''' <summary>
