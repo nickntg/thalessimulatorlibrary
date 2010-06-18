@@ -123,6 +123,7 @@
     <Compile Include="HostCommands\AHostCommand.vb" />
     <Compile Include="HostCommands\BuildIn\CommandChaining_NK.vb" />
     <Compile Include="HostCommands\BuildIn\EchoTest_B2.vb" />
+    <Compile Include="HostCommands\BuildIn\EncryptClearPIN_BA.vb" />
     <Compile Include="HostCommands\BuildIn\GenerateBDK_BI.vb" />
     <Compile Include="HostCommands\BuildIn\GenerateIBMOffset_DE.vb" />
     <Compile Include="HostCommands\BuildIn\HashDataBlock_GM.vb" />
@@ -269,6 +270,7 @@
   <ItemGroup>
     <Content Include="ThalesParameters.xml" />
     <Content Include="XMLDefs\HostCommands\CommandChaining_NK.xml" />
+    <Content Include="XMLDefs\HostCommands\EncryptClearPIN_BA.xml" />
     <Content Include="XMLDefs\HostCommands\FormKeyFromEncryptedComponents_A4.xml" />
     <Content Include="XMLDefs\HostCommands\FormZMKFromThreeComponents_GG.xml" />
     <Content Include="XMLDefs\HostCommands\GenerateAndPrintComponent_A2.xml" />
