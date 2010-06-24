@@ -24,7 +24,7 @@ Namespace HostCommands.BuildIn
     ''' Generates a random TMK, TPK or PVK.
     ''' </summary>
     ''' <remarks>
-    ''' This class implements the HA Racal command.
+    ''' This class implements the HC Racal command.
     ''' </remarks>
     <ThalesCommandCode("HC", "HD", "", "Generates a random TMK, TPK or PVK")> _
     Public Class GenerateTMKTPKPVK_HC
@@ -39,7 +39,7 @@ Namespace HostCommands.BuildIn
         ''' Constructor.
         ''' </summary>
         ''' <remarks>
-        ''' The constructor sets up the HA message parsing fields.
+        ''' The constructor sets up the HC message parsing fields.
         ''' </remarks>
         Public Sub New()
             ReadXMLDefinitions()

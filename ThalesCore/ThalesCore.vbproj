@@ -100,6 +100,10 @@
     <Compile Include="ConsoleCommands\ThalesConsoleCommandCode.vb" />
     <Compile Include="Cryptography\DUKPT\DerivedKey.vb" />
     <Compile Include="Cryptography\DUKPT\KeySerialNumber.vb" />
+    <Compile Include="Cryptography\MAC\ISO9797Algorithms.vb" />
+    <Compile Include="Cryptography\MAC\ISO9797MAC.vb" />
+    <Compile Include="Cryptography\MAC\ISO9797Pad.vb" />
+    <Compile Include="Cryptography\MAC\ISO9797PaddingMethods.vb" />
     <Compile Include="Exceptions\XDecryptError.vb" />
     <Compile Include="Exceptions\XEncryptError.vb" />
     <Compile Include="Exceptions\XFunctionNotPermitted.vb" />
@@ -126,13 +130,18 @@
     <Compile Include="HostCommands\BuildIn\EncryptClearPIN_BA.vb" />
     <Compile Include="HostCommands\BuildIn\GenerateBDK_BI.vb" />
     <Compile Include="HostCommands\BuildIn\GenerateIBMOffset_DE.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateMAC_M6.vb" />
     <Compile Include="HostCommands\BuildIn\HashDataBlock_GM.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateBDKFromLMKToZMK_DY.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslateBDKFromZMKToLMK_DW.vb" />
     <Compile Include="HostCommands\BuildIn\TranslatePINFromDUKTPToZPK_CI.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifyAndGenerateVISAPVV_CU.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyDukptPINWithIBMAlgorithm_CK.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyDukptPINWithVisaAlgorithm_CM.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyDynamicCVV_PM.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyInterchangePinUsingComparisonMethod_BE.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyInterchangePINWithIBMAlgorithm_EA.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifyMAC_M8.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyTerminalPINUsingComparisonMethod_BC.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyTerminalPINwithIBMAlgorithm_DA.vb" />
     <Compile Include="HostCommands\CommandClass.vb" />
@@ -284,6 +293,7 @@
     <Content Include="XMLDefs\HostCommands\GenerateIBMOffset_DE.xml" />
     <Content Include="XMLDefs\HostCommands\GenerateKey_A0.xml" />
     <Content Include="XMLDefs\HostCommands\GenerateMACForLargeMessage_MQ.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateMAC_M6.xml" />
     <Content Include="XMLDefs\HostCommands\GenerateMAC_MA.xml" />
     <Content Include="XMLDefs\HostCommands\GeneratePVKPair_FG.xml" />
     <Content Include="XMLDefs\HostCommands\GenerateRandomPIN_JA.xml" />
@@ -307,6 +317,8 @@
     <Content Include="XMLDefs\HostCommands\PINBlockFormat.xml" />
     <Content Include="XMLDefs\HostCommands\SetHSMDelay_LG.xml" />
     <Content Include="XMLDefs\HostCommands\SingleCommand.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateBDKFromLMKToZMK_DY.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslateBDKFromZMKToLMK_DW.xml" />
     <Content Include="XMLDefs\HostCommands\TranslateCVKFromLMKToZMK_AU.xml" />
     <Content Include="XMLDefs\HostCommands\TranslateCVKFromZMKToLMK_AW.xml" />
     <Content Include="XMLDefs\HostCommands\TranslateKeyScheme_B0.xml" />
@@ -328,6 +340,7 @@
     <Content Include="XMLDefs\HostCommands\TranslateZMKFromZMKToLMK_BY.xml" />
     <Content Include="XMLDefs\HostCommands\TranslateZPKFromLMKToZMK_GC.xml" />
     <Content Include="XMLDefs\HostCommands\TranslateZPKFromZMKToLMK_FA.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyAndGenerateVISAPVV_CU.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyAndTranslateMAC_ME.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyDukptPINWithIBMAlgorithm_CK.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyDukptPINWithVISAAlgorithm_CM.xml" />
@@ -335,6 +348,7 @@
     <Content Include="XMLDefs\HostCommands\VerifyInterchangePinUsingComparisonMethod_BE.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyInterchangePINWithIBMAlgorithm_EA.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyInterchangePINWithVISAAlgorithm_EC.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyMAC_M8.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyMAC_MC.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyTerminalPinUsingComparisonMethod_BC.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyTerminalPINwithIBMAlgorithm_DA.xml" />

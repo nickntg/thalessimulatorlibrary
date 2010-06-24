@@ -39,7 +39,7 @@ Namespace HostCommands.BuildIn
         ''' Constructor.
         ''' </summary>
         ''' <remarks>
-        ''' The constructor sets up the A0 message parsing fields.
+        ''' The constructor sets up the A8 message parsing fields.
         ''' </remarks>
         Public Sub New()
             ReadXMLDefinitions()

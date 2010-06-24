@@ -185,7 +185,17 @@ Namespace Message.XML
 
                             'Get the dynamic length, if it's appropriate.
                             If fld.DynamicLength <> "" Then
-                                fld.Length = Convert.ToInt32(KVPairs.Item(fld.DynamicLength))
+                                'Find out if the dynamic field is numeric or otherwise and perform the necessary conversion.
+                                For Each scannedFld As XML.MessageField In fields.Fields
+                                    If scannedFld.Name = fld.DynamicLength Then
+                                        If scannedFld.MessageFieldType = MessageFieldTypes.Hexadecimal Then
+                                            fld.Length = Convert.ToInt32(KVPairs.Item(fld.DynamicLength), 16)
+                                        Else
+                                            fld.Length = Convert.ToInt32(KVPairs.Item(fld.DynamicLength))
+                                        End If
+                                        Exit For
+                                    End If
+                                Next
                             End If
 
                             If fld.Length <> 0 Then

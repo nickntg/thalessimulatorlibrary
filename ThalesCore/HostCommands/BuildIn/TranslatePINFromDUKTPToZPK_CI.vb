@@ -27,7 +27,7 @@ Namespace HostCommands.BuildIn
     ''' Translates a PIN block from ZPK to ZPK encryption.
     ''' </summary>
     ''' <remarks>
-    ''' This class implements the CC Racal command.
+    ''' This class implements the CI Racal command.
     ''' </remarks>
     <ThalesCommandCode("CI", "CJ", "", "Translates a PIN block from DUKPT to ZPK encryption")> _
     Public Class TranslatePINFromDUKPTToZPK_CI
@@ -45,7 +45,7 @@ Namespace HostCommands.BuildIn
         ''' Constructor.
         ''' </summary>
         ''' <remarks>
-        ''' The constructor sets up the CC message parsing fields.
+        ''' The constructor sets up the CI message parsing fields.
         ''' </remarks>
         Public Sub New()
             ReadXMLDefinitions()

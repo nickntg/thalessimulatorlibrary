@@ -5,6 +5,11 @@ xxxx/xx/xx: Version 0.9.1 beta released.
 ----------------------------------------
 * The following host commands have been added:
     - BA: Encrypts a clear PIN text.
+    - DW: Translate a BDK from ZPK to LMK encryption.
+    - DY: Translate a BDK from LMK to ZPK encryption.
+    - CU: Verify and generate a VISA PVV.
+    - M6: Generate a MAC.
+    - M8: Verify a MAC.
 
 2010/06/16: Version 0.9 beta released.
 --------------------------------------
@@ -19,8 +24,8 @@ xxxx/xx/xx: Version 0.9.1 beta released.
     - BI (Generate a BDK).
     - DE (Generate an IBM offset).
     - CI (Translate PIN from DUKPT to ZPK.
-    - CK (Verify a DUKPT PIN using the VISA method).
-    - CM (Verify a DUKPT PIN using the IBM method).
+    - CK (Verify a DUKPT PIN using the IBM method).
+    - CM (Verify a DUKPT PIN using the VISA method).
     - EA (Verify an interchange PIN using the IBM method).
     - DA (Verify a terminal PIN using the IBM method).
 

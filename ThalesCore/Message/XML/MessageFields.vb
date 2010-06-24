@@ -228,7 +228,7 @@ Namespace Message.XML
                         'Get length.
                         Dim len As String = Convert.ToString(dr.Item("Length"))
                         If IsNumeric(len) Then
-                            'When we want to parse unti we find a value, we set a length
+                            'When we want to parse until we find a value, we set a length
                             'of 1. This is because we want to look for a value of a 
                             'single-character.
                             If fld.ParseUntilValue = "" Then

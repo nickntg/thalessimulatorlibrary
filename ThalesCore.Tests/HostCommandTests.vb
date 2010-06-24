@@ -380,6 +380,16 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("00", TestTran("U8E3D3E2FD5919657F05A1AA90D32A014U9487FAD9CF6AF6E918BF06F71FED1415605FFFF9876543210E000011B9C1845EB993A7A04401234567808266", New VerifyDukptPINWithVISAAlgorithm_CM))
     End Sub
 
+    <TestMethod()> _
+    Public Sub TestVerifyAndGeneratePVV()
+        'Successfully change PIN from 1234 to 4321 for ZPK and TPK.
+        Assert.AreEqual("009860", TestTran("001U1EF828AA8F6B80EB83E19FBC373F3A85X367930344805B1FAD6146EF4ED7502B391DDDA0A7C12CFAA0155000002532113969262D1CC277EF0BB4", New VerifyAndGenerateVISAPVV_CU))
+        Assert.AreEqual("009860", TestTran("002U8463435FC4B4DAA0C49025272C29B12CX367930344805B1FAD6146EF4ED7502B3028DCC093FB0471F0355000002532113969DC90438F79A7A075", New VerifyAndGenerateVISAPVV_CU))
+        'Fail both above tests (wrong PVV).
+        Assert.AreEqual("01", TestTran("001U1EF828AA8F6B80EB83E19FBC373F3A85X367930344805B1FAD6146EF4ED7502B391DDDA0A7C12CFAA0155000002532113961262D1CC277EF0BB4", New VerifyAndGenerateVISAPVV_CU))
+        Assert.AreEqual("01", TestTran("002U8463435FC4B4DAA0C49025272C29B12CX367930344805B1FAD6146EF4ED7502B3028DCC093FB0471F0355000002532113961DC90438F79A7A075", New VerifyAndGenerateVISAPVV_CU))
+    End Sub
+
     'Contributed by robt, http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=70958
     <TestMethod()> _
     Public Sub TestGenerateZEKAndCheckTranslation()
@@ -525,6 +535,53 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("00", TestTran(cryptZPK + cryptPINBlock + Core.PIN.PINBlockFormat.FromPINBlockFormat(Core.PIN.PINBlockFormat.PIN_Block_Format.Diebold) + PAN.Substring(PAN.Length - 12 - 1, 12) + PIN, New VerifyInterchangePinUsingComparisonMethod_BE))
         'Verification failure.
         Assert.AreEqual("01", TestTran(cryptZPK + cryptPINBlock + Core.PIN.PINBlockFormat.FromPINBlockFormat(Core.PIN.PINBlockFormat.PIN_Block_Format.Diebold) + PAN.Substring(PAN.Length - 12 - 1, 12) + PIN2, New VerifyInterchangePinUsingComparisonMethod_BE))
+    End Sub
+
+    <TestMethod()> _
+    Public Sub TranslateBDKFromZMKToLMK()
+        Assert.AreEqual("00U8E3D3E2FD5919657F05A1AA90D32A01408D7B4", TestTran("U1457FF6ADF6250C66C368416B4C9D3836A2C67C227784BC5D8508B6BED82ECB8;0U1", New TranslateBDKFromZMKToLMK_DW))
+    End Sub
+
+    <TestMethod()> _
+    Public Sub TranslateBDKFromLMKToZMK()
+        Assert.AreEqual("00X6A2C67C227784BC5D8508B6BED82ECB808D7B4", TestTran("U1457FF6ADF6250C66C368416B4C9D383U8E3D3E2FD5919657F05A1AA90D32A014;X01", New TranslateBDKFromLMKToZMK_DY))
+    End Sub
+
+    <TestMethod()> _
+    Public Sub EncryptClearPIN()
+        Dim clearPIN As String = "1234"
+        Dim clearTPK As String = "D3DCC7EA9BCB755D254620B376B3D007"
+        Dim cryptTPK As String = "U8463435FC4B4DAA0C49025272C29B12C"
+        Dim cryptPVK As String = "UA8B1520E201412938388191885FFA50A"
+        Dim PAN As String = "5044070000253211"
+
+        'Generate the "encrypted" PIN.
+        Assert.AreEqual("000" + clearPIN, TestTran("0" + clearPIN + PAN.Substring(3, 12), New EncryptClearPIN_BA))
+
+        'Generate a PVV for the "encrypted PIN"
+        Dim res As String = TestTran(cryptPVK + "0" + clearPIN + PAN.Substring(3, 12) + "1" + ";", New GenerateVISAPVV_DG)
+        If res.Substring(0, 2) <> ErrorCodes._00_NO_ERROR Then
+            Assert.Fail("Error duging PVV generation.")
+        End If
+
+        'Get the PVV.
+        Dim PVV As String = res.Substring(2)
+
+        'Create a simple PIN block using the clear PIN.
+        Dim PB As String = Cryptography.TripleDES.TripleDESEncrypt(New Cryptography.HexKey(clearTPK), clearPIN + New String("F"c, 12))
+
+        'Throw a Visa PVV verification against all this.
+        Assert.AreEqual("00", TestTran(cryptTPK + cryptPVK + PB + "03" + PAN.Substring(3, 12) + "1" + PVV, New VerifyTerminalPINWithVISAAlgorithm_DC))
+    End Sub
+
+    <TestMethod()> _
+    Public Sub GenerateMAC()
+        Assert.AreEqual("0000085F1448EE", TestTran("01032003U19D25F349FD03CC3556BB05F65283CA10000000000000000004072C29C2371CC9BDB65B779B8E8D37B29ECC154AA56A8799FAE2F498F76ED92F2", New GenerateMAC_M6))
+    End Sub
+
+    <TestMethod()> _
+    Public Sub VerifyMAC()
+        Assert.AreEqual("00", TestTran("01032003U19D25F349FD03CC3556BB05F65283CA10000000000000000004072C29C2371CC9BDB65B779B8E8D37B29ECC154AA56A8799FAE2F498F76ED92F25F1448EE", New VerifyMAC_M8))
     End Sub
 
     'Dump major events to the console window.
