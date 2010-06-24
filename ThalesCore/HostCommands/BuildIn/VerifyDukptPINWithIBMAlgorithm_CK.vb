@@ -53,7 +53,7 @@ Namespace HostCommands.BuildIn
         ''' Constructor.
         ''' </summary>
         ''' <remarks>
-        ''' The constructor sets up the EC message parsing fields.
+        ''' The constructor sets up the CK message parsing fields.
         ''' </remarks>
         Public Sub New()
             ReadXMLDefinitions()

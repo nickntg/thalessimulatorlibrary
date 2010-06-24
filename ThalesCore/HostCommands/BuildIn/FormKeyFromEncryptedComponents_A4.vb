@@ -24,7 +24,7 @@ Namespace HostCommands.BuildIn
     ''' Forms a key from encrypted components.
     ''' </summary>
     ''' <remarks>
-    ''' This class implements the KA Racal command.
+    ''' This class implements the A4 Racal command.
     ''' </remarks>
     <ThalesCommandCode("A4", "A5", "", "Forms a key from encrypted components")> _
     Public Class FormKeyFromEncryptedComponents_A4

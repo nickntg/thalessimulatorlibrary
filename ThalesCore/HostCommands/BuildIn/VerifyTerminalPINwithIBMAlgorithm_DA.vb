@@ -26,7 +26,7 @@ Namespace HostCommands.BuildIn
     ''' Verifies a terminal PIN using the IBM algorithm.
     ''' </summary>
     ''' <remarks>
-    ''' This class implements the DC Racal command.
+    ''' This class implements the DA Racal command.
     ''' </remarks>
     <ThalesCommandCode("DA", "DB", "", "Verifies a terminal PIN using the IBM algorithm")> _
     Public Class VerifyTerminalPINwithIBMAlgorithm_DA

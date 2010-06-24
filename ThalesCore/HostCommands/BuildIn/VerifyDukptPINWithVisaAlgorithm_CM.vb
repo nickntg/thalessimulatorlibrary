@@ -27,7 +27,7 @@ Namespace HostCommands.BuildIn
     ''' Verifies a DUKPT PIN using the VISA algorithm.
     ''' </summary>
     ''' <remarks>
-    ''' This class implements the EC Racal command.
+    ''' This class implements the CM Racal command.
     ''' </remarks>
     <ThalesCommandCode("CM", "CN", "", "Verifies a DUKPT PIN using the VISA algorithm")> _
     Public Class VerifyDukptPINWithVISAAlgorithm_CM
@@ -46,7 +46,7 @@ Namespace HostCommands.BuildIn
         ''' Constructor.
         ''' </summary>
         ''' <remarks>
-        ''' The constructor sets up the EC message parsing fields.
+        ''' The constructor sets up the CM message parsing fields.
         ''' </remarks>
         Public Sub New()
             ReadXMLDefinitions()

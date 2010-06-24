@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Verifies a PVV and generates a new PVV.</CommandName>
+  <Request>CU</Request>
+  <Response>CV</Response>
+
+  <Field>
+    <Name>Key Type</Name>
+    <Length>3</Length>
+    <Type>Numeric</Type>
+    <ValidValue>001</ValidValue>
+    <ValidValue>002</ValidValue>
+    <RejectionCodeIfInvalid>15</RejectionCodeIfInvalid>
+  </Field>
+  
+  <Field>
+    <Name>Key</Name>
+    <IncludeFile>MultiFormatKey.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>PVK</Name>
+    <IncludeFile>MultiFormatCVK.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>PIN Block</Name>
+    <Length>16</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+  <Field>
+    <Name>PIN Block Format Code</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Account Number</Name>
+    <Length>12</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>PVKI</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>PVV</Name>
+    <Length>4</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>New PIN Block</Name>
+    <Length>16</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+</CommandConfiguration>
