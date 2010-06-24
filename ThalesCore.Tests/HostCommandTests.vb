@@ -131,6 +131,8 @@ Imports ThalesSim.Core.Message
         SwitchToSingleLengthZMKs()
         Assert.AreEqual("000406FBB23A5214DF0035BB", TestTran("0024ED06495741C280C35ED0C0EA7F7D0FAZ", New ImportKey_A6))
         SwitchToDoubleLengthZMKs()
+        'Contributed by wpak, fixes issue described at http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=217215.
+        Assert.AreEqual("00U0E07CDC0161A0DE3B5AA44DF227EC9DEABDEBC", TestTran("001U71979DEB8587E2734F1E99D5DCAEF9ACU482C4E722BB0CF1845E1E5BD16310119U", New ImportKey_A6))
         Assert.AreEqual("00BAB32D775A38E4AB73936E", TestTran("001U1457FF6ADF6250C66C368416B4C9D3832B930A07119F93A8Z", New ImportKey_A6))
     End Sub
 

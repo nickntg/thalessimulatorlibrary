@@ -62,9 +62,9 @@ Namespace Cryptography.DUKPT
             '5) Set the left-most bit of SR, clearing the other 20 bits.
             shiftr = _100000
 
-            Do While CInt(shiftr) <> 0
+            Do While Convert.ToInt32(shiftr) <> 0
                 temp = Utility.ANDHexStrings(shiftr, reg3)
-                If CInt(temp) <> 0 Then
+                If Convert.ToInt32(temp) <> 0 Then
                     reg8str = Utility.ORHexStringsFull(reg8str, shiftr, 10)
                     r8astr = Utility.XORHexStringsFull(reg8str, curkey.Substring(16, 16))
                     r8astr = DES.DESEncrypt(curkey.Substring(0, 16), r8astr)

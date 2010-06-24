@@ -34,6 +34,7 @@ Namespace HostCommands.BuildIn
         Private _zmk As String = ""
         Private _key As String = ""
         Private _lmkScheme As String = ""
+        Private _targetKeyScheme As KeySchemeTable.KeyScheme
 
         ''' <summary>
         ''' Constructor.
@@ -59,6 +60,11 @@ Namespace HostCommands.BuildIn
                 _zmk = kvp.ItemCombination("ZMK Scheme", "ZMK")
                 _key = kvp.ItemCombination("Key Scheme", "Key")
                 _lmkScheme = kvp.Item("Key Scheme LMK")
+                If kvp.ItemOptional("Key Scheme") <> "" Then
+                    _targetKeyScheme = KeySchemeTable.GetKeySchemeFromValue(kvp.ItemOptional("Key Scheme"))
+                Else
+                    _targetKeyScheme = KeySchemeTable.KeyScheme.Unspecified
+                End If
             End If
         End Sub
 
@@ -88,12 +94,14 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            Dim clearKey As String = TripleDES.TripleDESDecrypt(New HexKey(clearZMK), _key)
+            'Changed to use the DecryptUnderZMK method instead of directly performing 3DES decrypt.
+            'See http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=217215.
+            Dim clearKey As String = DecryptUnderZMK(clearZMK, Utility.RemoveKeyType(_key), _targetKeyScheme)
             If Utility.IsParityOK(clearKey, Utility.ParityCheck.OddParity) = False Then
                 _warnParity = True
             End If
 
-            Dim cryptKey As String = Utility.EncryptUnderLMK(clearKey, lmk_ks, LMKKeyPair, var)
+            Dim cryptKey As String = Utility.EncryptUnderLMK(Utility.RemoveKeyType(clearKey), lmk_ks, LMKKeyPair, var)
             Dim checkValue As String = TripleDES.TripleDESEncrypt(New HexKey(clearKey), ZEROES)
 
             Log.Logger.MinorInfo("ZMK (clear): " + clearZMK)
