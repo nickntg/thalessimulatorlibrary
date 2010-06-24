@@ -125,6 +125,13 @@ Namespace HostCommands.BuildIn
             Return mr
         End Function
 
+        ''' <summary>
+        ''' This method performs sanity checks and generates the MAC.
+        ''' </summary>
+        ''' <param name="ErrorCode">If non-empty is returned, a logical error has occured.</param>
+        ''' <param name="ClearKey">Returns the clear key.</param>
+        ''' <param name="GeneratedMAC">Returns the complete MAC.</param>
+        ''' <remarks></remarks>
         Protected Sub ProcessMACGeneration(ByRef ErrorCode As String, ByRef ClearKey As String, ByRef GeneratedMAC As String)
             Dim cryptKey As New HexKey(_key)
 

@@ -10,6 +10,7 @@ xxxx/xx/xx: Version 0.9.1 beta released.
     - CU: Verify and generate a VISA PVV.
     - M6: Generate a MAC.
     - M8: Verify a MAC.
+* Fixed a bug with the A6 command.
 
 2010/06/16: Version 0.9 beta released.
 --------------------------------------

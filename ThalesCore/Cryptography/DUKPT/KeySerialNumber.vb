@@ -85,14 +85,13 @@ Namespace Cryptography.DUKPT
 
             Dim p As Integer = 0
 
-            baseKeyId = KSN.Substring(p, Val(KSNDescriptor(0)))
-            p += Val(KSNDescriptor(0))
+            baseKeyId = KSN.Substring(p, Convert.ToInt32(KSNDescriptor.Substring(0, 1)))
+            p += Convert.ToInt32(KSNDescriptor.Substring(0, 1))
 
-            trsmId = KSN.Substring(p, Val(KSNDescriptor(2)))
-            p += Val(KSNDescriptor(2))
+            trsmId = KSN.Substring(p, Convert.ToInt32(KSNDescriptor.Substring(2, 1)))
+            p += Convert.ToInt32(KSNDescriptor.Substring(2, 1))
 
-            transactionCounter = Hex$(Convert.ToInt32(KSN(p - 1), 16) And &H1) + KSN.Substring(p, KSN.Length - p)
-
+            transactionCounter = Convert.ToString(Convert.ToInt32(KSN(p - 1), 16) And &H1, 16) + KSN.Substring(p, KSN.Length - p)
         End Sub
 
     End Class
