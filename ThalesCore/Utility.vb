@@ -135,7 +135,28 @@ Public Class Utility
                     Return False
                 End If
             End If
+        Next
 
+        Return True
+    End Function
+
+    ''' <summary>
+    ''' Determines if a string is comprised of hexadecimal characters.
+    ''' </summary>
+    ''' <remarks>
+    ''' Determines if a string is comprised of hexadecimal characters.
+    ''' </remarks>
+    Public Shared Function IsHexString(ByVal s As String, ByVal removeType As Boolean) As Boolean
+        If String.IsNullOrEmpty(s) Then Return False
+
+        If removeType Then s = RemoveKeyType(s).ToUpper
+
+        For i As Integer = 0 To s.Length - 1
+            If Not Char.IsDigit(s.Chars(i)) Then
+                If (s.Chars(i) < "A"c) Or (s.Chars(i) > "F"c) Then
+                    Return False
+                End If
+            End If
         Next
 
         Return True
