@@ -421,13 +421,9 @@ Imports ThalesSim.Core.Message
 
     'Get a track-II with a string representation and return a string with a byte representation.
     Private Function CreateBytesWithData(ByVal trackData As String) As String
-        Dim s As String = ""
-        Dim b(100) As Byte
+        Dim b((trackData.Length \ 2) - 1) As Byte
         Utility.HexStringToByteArray(trackData, b)
-        For i As Integer = 0 To (trackData.Length \ 2) - 1
-            s = s + Chr(b(i))
-        Next
-        Return s
+        Return System.Text.ASCIIEncoding.Default.GetChars(b)
     End Function
 
     <TestMethod()> _
@@ -459,6 +455,14 @@ Imports ThalesSim.Core.Message
     'ASC-convert a string to a byte-array.
     Private Function bytesFromString(ByVal s As String) As Byte()
         Return Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetBytes(s)
+    End Function
+
+    Private Function ASCIIBytesFromString(ByVal s As String) As String
+        Dim ret As String = ""
+        For i As Integer = 0 To s.Length - 1 Step 2
+            ret = ret + Text.ASCIIEncoding.Default.GetChars(New Byte() {Convert.ToByte(s.Substring(i, 2))})
+        Next
+        Return ret
     End Function
 
     <TestMethod()> _
@@ -584,6 +588,19 @@ Imports ThalesSim.Core.Message
     <TestMethod()> _
     Public Sub VerifyMAC()
         Assert.AreEqual("00", TestTran("01032003U19D25F349FD03CC3556BB05F65283CA10000000000000000004072C29C2371CC9BDB65B779B8E8D37B29ECC154AA56A8799FAE2F498F76ED92F25F1448EE", New VerifyMAC_M8))
+    End Sub
+
+    <TestMethod()> _
+    Public Sub VerifyTruncatedApplicationCryptogram()
+        Dim tranData As String = "000000000000000000000000000080000000000000000000005344657800000007800001240000"
+        Dim tranDataLength As String = ""
+        Utility.ByteArrayToHexString(New Byte() {Convert.ToByte(tranData.Length / 2)}, tranDataLength)
+        Assert.AreEqual("00", TestTran("00001UA67981CE67F36A4BD2DE46BA17D6F59608" + Utility.toBCD("6414000000036701") + ASCIIBytesFromString("0007") + ASCIIBytesFromString("53446578") + tranDataLength + ASCIIBytesFromString(tranData) + ";" + CreateBytesWithData("1D8F14549EDED2D6") + CreateBytesWithData("0000000000000000") + CreateBytesWithData("00000000"), New VerifyTruncatedApplicationCryptogram_K2))
+        AuthorizedStateOff()
+        Assert.AreEqual("01", TestTran("00001UA67981CE67F36A4BD2DE46BA17D6F59608" + Utility.toBCD("6414000000036701") + ASCIIBytesFromString("0007") + ASCIIBytesFromString("53446578") + tranDataLength + ASCIIBytesFromString(tranData) + ";" + CreateBytesWithData("1D8F14549EDED2D7") + CreateBytesWithData("0000000000000000") + CreateBytesWithData("00000000"), New VerifyTruncatedApplicationCryptogram_K2))
+        AuthorizedStateOn()
+        Assert.AreEqual("01" + CreateBytesWithData("1D8F14549EDED2D6"), TestTran("00001UA67981CE67F36A4BD2DE46BA17D6F59608" + Utility.toBCD("6414000000036701") + ASCIIBytesFromString("0007") + ASCIIBytesFromString("53446578") + tranDataLength + ASCIIBytesFromString(tranData) + ";" + CreateBytesWithData("1D8F14549EDED2D7") + CreateBytesWithData("0000000000000000") + CreateBytesWithData("00000000"), New VerifyTruncatedApplicationCryptogram_K2))
+        AuthorizedStateOff()
     End Sub
 
     'Dump major events to the console window.

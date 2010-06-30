@@ -377,6 +377,36 @@ Public Class Utility
         Return r
     End Function
 
+    ''' <summary>
+    ''' Converts a BCD-string to a number.
+    ''' </summary>
+    ''' <param name="BCDString">BCD-coded string.</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function fromBCD(ByVal BCDString As String) As String
+        Dim r As String = ""
+        For i As Integer = 0 To BCDString.Length - 1
+            Dim b As Byte = System.Text.ASCIIEncoding.Default.GetBytes(BCDString.Chars(i))(0)
+            r = r + Convert.ToString((b >> 4)) + Convert.ToString((b And 15))
+        Next
+        Return r
+    End Function
+
+    ''' <summary>
+    ''' Converts a numeric string to a BCD string.
+    ''' </summary>
+    ''' <param name="decimalString">Numeric string.</param>
+    ''' <returns></returns>
+    ''' <remarks>Numeric string must have an even length.</remarks>
+    Public Shared Function toBCD(ByVal decimalString As String) As String
+        Dim r As String = ""
+        For i As Integer = 0 To decimalString.Length - 1 Step 2
+            Dim b1 As Integer = Convert.ToInt32(decimalString.Chars(i)), b2 As Integer = Convert.ToInt32(decimalString.Chars(i + 1))
+            r = r + System.Text.ASCIIEncoding.Default.GetChars(New Byte() {Convert.ToByte(((b1 And 15) << 4) Or (b2 And 15))})
+        Next
+        Return r
+    End Function
+
     Public Shared Function AddNoCarry(ByVal str1 As String, ByVal str2 As String) As String
         Dim output As String = ""
         For cnt As Integer = 0 To str1.Length - 1

@@ -11,6 +11,8 @@ xxxx/xx/xx: Version 0.9.1 beta released.
     - M6: Generate a MAC.
     - M8: Verify a MAC.
 * Fixed a bug with the A6 command.
+* Added an initial implementation of the K2 host command. This particular implementation 
+  is considered an alpha version.
 * Added the ThalesKeyManager, a utility to assist with the housekeeping of test keys.
   This utility is only functional with the simulator and is not intended for use
   with a real HSM.

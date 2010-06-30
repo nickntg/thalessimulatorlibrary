@@ -165,9 +165,9 @@ Namespace HostCommands.BuildIn
             Dim KD As Cryptography.HexKey = Nothing
 
             If _keyDerivationMethod = KEY_DERIVATION_METHOD_A Then
-                KD = GetDerivedKey_OptionA(IMK, PAN, PANSequenceNo)
+                KD = EMV.KeyDerivation.GetDerivedMasterKey(IMK, PAN, PANSequenceNo, EMV.MasterKeyDerivationMethods.EMV_4_2_OptionA)
             Else
-                KD = GetDerivedKey_OptionB(IMK, PAN, PANSequenceNo)
+                KD = EMV.KeyDerivation.GetDerivedMasterKey(IMK, PAN, PANSequenceNo, EMV.MasterKeyDerivationMethods.EMV_4_2_OptionB)
             End If
 
             'Generate the MAC to get the IVCVC3.
@@ -180,91 +180,6 @@ Namespace HostCommands.BuildIn
             Dim b(7) As Byte
             Utility.HexStringToByteArray(result, b)
             Return (b(6) * 256 + b(7)).ToString.PadLeft(5, "0"c)
-        End Function
-
-        ''' <summary>
-        ''' Calculates the derived key using the initial key, the PAN and the sequence number.
-        ''' </summary>
-        ''' <param name="IMK">Initial key.</param>
-        ''' <param name="PAN">PAN.</param>
-        ''' <param name="PANSequenceNo">PAN sequence number.</param>
-        ''' <returns></returns>
-        ''' <remarks>This implements the key derivation method A.</remarks>
-        Private Function GetDerivedKey_OptionA(ByVal IMK As Cryptography.HexKey, ByVal PAN As String, ByVal PANSequenceNo As String) As Cryptography.HexKey
-            'Add sequence number to PAN and pad to at least 16 digits. 
-            'Then get the rightmost sixteen digits to form an 8-byte block.
-            Dim Y As String = PAN + PANSequenceNo
-            If Y.Length < 16 Then
-                Y = Y.PadLeft(16, "0"c)
-            End If
-            Y = Y.Substring(Y.Length - 16)
-
-            Return GetDerivedKeyFromPreparedPAN(IMK, Y)
-        End Function
-
-        ''' <summary>
-        ''' Calculates the derived key using the initial key, the PAN and the sequence number.
-        ''' This method is called when the PAN is larger than 16 digits.
-        ''' </summary>
-        ''' <param name="IMK">Initial key.</param>
-        ''' <param name="PAN">PAN.</param>
-        ''' <param name="PANSequenceNo">PAN sequence number.</param>
-        ''' <returns></returns>
-        ''' <remarks>This implements the key derivation method B.</remarks>
-        Private Function GetDerivedKey_OptionB(ByVal IMK As Cryptography.HexKey, ByVal PAN As String, ByVal PANSequenceNo As String) As Cryptography.HexKey
-            Dim Y As String = PAN + PANSequenceNo
-
-            'Pad to an even length.
-            If PAN.Length Mod 2 = 1 Then
-                Y = Y + "0"c
-            End If
-
-            'Hash Y.
-            Dim hash As Security.Cryptography.HashAlgorithm = New Security.Cryptography.SHA1Managed
-            Dim result() As Byte = hash.ComputeHash(Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetBytes(Y))
-
-            'Get hex result.
-            Dim resultStr As String = ""
-            Utility.ByteArrayToHexString(result, resultStr)
-
-            'Keep values A, B, C, D, E and F here.
-            Dim undecimalized As String = ""
-
-            'Try to get to the first 16 decimal characters.
-            Y = ""
-            For i As Integer = 0 To resultStr.Length - 1
-                If Char.IsDigit(resultStr.Chars(i)) Then
-                    Y = Y + resultStr.Chars(i)
-                    If Y.Length = 16 Then Exit For
-                Else
-                    undecimalized = undecimalized + resultStr.Chars(i)
-                End If
-            Next
-
-            'If more are needed, do the decimalization and get the rest.
-            If Y.Length < 16 Then
-                Dim decimalized As String = Utility.Decimalise(undecimalized, "012345")
-                Y = Y + decimalized.Substring(0, 16 - Y.Length)
-            End If
-
-            Return GetDerivedKeyFromPreparedPAN(IMK, Y)
-        End Function
-
-        ''' <summary>
-        ''' Calculates the derived key using the initial key given a massaged PAN.
-        ''' </summary>
-        ''' <param name="IMK">Initial key.</param>
-        ''' <param name="Y">Prepared PAN from OptionA or OptionB methods.</param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Private Function GetDerivedKeyFromPreparedPAN(ByVal IMK As Cryptography.HexKey, ByVal Y As String) As Cryptography.HexKey
-            'Left key is the result of encrypting Y with the IMK.
-            Dim ZL As String = Cryptography.TripleDES.TripleDESEncrypt(IMK, Y)
-            'Right key is the result of encrypting Y XOR FFs with the IMK.
-            Dim ZR As String = Cryptography.TripleDES.TripleDESEncrypt(IMK, Utility.XORHexStringsFull(Y, "FFFFFFFFFFFFFFFF"))
-
-            'Left+Right = the derived key.
-            Return New Cryptography.HexKey(Utility.MakeParity(ZL + ZR, Utility.ParityCheck.OddParity))
         End Function
 
         ''' <summary>

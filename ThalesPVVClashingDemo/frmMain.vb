@@ -112,13 +112,13 @@ Public Class frmMain
         Dim PAN As String = "5364140000000367"
         Dim PAN_Sequence_No As String = "01"
 
-        Dim MK_AC As Core.Cryptography.HexKey = GetDerivedKey_OptionA(IMK_AC, PAN.Substring(2), PAN_Sequence_No)
+        Dim MK_AC As Core.Cryptography.HexKey = Cryptography.EMV.KeyDerivation.GetDerivedKey_OptionA(IMK_AC, PAN.Substring(2), PAN_Sequence_No)
         Debug.WriteLine(MK_AC.ToString)
 
         Dim ATC As String = "0007"
-        Dim UN As String = "00000000" '"53446578"
+        Dim UN As String = "53446578"
 
-        Dim SK_AC As Core.Cryptography.HexKey = FindSessionKey(MK_AC, ATC, UN)
+        Dim SK_AC As Core.Cryptography.HexKey = Cryptography.EMV.KeyDerivation.FindMasterCardSessionKey(MK_AC, ATC, UN)
         Debug.WriteLine(SK_AC.ToString)
 
         Dim Amount_Authorized As String = "000000000000"
@@ -132,6 +132,7 @@ Public Class frmMain
         Dim CVR As String = "800001240000"
 
         Dim AC As String = GetMac(Amount_Authorized + Amount_Other + Terminal_Country_Code + TVR + Transaction_Currency_Code + Transaction_Date + Transaction_Type + UN + AIP + ATC + CVR, SK_AC)
+        '000000000000000000000000000080000000000000000000005344657800000007800001240000
         Debug.WriteLine(AC)
 
         Dim TDS_0 As String = "4725"
@@ -140,8 +141,6 @@ Public Class frmMain
 
         Dim TDSMAC As Core.Cryptography.HexKey = New Core.Cryptography.HexKey(GetMac(PadWithNibbles(TDS_0, TDS_1, TDS_2), New Core.Cryptography.HexKey(AC + AC)))
         Debug.WriteLine(TDSMAC.ToString)
-
-
     End Sub
 
     Private Function PadWithNibbles(ByVal first As String, ByVal second As String, ByVal third As String) As String
@@ -191,97 +190,6 @@ Public Class frmMain
         intermediateryData = Cryptography.TripleDES.TripleDESDecrypt(KR, intermediateryData)
         intermediateryData = Cryptography.TripleDES.TripleDESEncrypt(KL, intermediateryData)
         Return intermediateryData.Substring(0, 16)
-    End Function
-
-    Private Function FindSessionKey(ByVal MK_AC As Core.Cryptography.HexKey, ByVal ATC As String, ByVal UN As String) As Core.Cryptography.HexKey
-        Return New Core.Cryptography.HexKey(Core.Cryptography.TripleDES.TripleDESEncrypt(MK_AC, ATC + "F000" + UN) + Core.Cryptography.TripleDES.TripleDESEncrypt(MK_AC, ATC + "0F00" + UN))
-    End Function
-
-    ''' <summary>
-    ''' Calculates the derived key using the initial key, the PAN and the sequence number.
-    ''' </summary>
-    ''' <param name="IMK">Initial key.</param>
-    ''' <param name="PAN">PAN.</param>
-    ''' <param name="PANSequenceNo">PAN sequence number.</param>
-    ''' <returns></returns>
-    ''' <remarks>This implements the key derivation method A.</remarks>
-    Private Function GetDerivedKey_OptionA(ByVal IMK As Cryptography.HexKey, ByVal PAN As String, ByVal PANSequenceNo As String) As Cryptography.HexKey
-        'Add sequence number to PAN and pad to at least 16 digits. 
-        'Then get the rightmost sixteen digits to form an 8-byte block.
-        Dim Y As String = PAN + PANSequenceNo
-        If Y.Length < 16 Then
-            Y = Y.PadLeft(16, "0"c)
-        End If
-        Y = Y.Substring(Y.Length - 16)
-
-        Return GetDerivedKeyFromPreparedPAN(IMK, Y)
-    End Function
-
-    ''' <summary>
-    ''' Calculates the derived key using the initial key, the PAN and the sequence number.
-    ''' This method is called when the PAN is larger than 16 digits.
-    ''' </summary>
-    ''' <param name="IMK">Initial key.</param>
-    ''' <param name="PAN">PAN.</param>
-    ''' <param name="PANSequenceNo">PAN sequence number.</param>
-    ''' <returns></returns>
-    ''' <remarks>This implements the key derivation method B.</remarks>
-
-    Private Function GetDerivedKey_OptionB(ByVal IMK As Cryptography.HexKey, ByVal PAN As String, ByVal PANSequenceNo As String) As Cryptography.HexKey
-        Dim Y As String = PAN + PANSequenceNo
-
-        'Pad to an even length.
-        If PAN.Length Mod 2 = 1 Then
-            Y = Y + "0"c
-        End If
-
-        'Hash Y.
-        Dim hash As Security.Cryptography.HashAlgorithm = New Security.Cryptography.SHA1Managed
-        Dim result() As Byte = hash.ComputeHash(System.Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetBytes(Y))
-
-        'Get hex result.
-        Dim resultStr As String = ""
-        Utility.ByteArrayToHexString(result, resultStr)
-
-        'Keep values A, B, C, D, E and F here.
-        Dim undecimalized As String = ""
-
-        'Try to get to the first 16 decimal characters.
-        Y = ""
-        For i As Integer = 0 To resultStr.Length - 1
-            If Char.IsDigit(resultStr.Chars(i)) Then
-                Y = Y + resultStr.Chars(i)
-                If Y.Length = 16 Then Exit For
-            Else
-                undecimalized = undecimalized + resultStr.Chars(i)
-            End If
-        Next
-
-        'If more are needed, do the decimalization and get the rest.
-        If Y.Length < 16 Then
-            Dim decimalized As String = Utility.Decimalise(undecimalized, "012345")
-            Y = Y + decimalized.Substring(0, 16 - Y.Length)
-        End If
-
-        Return GetDerivedKeyFromPreparedPAN(IMK, Y)
-    End Function
-
-
-    ''' <summary>
-    ''' Calculates the derived key using the initial key given a massaged PAN.
-    ''' </summary>
-    ''' <param name="IMK">Initial key.</param>
-    ''' <param name="Y">Prepared PAN from OptionA or OptionB methods.</param>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Private Function GetDerivedKeyFromPreparedPAN(ByVal IMK As Cryptography.HexKey, ByVal Y As String) As Cryptography.HexKey
-        'Left key is the result of encrypting Y with the IMK.
-        Dim ZL As String = Cryptography.TripleDES.TripleDESEncrypt(IMK, Y)
-        'Right key is the result of encrypting Y XOR FFs with the IMK.
-        Dim ZR As String = Cryptography.TripleDES.TripleDESEncrypt(IMK, Utility.XORHexStringsFull(Y, "FFFFFFFFFFFFFFFF"))
-
-        'Left+Right = the derived key.
-        Return New Cryptography.HexKey(Utility.MakeParity(ZL + ZR, Utility.ParityCheck.OddParity))
     End Function
 
 

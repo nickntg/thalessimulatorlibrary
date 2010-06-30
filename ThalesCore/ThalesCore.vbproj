@@ -100,6 +100,9 @@
     <Compile Include="ConsoleCommands\ThalesConsoleCommandCode.vb" />
     <Compile Include="Cryptography\DUKPT\DerivedKey.vb" />
     <Compile Include="Cryptography\DUKPT\KeySerialNumber.vb" />
+    <Compile Include="Cryptography\EMV\KeyDerivation.vb" />
+    <Compile Include="Cryptography\EMV\MasterKeyDerivationMethods.vb" />
+    <Compile Include="Cryptography\EMV\SessionKeyDerivationMethods.vb" />
     <Compile Include="Cryptography\MAC\ISO9797Algorithms.vb" />
     <Compile Include="Cryptography\MAC\ISO9797MAC.vb" />
     <Compile Include="Cryptography\MAC\ISO9797Pad.vb" />
@@ -144,6 +147,7 @@
     <Compile Include="HostCommands\BuildIn\VerifyMAC_M8.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyTerminalPINUsingComparisonMethod_BC.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyTerminalPINwithIBMAlgorithm_DA.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifyTruncatedApplicationCryptogram_K2.vb" />
     <Compile Include="HostCommands\CommandClass.vb" />
     <Compile Include="HostCommands\CommandExplorer.vb" />
     <Compile Include="HostCommands\BuildIn\CancelAuthState_RA.vb" />
@@ -353,6 +357,7 @@
     <Content Include="XMLDefs\HostCommands\VerifyTerminalPinUsingComparisonMethod_BC.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyTerminalPINwithIBMAlgorithm_DA.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyTerminalPINWithVISAAlgorithm_DC.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyTruncatedApplicationCryptogram_K2.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyVISACVV_CY.xml" />
   </ItemGroup>
   <ItemGroup>
