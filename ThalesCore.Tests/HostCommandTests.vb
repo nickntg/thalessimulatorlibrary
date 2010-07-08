@@ -58,7 +58,7 @@ Imports ThalesSim.Core.Message
 
         HC.AcceptMessage(msg)
 
-        If HC.XMLParseResult <> ErrorCodes._00_NO_ERROR Then
+        If HC.XMLParseResult <> ErrorCodes.ER_00_NO_ERROR Then
             retMsg = New MessageResponse
             retMsg.AddElement(HC.XMLParseResult)
         Else
@@ -566,7 +566,7 @@ Imports ThalesSim.Core.Message
 
         'Generate a PVV for the "encrypted PIN"
         Dim res As String = TestTran(cryptPVK + "0" + clearPIN + PAN.Substring(3, 12) + "1" + ";", New GenerateVISAPVV_DG)
-        If res.Substring(0, 2) <> ErrorCodes._00_NO_ERROR Then
+        If res.Substring(0, 2) <> ErrorCodes.ER_00_NO_ERROR Then
             Assert.Fail("Error duging PVV generation.")
         End If
 

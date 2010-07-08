@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- This file includes the necessary definitions that parse a key scheme. -->
+<KeyScheme>
+
+  <Field>
+    <Name>#replace#</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <ValidValue>Z</ValidValue>
+    <ValidValue>U</ValidValue>
+    <ValidValue>T</ValidValue>
+    <ValidValue>X</ValidValue>
+    <ValidValue>Y</ValidValue>
+    <ValidValue>0</ValidValue>
+    <RejectionCodeIfInvalid>26</RejectionCodeIfInvalid>
+  </Field>
+
+</KeyScheme>

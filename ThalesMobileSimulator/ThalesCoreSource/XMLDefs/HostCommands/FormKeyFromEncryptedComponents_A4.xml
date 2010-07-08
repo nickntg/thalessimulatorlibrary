@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Forms a key from encrypted components</CommandName>
+  <Request>A4</Request>
+  <Response>A5</Response>
+
+  <Field>
+    <Name>Number of Components</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+    <ValidValue>2</ValidValue>
+    <ValidValue>3</ValidValue>
+    <ValidValue>4</ValidValue>
+    <ValidValue>5</ValidValue>
+    <ValidValue>6</ValidValue>
+    <ValidValue>7</ValidValue>
+    <ValidValue>8</ValidValue>
+    <ValidValue>9</ValidValue>
+    <RejectionCodeIfInvalid>03</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>Key Type</Name>
+    <Length>3</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+  <Field>
+    <Name>Key Scheme (LMK)</Name>
+    <IncludeFile>KeyScheme.xml</IncludeFile>
+  </Field>
+  
+  <Field>
+    <Name>Key Component</Name>
+    <IncludeFile>MultiFormatKey.xml</IncludeFile>
+    <Repetitions>Number of Components</Repetitions>
+    <StaticRepetitions>true</StaticRepetitions>
+  </Field>
+
+</CommandConfiguration>
