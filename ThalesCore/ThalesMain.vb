@@ -67,6 +67,14 @@ Public Class ThalesMain
     Private curMsg As ConsoleCommands.AConsoleCommand = Nothing
 
     ''' <summary>
+    ''' This event is raised when a Thales command is called.
+    ''' </summary>
+    ''' <param name="sender">This instance.</param>
+    ''' <param name="commandCode">The Thales command code.</param>
+    ''' <remarks></remarks>
+    Public Event CommandCalled(ByVal sender As ThalesMain, ByVal commandCode As String)
+
+    ''' <summary>
     ''' Major event.
     ''' </summary>
     ''' <remarks>
@@ -118,6 +126,25 @@ Public Class ThalesMain
 
     End Sub
 
+    ''' <summary>
+    ''' Return a human-readable string with the configuration.
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function SayConfiguration() As String
+        Return "Host command port: " + port.ToString + vbCrLf + _
+               "Console port: " + consolePort.ToString + vbCrLf + _
+               "Maximum connections: " + maxCons.ToString + vbCrLf + _
+               "Log level: " + Logger.CurrentLogLevel.ToString + vbCrLf + _
+               "Check LMK parity: " + CheckLMKParity.ToString + vbCrLf + _
+               "XML host command definitions: " + HostDefsDir + vbCrLf + _
+               "Use double-length ZMKs: " + DoubleLengthZMKs.ToString
+    End Function
+
+    ''' <summary>
+    ''' Startup TCP.
+    ''' </summary>
+    ''' <remarks></remarks>
     Private Sub StartTCP()
 
         StartThread(LT, AddressOf ListenerThread, "TCP listening")
@@ -142,19 +169,7 @@ Public Class ThalesMain
         Try
             t.Start()
             Dim cntr As Integer = 0
-            While t.ThreadState <> Threading.ThreadState.Running AndAlso _
-                  t.ThreadState <> Threading.ThreadState.Aborted AndAlso _
-                  t.ThreadState <> Threading.ThreadState.Background AndAlso _
-                  cntr < 20
-                cntr += 1
-                Threading.Thread.Sleep(50)
-            End While
-
-            If t.ThreadState <> Threading.ThreadState.Background Then
-                t.Abort()
-                t = Nothing
-                Throw New Exception(String.Format("Timeout on starting the {0} thread", threadMsg))
-            End If
+            Threading.Thread.Sleep(100)
         Catch ex As Exception
             Logger.MajorError(String.Format("Error while starting the {0} thread: " + ex.ToString(), threadMsg))
             Throw ex
@@ -280,8 +295,8 @@ Public Class ThalesMain
             HostDefsDir = list("XMLHOSTDEFINITIONSDIRECTORY")
             DoubleLengthZMKs = Convert.ToBoolean(list("DOUBLELENGTHZMKS"))
 
-            If HostDefsDir = "" Then HostDefsDir = IO.Directory.GetCurrentDirectory
-            If VBsources = "" Then VBsources = IO.Directory.GetCurrentDirectory
+            If HostDefsDir = "" Then HostDefsDir = Utility.GetExecutingDirectory
+            If VBsources = "" Then VBsources = Utility.GetExecutingDirectory
 
             StartUpCore(list("FIRMWARENUMBER"), _
                         list("DSPFIRMWARENUMBER"), _
@@ -306,10 +321,10 @@ Public Class ThalesMain
         consolePort = 9997
         maxCons = 5
         LMKFile = ""
-        VBsources = IO.Directory.GetCurrentDirectory
+        VBsources = Utility.GetExecutingDirectory
         Logger.CurrentLogLevel = Logger.LogLevel.Debug
         CheckLMKParity = True
-        HostDefsDir = IO.Directory.GetCurrentDirectory
+        HostDefsDir = Utility.GetExecutingDirectory
         DoubleLengthZMKs = True
 
         StartUpCore("0007-E000", _
@@ -682,6 +697,8 @@ Public Class ThalesMain
             Dim commandCode As String = msg.GetSubstring(2)
             msg.AdvanceIndex(2)
 
+            RaiseEvent CommandCalled(Me, commandCode)
+
             Logger.MajorDebug("Searching for implementor of " + commandCode + "...")
             Dim CC As ThalesSim.Core.HostCommands.CommandClass = CE.GetLoadedCommand(commandCode)
 
@@ -706,7 +723,7 @@ Public Class ThalesMain
 
                         Logger.MinorVerbose(o.DumpFields())
 
-                        If o.XMLParseResult <> ErrorCodes._00_NO_ERROR Then
+                        If o.XMLParseResult <> ErrorCodes.ER_00_NO_ERROR Then
                             Logger.MajorDebug("Error condition encountered during message parsing.")
                             Logger.MajorDebug(String.Format("Error code {0} will be returned without calling ConstructResponse().", o.XMLParseResult))
                             retMsg = New Core.Message.MessageResponse
@@ -737,7 +754,7 @@ Public Class ThalesMain
                     Else
                         Logger.MajorError("LMK parity error")
                         retMsg = New Message.MessageResponse
-                        retMsg.AddElementFront(Core.ErrorCodes._13_MASTER_KEY_PARITY_ERROR)
+                        retMsg.AddElementFront(Core.ErrorCodes.ER_13_MASTER_KEY_PARITY_ERROR)
                         retMsg.AddElementFront(CC.ResponseCode)
                         retMsg.AddElementFront(messageHeader)
                         sender.send(retMsg.MessageData())

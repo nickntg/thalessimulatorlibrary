@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Generates a key check value (no double-length ZMK).</CommandName>
+  <Request>KA</Request>
+  <Response>KB</Response>
+
+  <Field>
+    <Name>Key</Name>
+    <IncludeFile>MultiFormatKey.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Key Type Code</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+    <ValidValue>00</ValidValue>
+    <ValidValue>01</ValidValue>
+    <ValidValue>02</ValidValue>
+    <ValidValue>03</ValidValue>
+    <RejectionCodeIfInvalid>21</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>Delimiter</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <ValidValue>;</ValidValue>
+  </Field>
+
+  <Field>
+    <Name>Reserved 1</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <DependentField>Delimiter</DependentField>
+    <DependentValue>;</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
+  </Field>
+
+  <Field>
+    <Name>Reserved 2</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <DependentField>Delimiter</DependentField>
+    <DependentValue>;</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
+  </Field>
+
+  <Field>
+    <Name>Key Check Value Type</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+    <DependentField>Delimiter</DependentField>
+    <DependentValue>;</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
+    <ValidValue>0</ValidValue>
+    <ValidValue>1</ValidValue>
+    <RejectionCodeIfInvalid>15</RejectionCodeIfInvalid>
+  </Field>
+
+</CommandConfiguration>

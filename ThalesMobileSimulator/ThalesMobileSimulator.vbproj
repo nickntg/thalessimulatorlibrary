@@ -1,0 +1,384 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CC40176A-5C98-4074-B560-F334EEE82DE0}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>ThalesSim.Core.frmMain</StartupObject>
+    <RootNamespace>ThalesSim.Core</RootNamespace>
+    <AssemblyName>ThalesMobileSimulator</AssemblyName>
+    <ProjectTypeGuids>{68B1623D-7FB9-47D8-8664-7ECEA3297D4F};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <PlatformFamilyName>Smartphone</PlatformFamilyName>
+    <PlatformID>f27da329-3269-4191-98e0-c87d3d7f1db9</PlatformID>
+    <OSVersion>5.2</OSVersion>
+    <MyType>WindowsForms</MyType>
+    <DeployDirSuffix>ThalesMobileSimulator</DeployDirSuffix>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <NativePlatformName>Windows Mobile 6 Standard SDK</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>ThalesSim.snk</AssemblyOriginatorKeyFile>
+    <ApplicationIcon>keys.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>$(PlatformFamilyName)=TRUE</DefineConstants>
+    <DocumentationFile>ThalesMobileSimulator.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <FileAlignment>512</FileAlignment>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>$(PlatformFamilyName)=TRUE</DefineConstants>
+    <DocumentationFile>ThalesMobileSimulator.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <FileAlignment>512</FileAlignment>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="frmMain.Designer.vb">
+      <DependentUpon>frmMain.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmMain.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ThalesCoreSource\ConsoleCommands\AConsoleCommand.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\ConsoleCommandClass.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\ConsoleCommandExplorer.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\ConsoleMessage.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\ConsoleMessageStack.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\ExtendedValidator.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\IConsoleDataValidator.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\CancelAuthorizedState_C.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\DoubleLengthDESCalculator_%24.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\EncryptClearComponent_EC.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\EncryptZMKComponent_Z.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\EnterAuthorizedState_A.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\ExportKey_KE.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\FormKeyFromComponents_FK.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\FormZMKFromEncryptedComponents_D.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\GenerateKeyComponent_GC.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\GenerateKey_KG.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\GenerateZMKComponent_F.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\ImportKey_IK.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\QueryAuxilliary_QA.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\QueryConsole_QC.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\QueryHost_QH.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\SingleLengthDESCalculator_N.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\TripleLengthDESCalculator_T.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Implementations\ViewHSMSoftwareRevision_VR.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\ThalesConsoleCommandCode.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Validators\AuthorizedStateValidator.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Validators\CheckValueValidator.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Validators\ComponentTypeValidator.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Validators\DataLengthValidator.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Validators\FlexibleHexKeyValidator.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Validators\HexKeyValidator.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Validators\KeyLengthValidator.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Validators\KeySchemeValidator.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Validators\KeyTypeValidator.vb" />
+    <Compile Include="ThalesCoreSource\ConsoleCommands\Validators\NumberOfComponentsValidator.vb" />
+    <Compile Include="ThalesCoreSource\Cryptography\DES.vb" />
+    <Compile Include="ThalesCoreSource\Cryptography\DUKPT\DerivedKey.vb" />
+    <Compile Include="ThalesCoreSource\Cryptography\DUKPT\KeySerialNumber.vb" />
+    <Compile Include="ThalesCoreSource\Cryptography\EMV\KeyDerivation.vb" />
+    <Compile Include="ThalesCoreSource\Cryptography\EMV\MasterKeyDerivationMethods.vb" />
+    <Compile Include="ThalesCoreSource\Cryptography\EMV\SessionKeyDerivationMethods.vb" />
+    <Compile Include="ThalesCoreSource\Cryptography\HexKey.vb" />
+    <Compile Include="ThalesCoreSource\Cryptography\LMK\LMKStorage.vb" />
+    <Compile Include="ThalesCoreSource\Cryptography\LMK\Variants.vb" />
+    <Compile Include="ThalesCoreSource\Cryptography\MAC\ISO9797Algorithms.vb" />
+    <Compile Include="ThalesCoreSource\Cryptography\MAC\ISO9797MAC.vb" />
+    <Compile Include="ThalesCoreSource\Cryptography\MAC\ISO9797Pad.vb" />
+    <Compile Include="ThalesCoreSource\Cryptography\MAC\ISO9797PaddingMethods.vb" />
+    <Compile Include="ThalesCoreSource\Cryptography\TripleDES.vb" />
+    <Compile Include="ThalesCoreSource\ErrorCodes.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XDecryptError.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XEncryptError.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XFunctionNotPermitted.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XInvalidAccount.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XInvalidCheckValue.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XInvalidComponentType.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XInvalidConfiguration.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XInvalidData.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XInvalidKey.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XInvalidKeyLength.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XInvalidKeyScheme.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XInvalidKeyType.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XInvalidLMKTypeCode.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XInvalidNumberOfComponents.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XInvalidPINLength.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XInvalidStorageFile.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XNeedsAuthorizedState.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XNoDeterminerMatched.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XShortMessage.vb" />
+    <Compile Include="ThalesCoreSource\Exceptions\XUnsupportedPINBlockFormat.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\AHostCommand.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\CancelAuthState_RA.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\CommandChaining_NK.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\EchoTest_B2.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\EncryptClearPIN_BA.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\ExportKey_A8.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\FormKeyFromEncryptedComponents_A4.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\FormZMKFromThreeComponents_GG.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\FormZMKFromTwoToNineComponents_GY.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateAndPrintComponent_A2.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateAndPrintSplitComponents_NE.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateAndPrintTMPTPKPVK_OE.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateAndPrintZMKComponent_OC.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateBDK_BI.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateCheckValue_BU.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateCheckValue_KA.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateCVKPair_AS.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateIBMOffset_DE.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateKey_A0.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateMACForLargeMessage_MQ.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateMAC_M6.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateMAC_MA.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GeneratePVKPair_FG.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateRandomPIN_JA.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateTAK_HA.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateTMKTPKPVK_HC.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateVISACVV_CW.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateVISAPVV_DG.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateZEKorZAK_FI.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\GenerateZPK_IA.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\HashDataBlock_GM.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\HSMDiagnostics_NC.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\HSMStatus_NO.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\ImportKey_A6.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\LoadAdditionalFormattingData_PC.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\LoadFormattingData_PA.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\LoadPINTextString_LI.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\PrintPINSolicitationData_PE.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\PrintPINSolicitationMailer_OA.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\SetHSMDelay_LG.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateBDKFromLMKToZMK_DY.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateBDKFromZMKToLMK_DW.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateCVKFromLMKToZMK_AU.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateCVKFromZMKToLMK_AW.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateKeyScheme_B0.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslatePINFromDUKTPToZPK_CI.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslatePINFromLMKToZPK_JG.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslatePINFromTPKToLMK_JC.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslatePINFromTPKToZPK_CA.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslatePINFromVISAToRacal_BQ.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslatePINFromZPKToLMK_JE.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslatePINFromZPKToZPK_CC.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateTAKFromLMKToTMK_AG.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateTAKFromLMKToZMK_MG.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateTAKFromZMKToLMK_MI.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateTMKTPKPVKFromLMKToTMKTPKPVK_AE.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateTMKTPKPVKFromLMKToZMK_FE.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateTMPTPKPVKFromZMKToLMK_FC.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateZEKORZAKFromLMKToZMK_FM.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateZEKORZAKFromZMKToLMK_FK.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateZMKFromZMKToLMK_BY.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateZPKFromLMKToZMK_GC.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateZPKFromZMKToLMK_FA.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyAndGenerateVISAPVV_CU.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyAndTranslateMAC_ME.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyDukptPINWithIBMAlgorithm_CK.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyDukptPINWithVisaAlgorithm_CM.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyDynamicCVV_PM.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyInterchangePinUsingComparisonMethod_BE.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyInterchangePINWithIBMAlgorithm_EA.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyInterchangePINWithVISAAlgorithm_EC.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyMAC_M8.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyMAC_MC.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyPINSolicitationMailerCryptography_PG.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifySolicitationMailerCryptography_RC.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyTerminalPINUsingComparisonMethod_BC.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyTerminalPINwithIBMAlgorithm_DA.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyTerminalPINWithVISAAlgorithm_DC.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyTruncatedApplicationCryptogram_K2.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyVISACVV_CY.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\CommandClass.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\CommandExplorer.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\Constants.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\NoImplementation.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\ThalesCommandCode.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\TranslateFromKeyToLMK.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\TranslateFromLMKToKey.vb" />
+    <Compile Include="ThalesCoreSource\KeySchemeTable.vb" />
+    <Compile Include="ThalesCoreSource\KeyTypeTable.vb" />
+    <Compile Include="ThalesCoreSource\LMKPairs.vb" />
+    <Compile Include="ThalesCoreSource\Log\ILogProcs.vb" />
+    <Compile Include="ThalesCoreSource\Log\Logger.vb" />
+    <Compile Include="ThalesCoreSource\Message\Message.vb" />
+    <Compile Include="ThalesCoreSource\Message\MessageResponse.vb" />
+    <Compile Include="ThalesCoreSource\Message\XML\MessageField.vb" />
+    <Compile Include="ThalesCoreSource\Message\XML\MessageFields.vb" />
+    <Compile Include="ThalesCoreSource\Message\XML\MessageFieldsStore.vb" />
+    <Compile Include="ThalesCoreSource\Message\XML\MessageFieldTypes.vb" />
+    <Compile Include="ThalesCoreSource\Message\XML\MessageParser.vb" />
+    <Compile Include="ThalesCoreSource\Message\XML\MessageValues.vb" />
+    <Compile Include="ThalesCoreSource\PIN\PINBlockFormat.vb" />
+    <Compile Include="ThalesCoreSource\Resources.vb" />
+    <Compile Include="ThalesCoreSource\TCP\WorkerClient.vb" />
+    <Compile Include="ThalesCoreSource\ThalesError.vb" />
+    <Compile Include="ThalesCoreSource\ThalesMain.vb" />
+    <Compile Include="ThalesCoreSource\Utility.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="frmMain.resx">
+      <DependentUpon>frmMain.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="keys.ico" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\CommandChaining_NK.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\EchoTest_B2.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\EncryptClearPIN_BA.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\ExportKey_A8.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\FormKeyFromEncryptedComponents_A4.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\FormZMKFromThreeComponents_GG.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\FormZMKFromTwoToNineComponents_GY.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateAndPrintComponent_A2.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateAndPrintSplitComponents_NE.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateAndPrintTMPTPKPVK_OE.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateAndPrintZMKComponent_OC.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateBDK_BI.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateCheckValue_BU.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateCheckValue_KA.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateCVKPair_AS.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateIBMOffset_DE.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateKey_A0.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateMACForLargeMessage_MQ.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateMAC_M6.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateMAC_MA.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GeneratePVKPair_FG.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateRandomPIN_JA.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateTAK_HA.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateTMKTPKPVK_HC.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateVISACVV_CW.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateVISAPVV_DG.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateZEKorZAK_FI.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\GenerateZPK_IA.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\HashDataBlock_GM.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\HSMStatus_NO.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\ImportKey_A6.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\KeyScheme.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\LargeMultiFormatKey.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\MultiFormatCVK.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\MultiFormatKey.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\MultiFormatZMK.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\PINBlockFormat.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\SetHSMDelay_LG.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\SingleCommand.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateBDKFromLMKToZMK_DY.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateBDKFromZMKToLMK_DW.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateCVKFromLMKToZMK_AU.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateCVKFromZMKToLMK_AW.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateKeyScheme_B0.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslatePINFromDUKPTToZPK_CI.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslatePINFromLMKToZPK_JG.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslatePINFromTPKToLMK_JC.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslatePINFromTPKToZPK_CA.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslatePINFromVISAToThales_BQ.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslatePINFromZPKToLMK_JE.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslatePINFromZPKToZPK_CC.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateTAKFromLMKToTMK_AG.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateTAKFromLMKToZMK_MG.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateTAKFromZMKToLMK_MI.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateTMKTPKPVKFromLMKToTMKTPKPVK_AE.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateTMKTPKPVKFromLMKToZMK_FE.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateTMPTPKPVKFromZMKToLMK_FC.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateZEKORZAKFromLMKToZMK_FM.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateZEKORZAKFromZMKToLMK_FK.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateZMKFromZMKToLMK_BY.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateZPKFromLMKToZMK_GC.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateZPKFromZMKToLMK_FA.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyAndGenerateVISAPVV_CU.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyAndTranslateMAC_ME.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyDukptPINWithIBMAlgorithm_CK.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyDukptPINWithVISAAlgorithm_CM.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyDynamicCVV_PM.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyInterchangePinUsingComparisonMethod_BE.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyInterchangePINWithIBMAlgorithm_EA.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyInterchangePINWithVISAAlgorithm_EC.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyMAC_M8.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyMAC_MC.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyTerminalPinUsingComparisonMethod_BC.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyTerminalPINwithIBMAlgorithm_DA.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyTerminalPINWithVISAAlgorithm_DC.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyTruncatedApplicationCryptogram_K2.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyVISACVV_CY.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ThalesCoreSource\XMLDefs\HostCommands\HostCommandDefinitions.xsd" />
+    <None Include="ThalesSim.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ThalesCoreSource\HostCommands\Runtime\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.VisualBasic.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{F184B08F-C81C-45F6-A57F-5ABD9991F28F}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -61,12 +61,12 @@ Namespace HostCommands.BuildIn
         ''' </remarks>
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
             XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
-            If XMLParseResult = ErrorCodes._00_NO_ERROR Then
+            If XMLParseResult = ErrorCodes.ER_00_NO_ERROR Then
                 _hashID = kvp.Item("Hash Identifier")
                 Dim dataLen As String = kvp.Item("Data Length")
                 _bytes = System.Text.ASCIIEncoding.Default.GetBytes(kvp.Item("Message Data"))
                 If Convert.ToInt32(dataLen) <> _bytes.GetLength(0) Then
-                    XMLParseResult = ErrorCodes._80_DATA_LENGTH_ERROR
+                    XMLParseResult = ErrorCodes.ER_80_DATA_LENGTH_ERROR
                 End If
             End If
         End Sub
@@ -84,7 +84,7 @@ Namespace HostCommands.BuildIn
 
             'Currently not implemented for ISO 10118-2 and SHA-224.
             If _hashID = ISO_10118_2 OrElse _hashID = SHA_224 Then
-                mr.AddElement(ErrorCodes._41_INTERNAL_HARDWARE_SOFTWARE_ERROR)
+                mr.AddElement(ErrorCodes.ER_41_INTERNAL_HARDWARE_SOFTWARE_ERROR)
                 Return mr
             End If
 
@@ -103,9 +103,9 @@ Namespace HostCommands.BuildIn
             End Select
 
             Dim result() As Byte = hash.ComputeHash(_bytes)
-            Dim resultStr As String = Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetChars(result)
+            Dim resultStr As String = System.Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetChars(result)
 
-            mr.AddElement(ErrorCodes._00_NO_ERROR)
+            mr.AddElement(ErrorCodes.ER_00_NO_ERROR)
             mr.AddElement(resultStr)
 
             Return mr

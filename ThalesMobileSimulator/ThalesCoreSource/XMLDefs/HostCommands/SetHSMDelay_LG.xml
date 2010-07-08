@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Sets an HSM response delay.</CommandName>
+  <Request>LG</Request>
+  <Response>LH</Response>
+
+  <Field>
+    <Name>Delay</Name>
+    <Length>3</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+</CommandConfiguration>

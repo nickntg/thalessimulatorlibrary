@@ -16,6 +16,10 @@ xxxx/xx/xx: Version 0.9.1 beta released.
 * Added the ThalesKeyManager, a utility to assist with the housekeeping of test keys.
   This utility is only functional with the simulator and is not intended for use
   with a real HSM.
+* Introduced *a lot* of small code changes in order to make the simulator code as
+  compatible as possible with the mobile 6.0 SDK.
+* Added the ThalesMobileSimulator application, a small program that can be used to
+  run the simulator in a Windows mobile device.
 
 2010/06/16: Version 0.9 beta released.
 --------------------------------------

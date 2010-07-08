@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Verify Truncated Application Cryptogram.</CommandName>
+  <Request>K2</Request>
+  <Response>K3</Response>
+
+  <Field>
+    <Name>Mode Flag</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+    <ValidValue>0</ValidValue>
+    <RejectionCodeIfInvalid>04</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>Scheme ID</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+    <ValidValue>00</ValidValue>
+    <RejectionCodeIfInvalid>05</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>Card Key Derivation Method</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+    <ValidValue>0</ValidValue>
+    <ValidValue>1</ValidValue>
+    <RejectionCodeIfInvalid>15</RejectionCodeIfInvalid>
+  </Field>
+
+  <!-- Currently supports only MasterCard derivation method. -->
+  <Field>
+    <Name>Session Key Derivation Method</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+    <ValidValue>1</ValidValue>
+    <RejectionCodeIfInvalid>15</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>MK-AC</Name>
+    <IncludeFile>MultiFormatCVK.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>PAN Length</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>PAN And PAN Sequence No</Name>
+    <Length>1</Length>
+    <DynamicFieldLength>PAN Length</DynamicFieldLength>
+    <Type>Binary</Type>
+  </Field>
+
+  <Field>
+    <Name>Delimiter</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <DependentField>Card Key Derivation Method</DependentField>
+    <DependentValue>1</DependentValue>
+    <ValidValue>;</ValidValue>
+    <RejectionCodeIfInvalid>15</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>ATC</Name>
+    <Length>2</Length>
+    <Type>Binary</Type>
+  </Field>
+
+  <Field>
+    <Name>UN</Name>
+    <Length>4</Length>
+    <Type>Binary</Type>
+  </Field>
+
+  <Field>
+    <Name>Transaction Data Length</Name>
+    <Length>2</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+  <Field>
+    <Name>Transaction Data</Name>
+    <Length>1</Length>
+    <DynamicFieldLength>Transaction Data Length</DynamicFieldLength>
+    <Type>Binary</Type>
+  </Field>
+
+  <Field>
+    <Name>Delimiter 2</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <ValidValue>;</ValidValue>
+    <RejectionCodeIfInvalid>15</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>Truncated AC</Name>
+    <Length>8</Length>
+    <Type>Binary</Type>
+  </Field>
+
+  <Field>
+    <Name>Cryptogram IPB</Name>
+    <Length>8</Length>
+    <Type>Binary</Type>
+  </Field>
+
+  <Field>
+    <Name>IPB MAC</Name>
+    <Length>4</Length>
+    <Type>Binary</Type>
+  </Field>
+
+</CommandConfiguration>

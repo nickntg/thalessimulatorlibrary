@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Generates an IBM PIN Offset.</CommandName>
+  <Request>DE</Request>
+  <Response>DF</Response>
+
+  <Field>
+    <Name>PVK</Name>
+    <IncludeFile>MultiFormatKey.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>PIN</Name>
+    <Length>CLEAR_PIN_LENGTH</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Check Length</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Account Number</Name>
+    <Length>12</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Decimalisation Table</Name>
+    <Length>16</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+  <Field>
+    <Name>PIN Validation Data</Name>
+    <Length>12</Length>
+    <Type>Character</Type>
+  </Field>
+
+</CommandConfiguration>
