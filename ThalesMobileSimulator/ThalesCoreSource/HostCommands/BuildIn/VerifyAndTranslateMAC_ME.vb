@@ -59,7 +59,7 @@ Namespace HostCommands.BuildIn
                 _sourceTak = kvp.ItemCombination("Source TAK Scheme", "Source TAK")
                 _targetTak = kvp.ItemCombination("Destination TAK Scheme", "Destination TAK")
                 _mac = kvp.Item("MAC")
-                _data = System.Text.ASCIIEncoding.Default.GetBytes(kvp.Item("Data"))
+                _data = Utility.GetBytesFromString(kvp.Item("Data"))
             End If
         End Sub
 

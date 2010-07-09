@@ -20,6 +20,8 @@ xxxx/xx/xx: Version 0.9.1 beta released.
   compatible as possible with the mobile 6.0 SDK.
 * Added the ThalesMobileSimulator application, a small program that can be used to
   run the simulator in a Windows mobile device.
+* Finally implemented a couple of methods to correctly perform byte<->char conversions according
+  to a specific locale and used them globally.
 
 2010/06/16: Version 0.9 beta released.
 --------------------------------------

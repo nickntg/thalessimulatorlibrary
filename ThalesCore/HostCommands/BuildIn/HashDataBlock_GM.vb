@@ -64,7 +64,7 @@ Namespace HostCommands.BuildIn
             If XMLParseResult = ErrorCodes.ER_00_NO_ERROR Then
                 _hashID = kvp.Item("Hash Identifier")
                 Dim dataLen As String = kvp.Item("Data Length")
-                _bytes = System.Text.ASCIIEncoding.Default.GetBytes(kvp.Item("Message Data"))
+                _bytes = Utility.GetBytesFromString(kvp.Item("Message Data"))
                 If Convert.ToInt32(dataLen) <> _bytes.GetLength(0) Then
                     XMLParseResult = ErrorCodes.ER_80_DATA_LENGTH_ERROR
                 End If
@@ -103,7 +103,7 @@ Namespace HostCommands.BuildIn
             End Select
 
             Dim result() As Byte = hash.ComputeHash(_bytes)
-            Dim resultStr As String = System.Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetChars(result)
+            Dim resultStr As String = Utility.GetStringFromBytes(result)
 
             mr.AddElement(ErrorCodes.ER_00_NO_ERROR)
             mr.AddElement(resultStr)

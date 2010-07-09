@@ -152,7 +152,7 @@ Namespace HostCommands.BuildIn
                 hexData = strmsg
             Else
                 'Message is bytes or ASCII.
-                Utility.ByteArrayToHexString(System.Text.ASCIIEncoding.Default.GetBytes(strmsg), hexData)
+                Utility.ByteArrayToHexString(Utility.GetBytesFromString(strmsg), hexData)
             End If
 
             If (modeFlag = MAC_FIRSTBLOCK OrElse modeFlag = MAC_MIDDLEBLOCK) OrElse (PaddingMethod = PAD_NOPADDING) Then

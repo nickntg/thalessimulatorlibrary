@@ -57,7 +57,7 @@ Namespace HostCommands.BuildIn
             If XMLParseResult = ErrorCodes.ER_00_NO_ERROR Then
                 _tak = kvp.ItemCombination("TAK Scheme", "TAK")
                 _mac = kvp.Item("MAC")
-                _data = System.Text.ASCIIEncoding.Default.GetBytes(kvp.Item("Data"))
+                _data = Utility.GetBytesFromString(kvp.Item("Data"))
             End If
         End Sub
 

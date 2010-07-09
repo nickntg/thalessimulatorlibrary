@@ -153,7 +153,7 @@ Namespace Cryptography.EMV
 
             'Hash Y.
             Dim hash As Security.Cryptography.HashAlgorithm = New Security.Cryptography.SHA1Managed
-            Dim result() As Byte = hash.ComputeHash(System.Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetBytes(Y))
+            Dim result() As Byte = hash.ComputeHash(Utility.GetBytesFromString(Y))
 
             'Get hex result.
             Dim resultStr As String = ""

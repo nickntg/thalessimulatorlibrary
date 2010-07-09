@@ -220,7 +220,7 @@ Namespace TCP
             Dim Buffer() As Byte
 
             'Fixed bug where this was behaving completely wrong.
-            Buffer = System.Text.ASCIIEncoding.ASCII.GetBytes("  " + sendData)
+            Buffer = Utility.GetBytesFromString("  " + sendData)
             Buffer(0) = Convert.ToByte(sendData.Length \ 256)
             Buffer(1) = Convert.ToByte(sendData.Length Mod 256)
 
