@@ -62,7 +62,7 @@ Namespace HostCommands.BuildIn
                 _iv = kvp.ItemOptional("IV")
                 If _iv = "" Then _iv = ZEROES
                 _msgLen = kvp.Item("Message Length")
-                _data = System.Text.ASCIIEncoding.Default.GetBytes(kvp.Item("Message Block"))
+                _data = Utility.GetBytesFromString(kvp.Item("Message Block"))
             End If
         End Sub
 

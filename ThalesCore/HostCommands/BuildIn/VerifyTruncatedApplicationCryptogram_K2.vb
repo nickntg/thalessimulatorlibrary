@@ -114,19 +114,19 @@ Namespace HostCommands.BuildIn
                     DerivedKey = EMV.KeyDerivation.GetDerivedMasterKey(clearKey, PANAndPANSeq, EMV.MasterKeyDerivationMethods.EMV_4_2_OptionB)
             End Select
 
-            Dim ATC As String = GetDecodedBytes(System.Text.ASCIIEncoding.Default.GetBytes(_atc))
-            Dim UN As String = GetDecodedBytes(System.Text.ASCIIEncoding.Default.GetBytes(_un))
+            Dim ATC As String = GetDecodedBytes(Utility.GetBytesFromString(_atc))
+            Dim UN As String = GetDecodedBytes(Utility.GetBytesFromString(_un))
             Dim SessionKey As HexKey = Nothing
             Select Case _sessionKeyDerivationMethod
                 Case SESSION_KEY_DERIVATION_METHOD_MASTERCARD
                     SessionKey = EMV.KeyDerivation.GetSessionKey(DerivedKey, ATC, UN, EMV.SessionKeyDerivationMethods.MasterCard_Method)
             End Select
 
-            Dim TranData As String = GetDecodedBytes(System.Text.ASCIIEncoding.Default.GetBytes(_transactionData))
+            Dim TranData As String = GetDecodedBytes(Utility.GetBytesFromString(_transactionData))
             Dim DerivedAC As String = GetMac(TranData, SessionKey)
 
             Dim passedAC As String = ""
-            Utility.ByteArrayToHexString(System.Text.ASCIIEncoding.Default.GetBytes(_truncatedAC), passedAC)
+            Utility.ByteArrayToHexString(Utility.GetBytesFromString(_truncatedAC), passedAC)
 
             Log.Logger.MinorInfo("Crypt IMK: " + cryptKey.ToString)
             Log.Logger.MinorInfo("Clear IMK: " + clearKey.ToString)
@@ -214,7 +214,7 @@ Namespace HostCommands.BuildIn
         Private Function GetEncodedBytes(ByVal trackData As String) As String
             Dim b((trackData.Length \ 2) - 1) As Byte
             Utility.HexStringToByteArray(trackData, b)
-            Return System.Text.ASCIIEncoding.Default.GetChars(b)
+            Return Utility.GetStringFromBytes(b)
         End Function
 
     End Class

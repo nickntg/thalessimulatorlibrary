@@ -386,7 +386,7 @@ Public Class Utility
     Public Shared Function fromBCD(ByVal BCDString As String) As String
         Dim r As String = ""
         For i As Integer = 0 To BCDString.Length - 1
-            Dim b As Byte = System.Text.ASCIIEncoding.Default.GetBytes(BCDString.Chars(i))(0)
+            Dim b As Byte = Utility.GetBytesFromString(BCDString.Chars(i))(0)
             r = r + Convert.ToString((b >> 4)) + Convert.ToString((b And 15))
         Next
         Return r
@@ -402,7 +402,7 @@ Public Class Utility
         Dim r As String = ""
         For i As Integer = 0 To decimalString.Length - 1 Step 2
             Dim b1 As Integer = Convert.ToInt32(decimalString.Chars(i)), b2 As Integer = Convert.ToInt32(decimalString.Chars(i + 1))
-            r = r + System.Text.ASCIIEncoding.Default.GetChars(New Byte() {Convert.ToByte(((b1 And 15) << 4) Or (b2 And 15))})
+            r = r + Utility.GetStringFromBytes(New Byte() {Convert.ToByte(((b1 And 15) << 4) Or (b2 And 15))})
         Next
         Return r
     End Function
@@ -442,7 +442,7 @@ Public Class Utility
             If ch >= "0"c And ch <= "9"c Then
                 output = output + ch
             Else
-                Dim rep_index As Integer = (System.Text.ASCIIEncoding.Default.GetBytes(ch)(0) - 65) + 10
+                Dim rep_index As Integer = (Utility.GetBytesFromString(ch)(0) - 65) + 10
                 output = output + decimalisationTable.Chars(rep_index)
             End If
         Next
@@ -647,6 +647,26 @@ Public Class Utility
         Else
             Return exePathh.Substring(0, exePathh.LastIndexOf("/"))
         End If
+    End Function
+
+    ''' <summary>
+    ''' Converts a string to a byte array using culture info.
+    ''' </summary>
+    ''' <param name="str"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetBytesFromString(ByVal str As String) As Byte()
+        Return System.Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetBytes(str)
+    End Function
+
+    ''' <summary>
+    ''' Convers a byte array to a character string using culture info.
+    ''' </summary>
+    ''' <param name="b"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetStringFromBytes(ByVal b() As Byte) As String
+        Return System.Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetChars(b)
     End Function
 
 End Class

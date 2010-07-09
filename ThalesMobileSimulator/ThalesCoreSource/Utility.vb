@@ -649,4 +649,24 @@ Public Class Utility
         End If
     End Function
 
+    ''' <summary>
+    ''' Converts a string to a byte array using culture info.
+    ''' </summary>
+    ''' <param name="str"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetBytesFromString(ByVal str As String) As Byte()
+        Return System.Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetBytes(str)
+    End Function
+
+    ''' <summary>
+    ''' Convers a byte array to a character string using culture info.
+    ''' </summary>
+    ''' <param name="b"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetStringFromBytes(ByVal b() As Byte) As String
+        Return System.Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetChars(b)
+    End Function
+
 End Class

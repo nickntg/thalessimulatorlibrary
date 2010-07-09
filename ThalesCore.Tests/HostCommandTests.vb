@@ -423,7 +423,7 @@ Imports ThalesSim.Core.Message
     Private Function CreateBytesWithData(ByVal trackData As String) As String
         Dim b((trackData.Length \ 2) - 1) As Byte
         Utility.HexStringToByteArray(trackData, b)
-        Return System.Text.ASCIIEncoding.Default.GetChars(b)
+        Return Utility.GetStringFromBytes(b)
     End Function
 
     <TestMethod()> _
