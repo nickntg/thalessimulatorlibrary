@@ -90,11 +90,7 @@ Public Class frmMain
     End Sub
 
     Private Sub thales_MessageArrived(ByVal sender As ThalesSim.Core.TCP.WorkerClient, ByRef b() As Byte, ByVal len As Integer) Handles thales.MessageArrived
-        Dim s As String = ""
-        For i As Integer = 0 To len - 1
-            s = s + Chr(b(i))
-        Next
-        thalesData = s
+        thalesData = System.Text.Encoding.Default.GetString(b, 0, len)
     End Sub
 
     Private Sub doLog(ByVal s As String)
