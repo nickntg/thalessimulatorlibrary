@@ -9,14 +9,16 @@
     <Length>1</Length>
     <Type>Character</Type>
     <ValidValue>|</ValidValue>
+    <ValidValue></ValidValue>
     <SkipUntilValid>true</SkipUntilValid>
+    <AllowNotFoundValidValue>true</AllowNotFoundValidValue>
   </Field>
 
   <Field>
     <Name>Key Scheme LMK</Name>
     <IncludeFile>KeyScheme.xml</IncludeFile>
     <DependentField>Delimiter</DependentField>
-    <DependentValue>;</DependentValue>
+    <DependentValue>|</DependentValue>
     <ExclusiveDependency>false</ExclusiveDependency>
   </Field>
 
@@ -25,7 +27,7 @@
     <Length>1</Length>
     <Type>Numeric</Type>
     <DependentField>Delimiter</DependentField>
-    <DependentValue>;</DependentValue>
+    <DependentValue>|</DependentValue>
     <ExclusiveDependency>false</ExclusiveDependency>
     <ValidValue>0</ValidValue>
     <RejectionCodeIfInvalid>26</RejectionCodeIfInvalid>
@@ -36,7 +38,7 @@
     <Length>1</Length>
     <Type>Numeric</Type>
     <DependentField>Delimiter</DependentField>
-    <DependentValue>;</DependentValue>
+    <DependentValue>|</DependentValue>
     <ExclusiveDependency>false</ExclusiveDependency>
     <ValidValue>0</ValidValue>
     <RejectionCodeIfInvalid>26</RejectionCodeIfInvalid>

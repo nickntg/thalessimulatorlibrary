@@ -22,6 +22,9 @@ xxxx/xx/xx: Version 0.9.1 beta released.
   run the simulator in a Windows mobile device.
 * Finally implemented a couple of methods to correctly perform byte<->char conversions according
   to a specific locale and used them globally.
+* When parsing a field until a valid value is found, there is a chance that we'll run out of message
+  and the value will not be found but this might not signify an error condition (like the OC command).
+  To handle these cases, the AllowNotFoundValidValue xsd element has been added.
 
 2010/06/16: Version 0.9 beta released.
 --------------------------------------
