@@ -44,6 +44,9 @@
     <!-- Set to True if we'll be using double-length ZMKs. This is configured
          using the CS HSM command. -->
     <DoubleLengthZMKs value="True" />
+
+    <!-- Set to True to force an old behavior of certain commands. -->
+    <LegacyMode value="False" />
 		
 	</Parameters>
 

@@ -213,6 +213,17 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("00C0BC1DFFC449A402DAB71250CA5869CC8CE39643DA9A9B99", TestTran("32EC8A0412B5D0E86E3C1E5ABFA19B3F5FF43378ED5D85B1BC465BF000335FBF1A235EDF4C58A2CB0C84641D07319CF21", New FormZMKFromTwoToNineComponents_GY))
         Assert.AreEqual("00U369835189A058604EB7F84EAE10C7D048CE396", TestTran("32EC8A0412B5D0E86E3C1E5ABFA19B3F5FF43378ED5D85B1BC465BF000335FBF1A235EDF4C58A2CB0C84641D07319CF21;0U1", New FormZMKFromTwoToNineComponents_GY))
         Assert.AreEqual("00XC0BC1DFFC449A402DAB71250CA5869CC8CE39643DA9A9B99", TestTran("32EC8A0412B5D0E86E3C1E5ABFA19B3F5FF43378ED5D85B1BC465BF000335FBF1A235EDF4C58A2CB0C84641D07319CF21;0X0", New FormZMKFromTwoToNineComponents_GY))
+
+        'Unit test for the legacy mode.
+        LegacyModeOn()
+        Dim ZMKComp1 As String = TestTran("Component1|U00", New GenerateAndPrintZMKComponent_OC).Substring(2, 33)
+        System.Threading.Thread.Sleep(50)
+        Dim ZMKComp2 As String = TestTran("Component1|U00", New GenerateAndPrintZMKComponent_OC).Substring(2, 33)
+        Assert.AreEqual("00", TestTran("2" + ZMKComp1 + ZMKComp2, New FormZMKFromTwoToNineComponents_GY).Substring(0, 2))
+        'Get out of legacy mode and try again to get an invalid input data error.
+        LegacyModeOff()
+        Assert.AreEqual("15", TestTran("2" + ZMKComp1 + ZMKComp2, New FormZMKFromTwoToNineComponents_GY).Substring(0, 2))
+
         AuthorizedStateOff()
     End Sub
 
@@ -633,6 +644,16 @@ Imports ThalesSim.Core.Message
     'Put the simulator out of the authorized state.
     Private Sub AuthorizedStateOff()
         Resources.UpdateResource(Resources.AUTHORIZED_STATE, False)
+    End Sub
+
+    'Put the simulator in legacy mode.
+    Private Sub LegacyModeOn()
+        Resources.UpdateResource(Resources.LEGACY_MODE, True)
+    End Sub
+
+    'Put the simulator out of legacy mode.
+    Private Sub LegacyModeOff()
+        Resources.UpdateResource(Resources.LEGACY_MODE, False)
     End Sub
 
     Private Sub ClearMessageFieldStoreStore()

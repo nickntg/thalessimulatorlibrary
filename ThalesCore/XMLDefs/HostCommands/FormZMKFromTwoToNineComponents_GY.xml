@@ -19,11 +19,24 @@
     <RejectionCodeIfInvalid>03</RejectionCodeIfInvalid>
   </Field>
 
-  <Field>
+<!--
+
+We'll be parsing ZMK components like 16H/32H or 1A+16H/1A+32H,
+depending on the value of the LegacyMode flag.
+
+<Field>
     <Name>ZMK Component</Name>
     <Length>DOUBLE_LENGTH_ZMKS</Length>
     <Type>Hexadecimal</Type>
     <Repetitions>Number of Components</Repetitions>
+  </Field>
+-->
+
+  <Field>
+    <Name>ZMK Component</Name>
+    <IncludeFile>MultiFormatZMK.xml</IncludeFile>
+    <Repetitions>Number of Components</Repetitions>
+    <StaticRepetitions>true</StaticRepetitions>
   </Field>
 
   <Field>
