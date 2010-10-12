@@ -14,3 +14,4 @@ FirmwareNumber=0007-E000
 DSPFirmwareNumber=0001
 StartInAuthorizedState=True
 DoubleLengthZMKs=True
+LegacyMode=False

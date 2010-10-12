@@ -59,7 +59,7 @@ Namespace HostCommands.BuildIn
                 _nbrComponents = kvp.Item("Number of Components")
                 _iNbrComponents = Convert.ToInt32(_nbrComponents)
                 For i As Integer = 1 To _iNbrComponents
-                    _comps(i - 1) = kvp.Item("ZMK Component #" + i.ToString)
+                    _comps(i - 1) = kvp.ItemCombination("ZMK Component Scheme #" + i.ToString, "ZMK Component #" + i.ToString)
                 Next
                 _lmkScheme = kvp.ItemOptional("Key Scheme LMK")
                 _keyCheckValue = kvp.ItemOptional("Key Check Value Type")
@@ -87,7 +87,7 @@ Namespace HostCommands.BuildIn
             If _lmkScheme <> "" Then
                 If ValidateKeySchemeCode(_lmkScheme, lmkKs, mr) = False Then Return mr
             Else
-                If _comps(0).Length = 32 Then
+                If _comps(0).Length >= 32 Then
                     lmkKs = KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi
                 Else
                     lmkKs = KeySchemeTable.KeyScheme.SingleDESKey
@@ -95,10 +95,21 @@ Namespace HostCommands.BuildIn
             End If
 
             Dim clearKeys(8) As String, clearKey As String = ""
-            Dim sourceKs As KeySchemeTable.KeyScheme = New HexKey(_comps(0)).Scheme
 
             For i As Integer = 1 To _iNbrComponents
-                clearKeys(i - 1) = Utility.DecryptUnderLMK(_comps(i - 1), sourceKs, LMKPairs.LMKPair.Pair04_05, "0")
+                Dim component As New HexKey(_comps(i - 1))
+
+                If Not IsInLegacyMode() Then
+                    'If we're in legacy mode, the user can pass the key without its flag (ANSI) or the key with its flag.
+                    'If we're NOT in legacy mode, we only want to allow the user to pass ANSI keys without a flag.
+                    If _comps(i - 1).Length Mod 16 <> 0 Then
+                        Log.Logger.MinorError("LegacyMode is off - key components must be in the form of 16H/32H only.")
+                        mr.AddElement(ErrorCodes.ER_15_INVALID_INPUT_DATA)
+                        Return mr
+                    End If
+                End If
+
+                clearKeys(i - 1) = Utility.DecryptUnderLMK(component.ToString, component.Scheme, LMKPairs.LMKPair.Pair04_05, "0")
                 If Utility.IsParityOK(clearKeys(i - 1), Utility.ParityCheck.OddParity) = False Then
                     If i = 1 Then
                         mr.AddElement(ErrorCodes.ER_10_SOURCE_KEY_PARITY_ERROR)

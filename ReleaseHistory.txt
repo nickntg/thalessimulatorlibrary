@@ -26,6 +26,8 @@ xxxx/xx/xx: Version 0.9.1 beta released.
   and the value will not be found but this might not signify an error condition (like the OC command).
   To handle these cases, the AllowNotFoundValidValue xsd element has been added.
 * Changed the implementation of A4 to force odd parity on the generated keys.
+* Added a LegacyMode flag that can be used to force an old behavior (RG7000) on some commands.
+  Currently, only the GY command is affected.
 
 2010/06/16: Version 0.9 beta released.
 --------------------------------------

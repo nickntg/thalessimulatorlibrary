@@ -39,6 +39,7 @@ Public Class ThalesMain
     Private CheckLMKParity As Boolean
     Private HostDefsDir As String
     Private DoubleLengthZMKs As Boolean
+    Private LegacyMode As Boolean
 
     'Listening thread for hosts
     Private LT As Threading.Thread
@@ -234,6 +235,7 @@ Public Class ThalesMain
             CheckLMKParity = Convert.ToBoolean(GetParameterValue(doc, "CheckLMKParity"))
             HostDefsDir = Convert.ToString(GetParameterValue(doc, "XMLHostDefinitionsDirectory"))
             DoubleLengthZMKs = Convert.ToBoolean(GetParameterValue(doc, "DoubleLengthZMKs"))
+            LegacyMode = Convert.ToBoolean(GetParameterValue(doc, "LegacyMode"))
 
             StartUpCore(Convert.ToString(GetParameterValue(doc, "FirmwareNumber")), _
                         Convert.ToString(GetParameterValue(doc, "DSPFirmwareNumber")), _
@@ -271,6 +273,7 @@ Public Class ThalesMain
     '''   * DSPFirmwareNumber
     '''   * StartInAuthorizedState
     '''   * ClearPINLength
+    '''   * LegacyMode
     ''' </remarks>
     Private Function TryToReadValuePairFile(ByVal fileName As String) As Boolean
         Try
@@ -294,6 +297,7 @@ Public Class ThalesMain
             CheckLMKParity = Convert.ToBoolean(list("CHECKLMKPARITY"))
             HostDefsDir = list("XMLHOSTDEFINITIONSDIRECTORY")
             DoubleLengthZMKs = Convert.ToBoolean(list("DOUBLELENGTHZMKS"))
+            LegacyMode = Convert.ToBoolean(list("LEGACYMODE"))
 
             If HostDefsDir = "" Then HostDefsDir = Utility.GetExecutingDirectory
             If VBsources = "" Then VBsources = Utility.GetExecutingDirectory
@@ -326,6 +330,7 @@ Public Class ThalesMain
         CheckLMKParity = True
         HostDefsDir = Utility.GetExecutingDirectory
         DoubleLengthZMKs = True
+        LegacyMode = False
 
         StartUpCore("0007-E000", _
                     "0001", _
@@ -346,6 +351,7 @@ Public Class ThalesMain
         Resources.AddResource(Resources.AUTHORIZED_STATE, startInAuthorizedState)
         Resources.AddResource(Resources.CLEAR_PIN_LENGTH, clearPINLength)
         Resources.AddResource(Resources.DOUBLE_LENGTH_ZMKS, DoubleLengthZMKs)
+        Resources.AddResource(Resources.LEGACY_MODE, LegacyMode)
 
         'Make sure it ends with a directory separator, both for Windows and Linux.
         HostDefsDir = Utility.AppendDirectorySeparator(HostDefsDir)

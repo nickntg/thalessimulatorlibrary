@@ -94,6 +94,12 @@ Public Class Resources
     ''' <remarks></remarks>
     Public Const DOUBLE_LENGTH_ZMKS As String = "DOUBLE_LENGTH_ZMKS"
 
+    ''' <summary>
+    ''' Resource name for the legacy mode flag.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const LEGACY_MODE As String = "LEGACY_MODE"
+
     Private Shared _lst As New SortedList(Of String, Object)
 
     ''' <summary>
