@@ -104,6 +104,9 @@ Namespace HostCommands.BuildIn
                 End If
             Next
 
+            'Force odd parity on the generated key.
+            clearKey = Utility.MakeParity(clearKey, Utility.ParityCheck.OddParity)
+
             Dim cryptKey As String = Utility.EncryptUnderLMK(clearKey, ks, LMKKeyPair, var.ToString)
             Dim checkValue As String = TripleDES.TripleDESEncrypt(New HexKey(clearKey), ZEROES)
 
