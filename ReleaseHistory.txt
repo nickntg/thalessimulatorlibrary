@@ -25,6 +25,7 @@ xxxx/xx/xx: Version 0.9.1 beta released.
 * When parsing a field until a valid value is found, there is a chance that we'll run out of message
   and the value will not be found but this might not signify an error condition (like the OC command).
   To handle these cases, the AllowNotFoundValidValue xsd element has been added.
+* Changed the implementation of A4 to force odd parity on the generated keys.
 
 2010/06/16: Version 0.9 beta released.
 --------------------------------------
