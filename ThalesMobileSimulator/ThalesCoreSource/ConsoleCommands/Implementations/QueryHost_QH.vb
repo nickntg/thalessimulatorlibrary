@@ -40,10 +40,10 @@ Namespace ConsoleCommands
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Overrides Function ProcessMessage() As String
+            'IP address not supported in mobile simulator.
             Return "Message header length: 04" + vbCrLf + _
                    "Protocol: Ethernet" + vbCrLf + _
                    "Character format: ASCII" + vbCrLf + _
-                   "IP address: " + System.Net.Dns.GetHostEntry("localhost").ToString + vbCrLf + _
                    "Well-Known-Port address: " + Convert.ToInt32(Resources.GetResource(Resources.WELL_KNOWN_PORT)).ToString
         End Function
 

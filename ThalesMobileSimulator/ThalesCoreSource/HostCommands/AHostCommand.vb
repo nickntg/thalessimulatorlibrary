@@ -258,6 +258,15 @@ Namespace HostCommands
         End Function
 
         ''' <summary>
+        ''' Determines whether the simulator is in legacy mode.
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Protected Function IsInLegacyMode() As Boolean
+            Return Convert.ToBoolean(Core.Resources.GetResource(Core.Resources.LEGACY_MODE))
+        End Function
+
+        ''' <summary>
         ''' Decrypts data encrypted under a ZMK.
         ''' </summary>
         ''' <remarks>

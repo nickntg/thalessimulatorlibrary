@@ -280,6 +280,23 @@ Namespace Message.XML
             End Set
         End Property
 
+        Private m_allowNotFoundValid As Boolean
+
+        ''' <summary>
+        ''' Get/set whether we allow a not-found condition if SkipUntilValid is set to True.
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Property AllowNotFoundValid() As Boolean
+            Get
+                Return m_allowNotFoundValid
+            End Get
+            Set(ByVal value As Boolean)
+                m_allowNotFoundValid = value
+            End Set
+        End Property
+
         ''' <summary>
         ''' Set the dependent value list from a comma-separated string
         ''' of values.
@@ -316,6 +333,7 @@ Namespace Message.XML
             o.StaticRepetitions = Me.StaticRepetitions
             o.ValidValues = CloneStringList(Me.ValidValues)
             o.SkipUntilValid = Me.SkipUntilValid
+            o.AllowNotFoundValid = Me.AllowNotFoundValid
             Return o
         End Function
 

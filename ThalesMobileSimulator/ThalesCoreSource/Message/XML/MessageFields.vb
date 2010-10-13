@@ -149,6 +149,9 @@ Namespace Message.XML
                     'Get whether we'll skip until a valid value.
                     If ContainsNonNullColumn(dr, "SkipUntilValid") Then fld.SkipUntilValid = Convert.ToBoolean(dr.Item("SkipUntilValid"))
 
+                    'Get whether we'll allow a not-found condition if skipuntilvalid is set to True.
+                    If ContainsNonNullColumn(dr, "AllowNotFoundValidValue") Then fld.AllowNotFoundValid = Convert.ToBoolean(dr.Item("AllowNotFoundValidValue"))
+
                     'OptionValue and ValidValue will appear as elements if there is only one instance
                     'in the XML file, so we parse them here as well.
                     If ContainsNonNullColumn(dr, "OptionValue") Then fld.OptionValues.Add(Convert.ToString(dr.Item("OptionValue")))

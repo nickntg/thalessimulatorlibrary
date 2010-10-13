@@ -89,6 +89,12 @@
       <!-- If set to true, parsing for this field continues until a valid character, as defined
            by the list of ValidValues, is detected. -->
       <xs:element name="SkipUntilValid" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1" />
+
+      <!-- When SkipUntilValid is set to True, the parser may not find the value being searched for. When
+           that happens, this field determines what to do next. If set to False, an exception is being thrown.
+           Otherwise, the field's value is set to an empty string and processing continues. When set to true,
+           an empty valid value should also be added to the field being parsed. -->
+      <xs:element name="AllowNotFoundValidValue" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1" />
       
     </xs:sequence>
   </xs:complexType>
