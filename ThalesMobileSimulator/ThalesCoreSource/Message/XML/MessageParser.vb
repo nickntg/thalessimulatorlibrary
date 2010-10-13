@@ -155,16 +155,24 @@ Namespace Message.XML
                         Dim val As String = ""
 
                         If fld.SkipUntilValid Then
-                            'If we're supposed to skip until we encounter a valid value, keep on reading.
-                            Do
-                                val = msg.MessageData.Substring(msg.CurrentIndex, fld.Length)
-                                If fld.ValidValues.Contains(val) Then
-                                    Exit Do
+                            Try
+                                'If we're supposed to skip until we encounter a valid value, keep on reading.
+                                Do
+                                    val = msg.MessageData.Substring(msg.CurrentIndex, fld.Length)
+                                    If fld.ValidValues.Contains(val) Then
+                                        Exit Do
+                                    Else
+                                        'We advance by one only!
+                                        msg.AdvanceIndex(1)
+                                    End If
+                                Loop Until fld.ValidValues.Contains(val)
+                            Catch ex As ArgumentOutOfRangeException
+                                If fld.AllowNotFoundValid Then
+                                    val = ""
                                 Else
-                                    'We advance by one only!
-                                    msg.AdvanceIndex(1)
+                                    Throw ex
                                 End If
-                            Loop Until fld.ValidValues.Contains(val)
+                            End Try
                         ElseIf fld.ParseUntilValue <> "" Then
                             'Parse until a specific value is found. Note that we're looking
                             'for a single-character value only.

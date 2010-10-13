@@ -495,6 +495,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_ED7EA20CFF4E49AE8783C1A18245617E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_F3CCC28C85004B4C93B8FE2D50FAD666"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1080,7 +1086,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ThalesCore, Version=0.9.0.0, Culture=neutral, PublicKeyToken=3b1da66c080a0b02, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ThalesCore, Version=0.9.1.0, Culture=neutral, PublicKeyToken=3b1da66c080a0b02, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_3C5FAC79D7087D7178911DAB16D45BA4"
@@ -2191,6 +2197,26 @@
             {
             "SourcePath" = "8:..\\ThalesCore\\XMLDefs\\HostCommands\\TranslateTAKFromLMKToTMK_AG.xml"
             "TargetName" = "8:TranslateTAKFromLMKToTMK_AG.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_E2AE7C7E8EB94A15A9630785EDFF29E4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_ED7EA20CFF4E49AE8783C1A18245617E"
+            {
+            "SourcePath" = "8:..\\ThalesCore\\XMLDefs\\HostCommands\\VerifyTruncatedApplicationCryptogram_K2.xml"
+            "TargetName" = "8:VerifyTruncatedApplicationCryptogram_K2.xml"
             "Tag" = "8:"
             "Folder" = "8:_E2AE7C7E8EB94A15A9630785EDFF29E4"
             "Condition" = "8:"

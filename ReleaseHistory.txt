@@ -1,7 +1,7 @@
 ﻿ThalesSim Release History
 =========================
 
-xxxx/xx/xx: Version 0.9.1 beta released.
+2010/10/13: Version 0.9.1 beta released.
 ----------------------------------------
 * The following host commands have been added:
     - BA: Encrypts a clear PIN text.
@@ -28,6 +28,7 @@ xxxx/xx/xx: Version 0.9.1 beta released.
 * Changed the implementation of A4 to force odd parity on the generated keys.
 * Added a LegacyMode flag that can be used to force an old behavior (RG7000) on some commands.
   Currently, only the GY command is affected.
+* Changed GY to force odd parity on the returned key.
 
 2010/06/16: Version 0.9 beta released.
 --------------------------------------

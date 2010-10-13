@@ -61,7 +61,7 @@ Namespace HostCommands.BuildIn
                 _lmkScheme = kvp.Item("Key Scheme (LMK)")
                 _iNbrComponents = Convert.ToInt32(_nbrComponents)
                 For i As Integer = 1 To _iNbrComponents
-                    _comps(i - 1) = kvp.Item("Key Component #" + i.ToString)
+                    _comps(i - 1) = kvp.ItemCombination("Key Component Scheme #" + i.ToString, "Key Component #" + i.ToString)
                 Next
             End If
         End Sub
@@ -82,17 +82,17 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            Dim LMKKeyPair As LMKPairs.LMKPair, var As Integer
+            Dim LMKKeyPair As LMKPairs.LMKPair, var As String = ""
             Dim ks As KeySchemeTable.KeyScheme
 
-            If ValidateKeyTypeCode(_keyTypeCode, LMKKeyPair, var.ToString, mr) = False Then Return mr
+            If ValidateKeyTypeCode(_keyTypeCode, LMKKeyPair, var, mr) = False Then Return mr
             If ValidateKeySchemeCode(_lmkScheme, ks, mr) = False Then Return mr
 
             Dim clearKeys(8) As String, clearKey As String = ""
-            Dim sourceKs As KeySchemeTable.KeyScheme = New HexKey(_comps(0)).Scheme
 
             For i As Integer = 1 To _iNbrComponents
-                clearKeys(i - 1) = Utility.DecryptUnderLMK(_comps(i - 1), sourceKs, LMKKeyPair, var.ToString)
+                Dim cryptComp As New HexKey(_comps(i - 1))
+                clearKeys(i - 1) = Utility.DecryptUnderLMK(cryptComp.ToString, cryptComp.Scheme, LMKKeyPair, var)
                 If Utility.IsParityOK(clearKeys(i - 1), Utility.ParityCheck.OddParity) = False Then
                     mr.AddElement(ErrorCodes.ER_10_SOURCE_KEY_PARITY_ERROR)
                     Return mr
@@ -103,6 +103,9 @@ Namespace HostCommands.BuildIn
                     clearKey = clearKeys(i - 1)
                 End If
             Next
+
+            'Force odd parity on the generated key.
+            clearKey = Utility.MakeParity(clearKey, Utility.ParityCheck.OddParity)
 
             Dim cryptKey As String = Utility.EncryptUnderLMK(clearKey, ks, LMKKeyPair, var.ToString)
             Dim checkValue As String = TripleDES.TripleDESEncrypt(New HexKey(clearKey), ZEROES)
