@@ -480,11 +480,38 @@ Namespace HostCommands
 
         ''' <summary>
         ''' Reads the message field definitions using
+        ''' the class name to look for the xml file.
+        ''' </summary>
+        ''' <param name="forceRead">True to force xml fields to be re-parsed 
+        ''' and ignore the cache.</param>
+        ''' <remarks></remarks>
+        Protected Sub ReadXMLDefinitions(ByVal forceRead As Boolean)
+            ReadXMLDefinitions(forceRead, Me.GetType.Name + ".xml")
+        End Sub
+
+        ''' <summary>
+        ''' Reads the message field definitions using
         ''' a specific xml file name.
         ''' </summary>
-        ''' <param name="fileName"></param>
+        ''' <param name="fileName">XML file with definition.</param>
         ''' <remarks></remarks>
         Protected Sub ReadXMLDefinitions(ByVal fileName As String)
+            ReadXMLDefinitions(False, fileName)
+        End Sub
+
+        ''' <summary>
+        ''' Reads the message field definitions using
+        ''' a specific xml file name.
+        ''' </summary>
+        ''' <param name="forceRead">True to force xml fields to be re-parsed 
+        ''' and ignore the cache.</param>
+        ''' <param name="fileName">XML file with definition.</param>
+        ''' <remarks></remarks>
+        Protected Sub ReadXMLDefinitions(ByVal forceRead As Boolean, ByVal fileName As String)
+            If forceRead Then
+                XML.MessageFieldsStore.Remove(Me.GetType.Name)
+            End If
+
             XMLMessageFields = XML.MessageFieldsStore.Item(Me.GetType.Name)
             If XMLMessageFields Is Nothing Then
                 XMLMessageFields = XML.MessageFields.ReadXMLFields(fileName)
