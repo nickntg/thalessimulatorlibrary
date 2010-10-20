@@ -56,6 +56,11 @@ Imports ThalesSim.Core.Message
         Dim retMsg As MessageResponse
         Dim msg As New Message(input)
 
+        Dim trailingChars As String = ""
+        If ExpectTrailers Then
+            trailingChars = msg.GetTrailers()
+        End If
+
         HC.AcceptMessage(msg)
 
         If HC.XMLParseResult <> ErrorCodes.ER_00_NO_ERROR Then
@@ -64,6 +69,8 @@ Imports ThalesSim.Core.Message
         Else
             retMsg = HC.ConstructResponse()
         End If
+
+        retMsg.AddElement(trailingChars)
 
         HC.Terminate()
         HC = Nothing
@@ -655,6 +662,21 @@ Imports ThalesSim.Core.Message
     Private Sub LegacyModeOff()
         Resources.UpdateResource(Resources.LEGACY_MODE, False)
     End Sub
+
+    'Put the simulator to expect trailers.
+    Private Sub ExpectTrailersOn()
+        Resources.UpdateResource(Resources.EXPECT_TRAILERS, True)
+    End Sub
+
+    'Put the simulator to not expect trailers.
+    Private Sub ExpectTrailersOff()
+        Resources.UpdateResource(Resources.EXPECT_TRAILERS, False)
+    End Sub
+
+    'Determine whether we're expecting trailers or not.
+    Private Function ExpectTrailers() As Boolean
+        Return CType(Resources.GetResource(Resources.EXPECT_TRAILERS), Boolean)
+    End Function
 
     Private Sub ClearMessageFieldStoreStore()
         'We're clearing the message fields store because there are definitions
