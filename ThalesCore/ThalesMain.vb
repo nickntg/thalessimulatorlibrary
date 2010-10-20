@@ -40,6 +40,7 @@ Public Class ThalesMain
     Private HostDefsDir As String
     Private DoubleLengthZMKs As Boolean
     Private LegacyMode As Boolean
+    Private ExpectTrailers As Boolean
 
     'Listening thread for hosts
     Private LT As Threading.Thread
@@ -236,6 +237,7 @@ Public Class ThalesMain
             HostDefsDir = Convert.ToString(GetParameterValue(doc, "XMLHostDefinitionsDirectory"))
             DoubleLengthZMKs = Convert.ToBoolean(GetParameterValue(doc, "DoubleLengthZMKs"))
             LegacyMode = Convert.ToBoolean(GetParameterValue(doc, "LegacyMode"))
+            ExpectTrailers = Convert.ToBoolean(GetParameterValue(doc, "ExpectTrailers"))
 
             StartUpCore(Convert.ToString(GetParameterValue(doc, "FirmwareNumber")), _
                         Convert.ToString(GetParameterValue(doc, "DSPFirmwareNumber")), _
@@ -298,6 +300,7 @@ Public Class ThalesMain
             HostDefsDir = list("XMLHOSTDEFINITIONSDIRECTORY")
             DoubleLengthZMKs = Convert.ToBoolean(list("DOUBLELENGTHZMKS"))
             LegacyMode = Convert.ToBoolean(list("LEGACYMODE"))
+            ExpectTrailers = Convert.ToBoolean(list("EXPECTTRAILERS"))
 
             If HostDefsDir = "" Then HostDefsDir = Utility.GetExecutingDirectory
             If VBsources = "" Then VBsources = Utility.GetExecutingDirectory
@@ -331,6 +334,7 @@ Public Class ThalesMain
         HostDefsDir = Utility.GetExecutingDirectory
         DoubleLengthZMKs = True
         LegacyMode = False
+        ExpectTrailers = False
 
         StartUpCore("0007-E000", _
                     "0001", _
@@ -352,6 +356,7 @@ Public Class ThalesMain
         Resources.AddResource(Resources.CLEAR_PIN_LENGTH, clearPINLength)
         Resources.AddResource(Resources.DOUBLE_LENGTH_ZMKS, DoubleLengthZMKs)
         Resources.AddResource(Resources.LEGACY_MODE, LegacyMode)
+        Resources.AddResource(Resources.EXPECT_TRAILERS, ExpectTrailers)
 
         'Make sure it ends with a directory separator, both for Windows and Linux.
         HostDefsDir = Utility.AppendDirectorySeparator(HostDefsDir)
@@ -721,6 +726,11 @@ Public Class ThalesMain
                 Dim retMsgAfterIO As ThalesSim.Core.Message.MessageResponse = Nothing
 
                 Try
+                    Dim trailingChars As String = ""
+                    If ExpectTrailers Then
+                        trailingChars = msg.GetTrailers()
+                    End If
+
                     If CheckLMKParity = False OrElse Cryptography.LMK.LMKStorage.CheckLMKStorage() = True Then
                         Logger.MinorInfo("=== [" + commandCode + "], starts " + Utility.getTimeMMHHSSmmmm + " =======")
 
@@ -744,6 +754,7 @@ Public Class ThalesMain
                         Logger.MajorDebug("Attaching header/response code to response...")
                         retMsg.AddElementFront(CC.ResponseCode)
                         retMsg.AddElementFront(messageHeader)
+                        retMsg.AddElement(trailingChars)
 
                         Logger.MajorVerbose("Sending: " + retMsg.MessageData())
                         sender.send(retMsg.MessageData())
@@ -752,6 +763,14 @@ Public Class ThalesMain
                             Logger.MajorDebug("Attaching header/response code to response after I/O...")
                             retMsgAfterIO.AddElementFront(CC.ResponseCodeAfterIO)
                             retMsgAfterIO.AddElementFront(messageHeader)
+
+                            'With "Generate and print" type of commands, we get another message after I/O.
+                            'If we have end delimiter and trailer, only the end delimiter is added at the
+                            'end of the last message.
+                            If ExpectTrailers Then
+                                retMsgAfterIO.AddElement(Utility.GetStringFromBytes(New Byte() {&H19}))
+                            End If
+
                             Logger.MajorVerbose("Sending: " + retMsgAfterIO.MessageData())
                             sender.send(retMsgAfterIO.MessageData())
                         End If
@@ -763,6 +782,7 @@ Public Class ThalesMain
                         retMsg.AddElementFront(Core.ErrorCodes.ER_13_MASTER_KEY_PARITY_ERROR)
                         retMsg.AddElementFront(CC.ResponseCode)
                         retMsg.AddElementFront(messageHeader)
+                        retMsg.AddElement(trailingChars)
                         sender.send(retMsg.MessageData())
                     End If
 

@@ -100,6 +100,12 @@ Public Class Resources
     ''' <remarks></remarks>
     Public Const LEGACY_MODE As String = "LEGACY_MODE"
 
+    ''' <summary>
+    ''' Resource name for the expect trailers flag.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const EXPECT_TRAILERS As String = "EXPECT_TRAILERS"
+
     Private Shared _lst As New SortedList(Of String, Object)
 
     ''' <summary>
