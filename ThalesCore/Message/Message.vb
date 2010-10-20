@@ -150,6 +150,7 @@ Namespace Message
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function GetTrailers() As String
+            _bData = Utility.GetBytesFromString(Me.MessageData)
             Dim idx As Integer = _bData.GetLength(0) - 1
             While idx >= 0
                 'Search for the end sentinel from the end.
