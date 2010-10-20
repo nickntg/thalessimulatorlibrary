@@ -44,6 +44,13 @@
     		<!-- Set to True if we'll be using double-length ZMKs. This is configured
          	     using the CS HSM command. -->
     		<DoubleLengthZMKs value="True" />
+
+    		<!-- Set to True to force an old behavior of certain commands. -->
+    		<LegacyMode value="False" />
+
+    		<!-- Set to True to force the simulator to expect and ending trailer
+            	     equal to 0x19 and a trailing header. -->
+    		<ExpectTrailers value="False" />
 		
 	</Parameters>
 
