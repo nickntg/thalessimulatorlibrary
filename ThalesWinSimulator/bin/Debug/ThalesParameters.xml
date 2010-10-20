@@ -7,8 +7,8 @@
 		<!-- Port number for the simulator's TCP listener -->
 		<Port value="9998" />
     
-    <!-- Port number for the simulator's console commands listener -->
-    <ConsolePort value="9997" />
+    		<!-- Port number for the simulator's console commands listener -->
+    		<ConsolePort value="9997" />
 		
 		<!-- Max TCP connections allowed -->
 		<MaxConnections value="5" />
@@ -20,8 +20,8 @@
 		     in runtime -->
 		<VBSourceDirectory value=".\Runtime" />
 
-    <!-- Directory where XML host command definitions reside -->
-    <XMLHostDefinitionsDirectory value="..\..\..\ThalesCore\XMLDefs\HostCommands" />
+    		<!-- Directory where XML host command definitions reside -->
+    		<XMLHostDefinitionsDirectory value="..\..\..\ThalesCore\XMLDefs\HostCommands" />
 		
 		<!-- Log level -->
 		<LogLevel value="5" />
@@ -41,12 +41,16 @@
 		<!-- Set to True to start the simulator in the Authorized State -->
 		<StartInAuthorizedState value="True" />
 
-    <!-- Set to True if we'll be using double-length ZMKs. This is configured
-         using the CS HSM command. -->
-    <DoubleLengthZMKs value="True" />
+    		<!-- Set to True if we'll be using double-length ZMKs. This is configured
+		     using the CS HSM command. -->
+   		<DoubleLengthZMKs value="True" />
 
-    <!-- Set to True to force an old behavior of certain commands. -->
-    <LegacyMode value="False" />
+    		<!-- Set to True to force an old behavior of certain commands. -->
+    		<LegacyMode value="False" />
+
+    		<!-- Set to True to force the simulator to expect and ending trailer
+            	     equal to 0x19 and a trailing header. -->
+    		<ExpectTrailers value="False" />
 		
 	</Parameters>
 
