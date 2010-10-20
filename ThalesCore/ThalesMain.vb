@@ -703,6 +703,10 @@ Public Class ThalesMain
         Try
             Logger.MajorDebug("Parsing header and code of message " + msg.MessageData + "...")
 
+            'Dim sHex As String = ""
+            'Utility.ByteArrayToHexString(Utility.GetBytesFromString(msg.MessageData), sHex)
+            'Logger.MajorDebug("TEMP: Hex dump is [" + sHex + "]")
+
             Dim messageHeader As String = msg.GetSubstring(4)
             msg.AdvanceIndex(4)
             Dim commandCode As String = msg.GetSubstring(2)
