@@ -22,13 +22,18 @@ Partial Class frmConsole
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmConsole))
         Me.txtIP = New System.Windows.Forms.TextBox
         Me.Label1 = New System.Windows.Forms.Label
         Me.txtPort = New System.Windows.Forms.TextBox
         Me.Label2 = New System.Windows.Forms.Label
         Me.txtConsole = New System.Windows.Forms.TextBox
+        Me.CMCP = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.CopyCtrlCToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
+        Me.PasteCtrlVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
         Me.cmdConnect = New System.Windows.Forms.Button
+        Me.CMCP.SuspendLayout()
         Me.SuspendLayout()
         '
         'txtIP
@@ -65,6 +70,7 @@ Partial Class frmConsole
         'txtConsole
         '
         Me.txtConsole.BackColor = System.Drawing.Color.Black
+        Me.txtConsole.ContextMenuStrip = Me.CMCP
         Me.txtConsole.Enabled = False
         Me.txtConsole.Font = New System.Drawing.Font("Courier New", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(161, Byte))
         Me.txtConsole.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
@@ -74,6 +80,24 @@ Partial Class frmConsole
         Me.txtConsole.ReadOnly = True
         Me.txtConsole.Size = New System.Drawing.Size(650, 398)
         Me.txtConsole.TabIndex = 3
+        '
+        'CMCP
+        '
+        Me.CMCP.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CopyCtrlCToolStripMenuItem, Me.PasteCtrlVToolStripMenuItem})
+        Me.CMCP.Name = "CMCP"
+        Me.CMCP.Size = New System.Drawing.Size(153, 70)
+        '
+        'CopyCtrlCToolStripMenuItem
+        '
+        Me.CopyCtrlCToolStripMenuItem.Name = "CopyCtrlCToolStripMenuItem"
+        Me.CopyCtrlCToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.CopyCtrlCToolStripMenuItem.Text = "&Copy (Ctrl-C)"
+        '
+        'PasteCtrlVToolStripMenuItem
+        '
+        Me.PasteCtrlVToolStripMenuItem.Name = "PasteCtrlVToolStripMenuItem"
+        Me.PasteCtrlVToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.PasteCtrlVToolStripMenuItem.Text = "&Paste (Ctrl-V)"
         '
         'cmdConnect
         '
@@ -102,6 +126,7 @@ Partial Class frmConsole
         Me.Name = "frmConsole"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "CONSOLE"
+        Me.CMCP.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -112,4 +137,7 @@ Partial Class frmConsole
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents txtConsole As System.Windows.Forms.TextBox
     Friend WithEvents cmdConnect As System.Windows.Forms.Button
+    Friend WithEvents CMCP As System.Windows.Forms.ContextMenuStrip
+    Friend WithEvents CopyCtrlCToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents PasteCtrlVToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 End Class

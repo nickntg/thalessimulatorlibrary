@@ -19,6 +19,8 @@ Imports ThalesSim.Core
 
 Public Class frmConsole
 
+    Dim curCommand As String = ""
+
     Dim WithEvents w As TCP.WorkerClient
     Delegate Sub DisconnectedFromSimulator(ByVal msg As String)
     Delegate Sub MessageFromSimulator(ByVal msg As String)
@@ -93,28 +95,42 @@ Public Class frmConsole
 
     'Accept user commands and send them to the simulator.
     Private Sub txtConsole_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtConsole.KeyPress
-        Static command As String = ""
         If e.KeyChar = vbBack Then
-            If command <> "" Then
-                command = command.Substring(0, command.Length - 1)
+            If curCommand <> "" Then
+                curCommand = curCommand.Substring(0, curCommand.Length - 1)
                 Dim newText As String = txtConsole.Text.Remove(txtConsole.Text.Length - 1, 1)
                 txtConsole.Text = ""
                 txtConsole.AppendText(newText)
                 txtConsole.ScrollToCaret()
             End If
         ElseIf e.KeyChar = vbCr Then
-            w.send(command)
-            command = ""
+            w.send(curCommand)
+            curCommand = ""
             txtConsole.AppendText(vbCrLf)
         ElseIf Asc(e.KeyChar) = 3 Then 'Ctrl-C
             Clipboard.SetText(txtConsole.SelectedText)
         ElseIf Asc(e.KeyChar) = 22 Then 'Ctrl-V
-            command = command + Clipboard.GetText
-            txtConsole.AppendText(Clipboard.GetText)
+            DoPaste()
         Else
-            command = command + e.KeyChar
+            curCommand = curCommand + e.KeyChar
             txtConsole.AppendText(e.KeyChar)
         End If
     End Sub
 
+    Private Sub CMCP_Opening(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles CMCP.Opening
+        CopyCtrlCToolStripMenuItem.Enabled = (txtConsole.SelectedText <> "")
+    End Sub
+
+    Private Sub CopyCtrlCToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CopyCtrlCToolStripMenuItem.Click
+        Clipboard.SetText(txtConsole.SelectedText)
+    End Sub
+
+    Private Sub PasteCtrlVToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PasteCtrlVToolStripMenuItem.Click
+        DoPaste()
+    End Sub
+
+    Private Sub DoPaste()
+        curCommand = curCommand + Clipboard.GetText
+        txtConsole.AppendText(Clipboard.GetText)
+    End Sub
 End Class
