@@ -6,6 +6,8 @@ xxxx/xx/xx: Version 0.9.2 beta released.
 * Changed NK to force an XML field definition re-read every time.
 * Added the ability to expect an end delimiter and trailer message in the message request
   and add them to the message response.
+* Added a hex/char display to the GUI simulator.
+* Fixed the incorrect definition of the IA command.
 
 2010/10/13: Version 0.9.1 beta released.
 ----------------------------------------

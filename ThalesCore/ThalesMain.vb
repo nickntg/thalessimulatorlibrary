@@ -103,6 +103,10 @@ Public Class ThalesMain
     ''' </remarks>
     Public Event PrinterData(ByVal sender As ThalesMain, ByVal s As String)
 
+    Public Event DataArrived(ByVal sender As ThalesMain, ByVal e As TCPEventArgs)
+
+    Public Event DataSent(ByVal sender As ThalesMain, ByVal e As TCPEventArgs)
+
     ''' <summary>
     ''' Initialization method.
     ''' </summary>
@@ -695,6 +699,13 @@ Public Class ThalesMain
     'Host date event
     Private Sub WCMessageArrived(ByVal sender As TCP.WorkerClient, ByRef b() As Byte, ByVal len As Integer)
 
+        'Raise a data-arrived event.
+        Dim e As New TCPEventArgs
+        e.RemoteClient = sender.ClientIP
+        ReDim e.Data(len - 1)
+        Array.Copy(b, 0, e.Data, 0, len)
+        RaiseEvent DataArrived(Me, e)
+
         Dim msg As New ThalesSim.Core.Message.Message(b)
 
         Logger.MajorVerbose("Client: " + sender.ClientIP + vbCrLf + _
@@ -763,6 +774,8 @@ Public Class ThalesMain
                         Logger.MajorVerbose("Sending: " + retMsg.MessageData())
                         sender.send(retMsg.MessageData())
 
+                        RaiseDataSentEvent(sender.ClientIP, retMsg)
+
                         If retMsgAfterIO IsNot Nothing Then
                             Logger.MajorDebug("Attaching header/response code to response after I/O...")
                             retMsgAfterIO.AddElementFront(CC.ResponseCodeAfterIO)
@@ -777,6 +790,8 @@ Public Class ThalesMain
 
                             Logger.MajorVerbose("Sending: " + retMsgAfterIO.MessageData())
                             sender.send(retMsgAfterIO.MessageData())
+
+                            RaiseDataSentEvent(sender.ClientIP, retMsgAfterIO)
                         End If
 
                         Logger.MinorInfo("=== [" + commandCode + "],   ends " + Utility.getTimeMMHHSSmmmm + " =======" + vbCrLf)
@@ -788,6 +803,8 @@ Public Class ThalesMain
                         retMsg.AddElementFront(messageHeader)
                         retMsg.AddElement(trailingChars)
                         sender.send(retMsg.MessageData())
+
+                        RaiseDataSentEvent(sender.ClientIP, retMsgAfterIO)
                     End If
 
                 Catch ex As Exception
@@ -813,6 +830,13 @@ Public Class ThalesMain
             sender.TermClient()
         End Try
 
+    End Sub
+
+    Private Sub RaiseDataSentEvent(ByVal remoteClient As String, ByVal msg As Message.MessageResponse)
+        Dim e As New TCPEventArgs
+        e.RemoteClient = remoteClient
+        e.Data = Utility.GetBytesFromString(msg.MessageData)
+        RaiseEvent DataSent(Me, e)
     End Sub
 
     Private Sub GetMajor(ByVal s As String) Implements Log.ILogProcs.GetMajor

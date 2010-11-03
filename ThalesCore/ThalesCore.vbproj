@@ -249,6 +249,7 @@
     </Compile>
     <Compile Include="HostCommands\NoImplementation.vb" />
     <Compile Include="PIN\PINBlockFormat.vb" />
+    <Compile Include="TCP\TCPEventArgs.vb" />
     <Compile Include="ThalesError.vb" />
     <Compile Include="ThalesMain.vb" />
     <Compile Include="Resources.vb" />

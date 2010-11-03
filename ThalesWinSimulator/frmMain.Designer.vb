@@ -83,6 +83,10 @@ Partial Class frmMain
         Me.cmdClearPrinter = New System.Windows.Forms.Button
         Me.cmdCopyMinor = New System.Windows.Forms.Button
         Me.cmdCopyPrinter = New System.Windows.Forms.Button
+        Me.cmdCopyDataSent = New System.Windows.Forms.Button
+        Me.cmdClearDataSent = New System.Windows.Forms.Button
+        Me.cmdCopyDataReceived = New System.Windows.Forms.Button
+        Me.cmdClearDataReceived = New System.Windows.Forms.Button
         Me.cmdStartSim = New System.Windows.Forms.Button
         Me.cmdStopSim = New System.Windows.Forms.Button
         Me.cmdChangeAuth = New System.Windows.Forms.Button
@@ -90,6 +94,10 @@ Partial Class frmMain
         Me.cmdLMK = New System.Windows.Forms.Button
         Me.cmdLMKPairs = New System.Windows.Forms.Button
         Me.cmdConsole = New System.Windows.Forms.Button
+        Me.Label5 = New System.Windows.Forms.Label
+        Me.txtDataSent = New System.Windows.Forms.TextBox
+        Me.Label6 = New System.Windows.Forms.Label
+        Me.txtDataReceived = New System.Windows.Forms.TextBox
         Me.gb.SuspendLayout()
         CType(Me.authMode, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.status, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -191,7 +199,7 @@ Partial Class frmMain
         Me.txtMajorEvents.Multiline = True
         Me.txtMajorEvents.Name = "txtMajorEvents"
         Me.txtMajorEvents.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtMajorEvents.Size = New System.Drawing.Size(304, 320)
+        Me.txtMajorEvents.Size = New System.Drawing.Size(304, 268)
         Me.txtMajorEvents.TabIndex = 3
         Me.txtMajorEvents.WordWrap = False
         '
@@ -219,14 +227,14 @@ Partial Class frmMain
         Me.txtMinorEvents.Multiline = True
         Me.txtMinorEvents.Name = "txtMinorEvents"
         Me.txtMinorEvents.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtMinorEvents.Size = New System.Drawing.Size(304, 320)
+        Me.txtMinorEvents.Size = New System.Drawing.Size(304, 268)
         Me.txtMinorEvents.TabIndex = 5
         Me.txtMinorEvents.WordWrap = False
         '
         'Label4
         '
         Me.Label4.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(161, Byte))
-        Me.Label4.Location = New System.Drawing.Point(99, 386)
+        Me.Label4.Location = New System.Drawing.Point(99, 332)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(144, 23)
         Me.Label4.TabIndex = 8
@@ -235,7 +243,7 @@ Partial Class frmMain
         'txtPrinterOutput
         '
         Me.txtPrinterOutput.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(161, Byte))
-        Me.txtPrinterOutput.Location = New System.Drawing.Point(99, 412)
+        Me.txtPrinterOutput.Location = New System.Drawing.Point(99, 358)
         Me.txtPrinterOutput.Multiline = True
         Me.txtPrinterOutput.Name = "txtPrinterOutput"
         Me.txtPrinterOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both
@@ -245,7 +253,7 @@ Partial Class frmMain
         '
         'sb
         '
-        Me.sb.Location = New System.Drawing.Point(0, 535)
+        Me.sb.Location = New System.Drawing.Point(0, 696)
         Me.sb.Name = "sb"
         Me.sb.Panels.AddRange(New System.Windows.Forms.StatusBarPanel() {Me.authMode, Me.status, Me.various})
         Me.sb.ShowPanels = True
@@ -306,7 +314,7 @@ Partial Class frmMain
         '
         Me.cmdClearPrinter.BackgroundImage = CType(resources.GetObject("cmdClearPrinter.BackgroundImage"), System.Drawing.Image)
         Me.cmdClearPrinter.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.cmdClearPrinter.Location = New System.Drawing.Point(757, 410)
+        Me.cmdClearPrinter.Location = New System.Drawing.Point(757, 356)
         Me.cmdClearPrinter.Name = "cmdClearPrinter"
         Me.cmdClearPrinter.Size = New System.Drawing.Size(32, 32)
         Me.cmdClearPrinter.TabIndex = 14
@@ -326,11 +334,51 @@ Partial Class frmMain
         '
         Me.cmdCopyPrinter.BackgroundImage = CType(resources.GetObject("cmdCopyPrinter.BackgroundImage"), System.Drawing.Image)
         Me.cmdCopyPrinter.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.cmdCopyPrinter.Location = New System.Drawing.Point(757, 450)
+        Me.cmdCopyPrinter.Location = New System.Drawing.Point(757, 396)
         Me.cmdCopyPrinter.Name = "cmdCopyPrinter"
         Me.cmdCopyPrinter.Size = New System.Drawing.Size(32, 32)
         Me.cmdCopyPrinter.TabIndex = 15
         Me.ToolTip1.SetToolTip(Me.cmdCopyPrinter, "Click to copy printer output to the clipboard")
+        '
+        'cmdCopyDataSent
+        '
+        Me.cmdCopyDataSent.BackgroundImage = CType(resources.GetObject("cmdCopyDataSent.BackgroundImage"), System.Drawing.Image)
+        Me.cmdCopyDataSent.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.cmdCopyDataSent.Location = New System.Drawing.Point(759, 542)
+        Me.cmdCopyDataSent.Name = "cmdCopyDataSent"
+        Me.cmdCopyDataSent.Size = New System.Drawing.Size(32, 32)
+        Me.cmdCopyDataSent.TabIndex = 32
+        Me.ToolTip1.SetToolTip(Me.cmdCopyDataSent, "Click to copy data sent to the clipboard")
+        '
+        'cmdClearDataSent
+        '
+        Me.cmdClearDataSent.BackgroundImage = CType(resources.GetObject("cmdClearDataSent.BackgroundImage"), System.Drawing.Image)
+        Me.cmdClearDataSent.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.cmdClearDataSent.Location = New System.Drawing.Point(759, 503)
+        Me.cmdClearDataSent.Name = "cmdClearDataSent"
+        Me.cmdClearDataSent.Size = New System.Drawing.Size(32, 32)
+        Me.cmdClearDataSent.TabIndex = 31
+        Me.ToolTip1.SetToolTip(Me.cmdClearDataSent, "Click to clear data sent")
+        '
+        'cmdCopyDataReceived
+        '
+        Me.cmdCopyDataReceived.BackgroundImage = CType(resources.GetObject("cmdCopyDataReceived.BackgroundImage"), System.Drawing.Image)
+        Me.cmdCopyDataReceived.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.cmdCopyDataReceived.Location = New System.Drawing.Point(410, 542)
+        Me.cmdCopyDataReceived.Name = "cmdCopyDataReceived"
+        Me.cmdCopyDataReceived.Size = New System.Drawing.Size(32, 32)
+        Me.cmdCopyDataReceived.TabIndex = 30
+        Me.ToolTip1.SetToolTip(Me.cmdCopyDataReceived, "Click to copy data received to the clipboard")
+        '
+        'cmdClearDataReceived
+        '
+        Me.cmdClearDataReceived.BackgroundImage = CType(resources.GetObject("cmdClearDataReceived.BackgroundImage"), System.Drawing.Image)
+        Me.cmdClearDataReceived.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.cmdClearDataReceived.Location = New System.Drawing.Point(410, 503)
+        Me.cmdClearDataReceived.Name = "cmdClearDataReceived"
+        Me.cmdClearDataReceived.Size = New System.Drawing.Size(32, 32)
+        Me.cmdClearDataReceived.TabIndex = 29
+        Me.ToolTip1.SetToolTip(Me.cmdClearDataReceived, "Click to clear data received")
         '
         'cmdStartSim
         '
@@ -396,10 +444,58 @@ Partial Class frmMain
         Me.cmdConsole.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.cmdConsole.UseVisualStyleBackColor = True
         '
+        'Label5
+        '
+        Me.Label5.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(161, Byte))
+        Me.Label5.Location = New System.Drawing.Point(448, 479)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(144, 23)
+        Me.Label5.TabIndex = 28
+        Me.Label5.Text = "Data Sent"
+        '
+        'txtDataSent
+        '
+        Me.txtDataSent.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(161, Byte))
+        Me.txtDataSent.Location = New System.Drawing.Point(448, 502)
+        Me.txtDataSent.Multiline = True
+        Me.txtDataSent.Name = "txtDataSent"
+        Me.txtDataSent.ScrollBars = System.Windows.Forms.ScrollBars.Both
+        Me.txtDataSent.Size = New System.Drawing.Size(304, 187)
+        Me.txtDataSent.TabIndex = 27
+        Me.txtDataSent.WordWrap = False
+        '
+        'Label6
+        '
+        Me.Label6.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(161, Byte))
+        Me.Label6.Location = New System.Drawing.Point(98, 479)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(144, 23)
+        Me.Label6.TabIndex = 26
+        Me.Label6.Text = "Data Received"
+        '
+        'txtDataReceived
+        '
+        Me.txtDataReceived.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(161, Byte))
+        Me.txtDataReceived.Location = New System.Drawing.Point(98, 502)
+        Me.txtDataReceived.Multiline = True
+        Me.txtDataReceived.Name = "txtDataReceived"
+        Me.txtDataReceived.ScrollBars = System.Windows.Forms.ScrollBars.Both
+        Me.txtDataReceived.Size = New System.Drawing.Size(304, 187)
+        Me.txtDataReceived.TabIndex = 25
+        Me.txtDataReceived.WordWrap = False
+        '
         'frmMain
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 14)
-        Me.ClientSize = New System.Drawing.Size(792, 557)
+        Me.ClientSize = New System.Drawing.Size(792, 718)
+        Me.Controls.Add(Me.cmdCopyDataSent)
+        Me.Controls.Add(Me.cmdClearDataSent)
+        Me.Controls.Add(Me.cmdCopyDataReceived)
+        Me.Controls.Add(Me.cmdClearDataReceived)
+        Me.Controls.Add(Me.Label5)
+        Me.Controls.Add(Me.txtDataSent)
+        Me.Controls.Add(Me.Label6)
+        Me.Controls.Add(Me.txtDataReceived)
         Me.Controls.Add(Me.cmdConsole)
         Me.Controls.Add(Me.cmdLMKPairs)
         Me.Controls.Add(Me.cmdLMK)
@@ -440,4 +536,12 @@ Partial Class frmMain
 
     End Sub
     Friend WithEvents cmdConsole As System.Windows.Forms.Button
+    Friend WithEvents cmdCopyDataSent As System.Windows.Forms.Button
+    Friend WithEvents cmdClearDataSent As System.Windows.Forms.Button
+    Friend WithEvents cmdCopyDataReceived As System.Windows.Forms.Button
+    Friend WithEvents cmdClearDataReceived As System.Windows.Forms.Button
+    Friend WithEvents Label5 As System.Windows.Forms.Label
+    Friend WithEvents txtDataSent As System.Windows.Forms.TextBox
+    Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents txtDataReceived As System.Windows.Forms.TextBox
 End Class
