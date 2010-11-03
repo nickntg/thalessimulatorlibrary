@@ -78,6 +78,14 @@ Imports ThalesSim.Core.Message
     End Function
 
     <TestMethod()> _
+    Public Sub TestGenerateZPK()
+        AuthorizedStateOn()
+        SwitchToDoubleLengthZMKs()
+        Dim ZMK As String = TestTran("0000U", New GenerateKey_A0).Substring(2, 33)
+        Assert.AreEqual("00", TestTran(ZMK, New GenerateZPK_IA()).Substring(0, 2))
+    End Sub
+
+    <TestMethod()> _
     Public Sub TestCancelAuthState()
         Assert.AreEqual(TestTran("", New CancelAuthState_RA), "00")
     End Sub

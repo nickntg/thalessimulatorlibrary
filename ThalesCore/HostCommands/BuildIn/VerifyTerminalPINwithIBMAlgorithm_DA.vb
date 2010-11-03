@@ -136,7 +136,8 @@ Namespace HostCommands.BuildIn
                 _expPinValData = _pinValData.Substring(0, _pinValData.IndexOf("N"))
                 _expPinValData = _expPinValData + _acct.Substring(_acct.Length - 5, 5)
                 _expPinValData = _expPinValData + _pinValData.Substring(_pinValData.IndexOf("N") + 1, (_pinValData.Length - (_pinValData.IndexOf("N") + 1)))
-                _cryptAcctNum = DES.DESEncrypt(clearPVK, _expPinValData)
+                'The PVK is a double-length key, so we need to do a 3DES-decrypt.
+                _cryptAcctNum = TripleDES.TripleDESEncrypt(New HexKey(clearPVK), _expPinValData)
                 _decimalisedAcctNum = Utility.Decimalise(_cryptAcctNum, _decTable)
                 _naturalPin = _decimalisedAcctNum.Substring(0, Convert.ToInt32(_checkLen))
                 _derivedPin = Utility.AddNoCarry(_naturalPin, _offsetValue.Substring(0, _offsetValue.IndexOf("F")))

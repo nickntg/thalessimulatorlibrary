@@ -46,6 +46,36 @@ Public Class frmMain
         gb.Enabled = Not flag
     End Sub
 
+    Private Function GetByteDisplay(ByVal b() As Byte) As String
+        Dim ret As New System.Text.StringBuilder, str As String = ""
+        Dim hexStr As String = "", charStr As String = Utility.GetStringFromBytes(b)
+        Utility.ByteArrayToHexString(b, hexStr)
+        For i As Integer = 0 To b.GetLength(0) - 1
+            ret.Append(hexStr.Substring(i * 2, 2) + " ")
+            str = str + charStr.Substring(i, 1)
+            If (i + 1) Mod 8 = 0 Then
+                ret.Append("| " + str + vbCrLf)
+                str = ""
+            End If
+        Next
+        If str <> "" Then
+            ret.Append(New String(" "c, (8 - (b.GetLength(0) Mod 8)) * 3) + "| " + str)
+        End If
+        Return ret.ToString
+    End Function
+
+    Private Sub o_DataArrived(ByVal sender As Core.ThalesMain, ByVal e As Core.TCPEventArgs) Handles o.DataArrived
+        If ThalesSim.Core.Log.Logger.CurrentLogLevel >= Log.Logger.LogLevel.Info Then
+            Me.Invoke(New UpdateTextBox(AddressOf UpdateDataReceived), New String() {e.RemoteClient + vbCrLf + GetByteDisplay(e.Data) + vbCrLf})
+        End If
+    End Sub
+
+    Private Sub o_DataSent(ByVal sender As Core.ThalesMain, ByVal e As Core.TCPEventArgs) Handles o.DataSent
+        If ThalesSim.Core.Log.Logger.CurrentLogLevel >= Log.Logger.LogLevel.Info Then
+            Me.Invoke(New UpdateTextBox(AddressOf UpdateDataSent), New String() {e.RemoteClient + vbCrLf + GetByteDisplay(e.Data) + vbCrLf})
+        End If
+    End Sub
+
     Private Sub o_MajorLogEvent(ByVal sender As ThalesMain, ByVal s As String) Handles o.MajorLogEvent
         Me.Invoke(New UpdateTextBox(AddressOf UpdateMajorLogEvent), New String() {s})
     End Sub
@@ -56,6 +86,14 @@ Public Class frmMain
 
     Private Sub o_PrinterData(ByVal sender As ThalesMain, ByVal s As String) Handles o.PrinterData
         Me.Invoke(New UpdateTextBox(AddressOf UpdatePrinterData), New String() {s})
+    End Sub
+
+    Private Sub UpdateDataReceived(ByVal s As String)
+        txtDataReceived.AppendText(s + vbCrLf)
+    End Sub
+
+    Private Sub UpdateDataSent(ByVal s As String)
+        txtDataSent.AppendText(s + vbCrLf)
     End Sub
 
     Private Sub UpdateMajorLogEvent(ByVal s As String)
@@ -134,6 +172,26 @@ Public Class frmMain
         sb.Panels(2).Text = "Printer output copied to clipboard"
     End Sub
 
+    Private Sub cmdClearDataReceived_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdClearDataReceived.Click
+        txtDataReceived.Clear()
+        sb.Panels(2).Text = "Data received cleared"
+    End Sub
+
+    Private Sub cmdClearDataSent_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdClearDataSent.Click
+        txtDataSent.Clear()
+        sb.Panels(2).Text = "Data sent cleared"
+    End Sub
+
+    Private Sub cmdCopyDataReceived_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdCopyDataReceived.Click
+        Clipboard.SetDataObject(txtDataReceived.Text)
+        sb.Panels(2).Text = "Data received copied to clipboard"
+    End Sub
+
+    Private Sub cmdCopyDataSent_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdCopyDataSent.Click
+        Clipboard.SetDataObject(txtDataSent.Text)
+        sb.Panels(2).Text = "Data sent copied to clipboard"
+    End Sub
+
     Private Sub cmdLMK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdLMK.Click
         MessageBox.Show(Me, "LMK parity OK: " + Cryptography.LMK.LMKStorage.CheckLMKStorage().ToString(), "LMK Check", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Clipboard.SetDataObject(Cryptography.LMK.LMKStorage.DumpLMKs())
@@ -177,4 +235,5 @@ Public Class frmMain
             End If
         End If
     End Sub
+
 End Class
