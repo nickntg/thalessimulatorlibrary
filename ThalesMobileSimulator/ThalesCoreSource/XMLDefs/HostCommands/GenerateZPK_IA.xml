@@ -6,7 +6,7 @@
 
   <Field>
     <Name>ZMK</Name>
-    <IncludeFile>MultiFormatZMK</IncludeFile>
+    <IncludeFile>MultiFormatZMK.xml</IncludeFile>
   </Field>
 
   <Field>

@@ -137,6 +137,7 @@
     <Compile Include="HostCommands\BuildIn\HashDataBlock_GM.vb" />
     <Compile Include="HostCommands\BuildIn\TranslateBDKFromLMKToZMK_DY.vb" />
     <Compile Include="HostCommands\BuildIn\TranslateBDKFromZMKToLMK_DW.vb" />
+    <Compile Include="HostCommands\BuildIn\TranslatePINFromDUKPTToZPK3DES_G0.vb" />
     <Compile Include="HostCommands\BuildIn\TranslatePINFromDUKTPToZPK_CI.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyAndGenerateVISAPVV_CU.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyDukptPINWithIBMAlgorithm_CK.vb" />
@@ -327,6 +328,7 @@
     <Content Include="XMLDefs\HostCommands\TranslateCVKFromLMKToZMK_AU.xml" />
     <Content Include="XMLDefs\HostCommands\TranslateCVKFromZMKToLMK_AW.xml" />
     <Content Include="XMLDefs\HostCommands\TranslateKeyScheme_B0.xml" />
+    <Content Include="XMLDefs\HostCommands\TranslatePINFromDUKPTToZPK3DES_G0.xml" />
     <Content Include="XMLDefs\HostCommands\TranslatePINFromDUKPTToZPK_CI.xml" />
     <Content Include="XMLDefs\HostCommands\TranslatePINFromLMKToZPK_JG.xml" />
     <Content Include="XMLDefs\HostCommands\TranslatePINFromTPKToLMK_JC.xml" />

@@ -9,6 +9,8 @@ xxxx/xx/xx: Version 0.9.2 beta released.
 * Added a hex/char display to the GUI simulator.
 * Fixed the incorrect definition of the IA command.
 * Added mouse copy-paste on the console window as per workitem #7549.
+* Added an initial implementation of the G0 command.
+* Added Doxygen documentation of ThalesCore.dll.
 
 2010/10/13: Version 0.9.1 beta released.
 ----------------------------------------

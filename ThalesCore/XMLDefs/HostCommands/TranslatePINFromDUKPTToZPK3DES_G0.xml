@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Translates a PIN block from DUKPT to ZPK encryption (3DES).</CommandName>
+  <Request>G0</Request>
+  <Response>G1</Response>
+
+  <Field>
+    <Name>BDK</Name>
+    <IncludeFile>MultiFormatCVK.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>ZPK</Name>
+    <IncludeFile>MultiFormatKey.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>KSN Descriptor</Name>
+    <Length>3</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+  <Field>
+    <Name>Key Serial Number</Name>
+    <Length>20</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+  <Field>
+    <Name>Encrypted Block</Name>
+    <Length>16</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+  <Field>
+    <Name>Source PIN Block Format Code</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+    <ValidValue>01</ValidValue>
+    <RejectionCodeIfInvalid>23</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>Destination PIN Block Format Code</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+    <ValidValue>01</ValidValue>
+    <RejectionCodeIfInvalid>23</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>Account Number</Name>
+    <Length>12</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+</CommandConfiguration>
