@@ -399,6 +399,26 @@ Imports ThalesSim.Core.Message
     End Sub
 
     <TestMethod()> _
+    Public Sub TestTranslatePINFromDukptToZPK3DES()
+        Dim BDK As String = "0123456789ABCDEFFEDCBA9876543210"
+        Dim PAN As String = "4012345678909"
+        Dim PIN As String = "1234"
+        Dim ZPK As String = "C7152C20BC2C830EA7EC9E8334ABE3FE"
+        Dim KSN As String = "FFFF9876543210E00008"
+        Dim KSNDescriptor As String = "605"
+
+        Dim clearPB As String = Core.PIN.PINBlockFormat.ToPINBlock(PIN, PAN.Substring(0, 12), Core.PIN.PINBlockFormat.PIN_Block_Format.AnsiX98)
+        Dim derivedKey As String = Cryptography.DUKPT.DerivedKey.calculateDerivedKey(New Cryptography.DUKPT.KeySerialNumber(KSN, KSNDescriptor), BDK)
+
+        Dim cryptBDK As String = Utility.EncryptUnderLMK(BDK, KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, LMKPairs.LMKPair.Pair28_29, "0")
+        Dim cryptZPK As String = Utility.EncryptUnderLMK(ZPK, KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, LMKPairs.LMKPair.Pair06_07, "0")
+
+        Dim sourceEncryptedPB As String = Cryptography.TripleDES.TripleDESEncrypt(New Cryptography.HexKey(derivedKey), clearPB)
+        Dim targetEncryptedPB As String = Cryptography.TripleDES.TripleDESEncrypt(New Cryptography.HexKey(ZPK), clearPB)
+        Assert.AreEqual("0004" + targetEncryptedPB + "01", TestTran(cryptBDK + cryptZPK + KSNDescriptor + KSN + sourceEncryptedPB + "0101" + PAN.Substring(0, 12), New TranslatePINFromDUKPTToZPK3DES_G0()))
+    End Sub
+
+    <TestMethod()> _
     Public Sub TestValidateDukptPinWithIBMAlgorithm()
         Assert.AreEqual("00", TestTran("U8E3D3E2FD5919657F05A1AA90D32A01456C1DC7F3A899043605FFFF9876543210E000011B9C1845EB993A7A0440123456789001234567890123450004012345N99252FFFFFFFF", New VerifyDukptPINWithIBMAlgorithm_CK))
     End Sub

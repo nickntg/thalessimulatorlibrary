@@ -47,7 +47,7 @@ Namespace HostCommands.BuildIn
         ''' The constructor sets up the NK message parsing fields.
         ''' </remarks>
         Public Sub New()
-            ReadXMLDefinitions()
+            ReadXMLDefinitions(True)
         End Sub
 
         ''' <summary>

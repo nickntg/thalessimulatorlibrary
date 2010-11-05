@@ -45,6 +45,15 @@ Namespace Message.XML
         End Sub
 
         ''' <summary>
+        ''' Removes a message field definition.
+        ''' </summary>
+        ''' <param name="key"></param>
+        ''' <remarks></remarks>
+        Public Shared Sub Remove(ByVal key As String)
+            m_store.Remove(key)
+        End Sub
+
+        ''' <summary>
         ''' Return message field definitions if they exist.
         ''' </summary>
         ''' <param name="key">Key to search for.</param>

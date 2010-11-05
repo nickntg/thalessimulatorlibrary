@@ -143,6 +143,38 @@ Namespace Message
             Return _data.Length - _curIndex
         End Function
 
+        ''' <summary>
+        ''' Returns the end sentinel and the trailer from the message and
+        ''' removes it from the message.
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function GetTrailers() As String
+            _bData = Utility.GetBytesFromString(Me.MessageData)
+            Dim idx As Integer = _bData.GetLength(0) - 1
+            While idx >= 0
+                'Search for the end sentinel from the end.
+                If _bData(idx) = &H19 Then
+                    'Copy the end sentinel and trailer to a byte array.
+                    Dim b() As Byte
+                    ReDim b(_bData.GetLength(0) - idx - 1)
+                    Array.Copy(_bData, idx, b, 0, b.GetLength(0))
+                    'Copy the original message up to the sentinel to a byte array.
+                    Dim bNew() As Byte
+                    ReDim bNew(idx - 1)
+                    Array.Copy(_bData, 0, bNew, 0, bNew.GetLength(0))
+                    'Copy over the original message.
+                    _bData = bNew
+                    _data = Utility.GetStringFromBytes(_bData)
+                    'Return the sentinel and trailer.
+                    Return Utility.GetStringFromBytes(b)
+                End If
+                idx -= 1
+            End While
+            'If no end sentinel is found, do nothing.
+            Return ""
+        End Function
+
     End Class
 
 End Namespace
