@@ -1,6 +1,10 @@
 ﻿ThalesSim Release History
 =========================
 
+xxxx/xx/xx: Version 0.9.3 beta released.
+----------------------------------------
+* Added an implementation of the KQ command (contributed by nahsan, converted for XML definitions).
+
 2010/11/08: Version 0.9.2 beta released.
 ----------------------------------------
 * Changed NK to force an XML field definition re-read every time.
