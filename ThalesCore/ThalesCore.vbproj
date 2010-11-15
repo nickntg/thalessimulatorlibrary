@@ -40,6 +40,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -140,6 +142,7 @@
     <Compile Include="HostCommands\BuildIn\TranslatePINFromDUKPTToZPK3DES_G0.vb" />
     <Compile Include="HostCommands\BuildIn\TranslatePINFromDUKTPToZPK_CI.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyAndGenerateVISAPVV_CU.vb" />
+    <Compile Include="HostCommands\BuildIn\VerifyARQCAndOrGenerateARPC_KQ.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyDukptPINWithIBMAlgorithm_CK.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyDukptPINWithVisaAlgorithm_CM.vb" />
     <Compile Include="HostCommands\BuildIn\VerifyDynamicCVV_PM.vb" />
@@ -349,6 +352,7 @@
     <Content Include="XMLDefs\HostCommands\TranslateZPKFromZMKToLMK_FA.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyAndGenerateVISAPVV_CU.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyAndTranslateMAC_ME.xml" />
+    <Content Include="XMLDefs\HostCommands\VerifyARQCAndOrGenerateARPC_KQ.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyDukptPINWithIBMAlgorithm_CK.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyDukptPINWithVISAAlgorithm_CM.xml" />
     <Content Include="XMLDefs\HostCommands\VerifyDynamicCVV_PM.xml" />
