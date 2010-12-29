@@ -90,6 +90,7 @@ Namespace HostCommands.BuildIn
             Dim KeyA As String, KeyB As String, Data As String = ""
             Dim counter, counter1, counter2, ByteNo As Integer
             Dim Result, EncOutput, XOROutput, NextData As String
+            NextData = ""
 
             Dim cryptMDK As New HexKey(_mkAC)
             Dim clearMDK As String = Utility.DecryptUnderLMK(cryptMDK.ToString, cryptMDK.Scheme, LMKPairs.LMKPair.Pair28_29, "1")

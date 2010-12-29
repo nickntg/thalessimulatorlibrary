@@ -607,6 +607,9 @@ Imports ThalesSim.Core.Message
         Dim cryptPVK As String = "UA8B1520E201412938388191885FFA50A"
         Dim PAN As String = "5044070000253211"
 
+        'Test for clear PIN padded with Fs (http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=239725).
+        Assert.AreEqual("00" + "01234", TestTran("1234F" + PAN.Substring(3, 12), New EncryptClearPIN_BA))
+
         'Generate the "encrypted" PIN.
         Assert.AreEqual("000" + clearPIN, TestTran("0" + clearPIN + PAN.Substring(3, 12), New EncryptClearPIN_BA))
 
@@ -647,6 +650,31 @@ Imports ThalesSim.Core.Message
         AuthorizedStateOn()
         Assert.AreEqual("01" + CreateBytesWithData("1D8F14549EDED2D6"), TestTran("00001UA67981CE67F36A4BD2DE46BA17D6F59608" + Utility.toBCD("6414000000036701") + ASCIIBytesFromString("0007") + ASCIIBytesFromString("53446578") + tranDataLength + ASCIIBytesFromString(tranData) + ";" + CreateBytesWithData("1D8F14549EDED2D7") + CreateBytesWithData("0000000000000000") + CreateBytesWithData("00000000"), New VerifyTruncatedApplicationCryptogram_K2))
         AuthorizedStateOff()
+    End Sub
+
+    <TestMethod()> _
+    Public Sub GenerateAndVerifyIBMPin()
+        Dim cryptPVK As String = "UA8B1520E201412938388191885FFA50A"
+        Dim cryptZPK As String = "U402F396F7ABEDC14976EB65959AA99B2"
+        Dim acct As String = "832937216759"
+        Dim decTable As String = "FFFFFFFFFFFFFFFF"
+        Dim pinValData As String = "4458329372N3"
+        Dim offset As String = "0000FFFFFFFF"
+
+        'Derive the PIN encrypted under LMK.
+        Dim result As String = TestTran(cryptPVK + offset + "04" + acct + decTable + pinValData, New DerivePINUsingTheIBMMethod())
+        If Not result.StartsWith("00") Then
+            Assert.Fail("Error deriving IBM PIN")
+        End If
+
+        'Create a PIN block under the ZPK.
+        result = TestTran(cryptZPK + "01" + acct + result.Substring(2), New TranslatePINFromLMKToZPK_JG())
+        If Not result.StartsWith("00") Then
+            Assert.Fail("Error translating PIN from LMK to ZPK encryption")
+        End If
+
+        'Verify the PIN.
+        Assert.AreEqual("00", TestTran(cryptZPK + cryptPVK + "12" + result.Substring(2) + "01" + "04" + acct + decTable + pinValData + offset, New VerifyInterchangePINWithIBMAlgorithm_EA()).Substring(0, 2))
     End Sub
 
     'Dump major events to the console window.
