@@ -13,7 +13,6 @@
 '' along with this program; if not, write to the Free Software
 '' Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '' 
-' Contributed by rjw - May 2010
 
 Imports ThalesSim.Core.Message
 Imports ThalesSim.Core.Cryptography
@@ -23,26 +22,22 @@ Imports ThalesSim.Core.PIN.PINBlockFormat
 Namespace HostCommands.BuildIn
 
     ''' <summary>
-    ''' Verifies an interchange PIN using the VISA algorithm.
+    ''' Derives a PIN using the IBM method.
     ''' </summary>
     ''' <remarks>
-    ''' This class implements the EA Thales command.
+    ''' This class implements the EE Thales command.
     ''' </remarks>
-    <ThalesCommandCode("EA", "EB", "", "Verifies an interchange PIN using the IBM algorithm")> _
-    Public Class VerifyInterchangePINWithIBMAlgorithm_EA
+    <ThalesCommandCode("EE", "EF", "", "Derive a PIN using the IBM method.")> _
+    Public Class DerivePINUsingTheIBMMethod
         Inherits AHostCommand
 
-        Private _acct As String
-        Private _pinBlock As String
-        Private _pinBlockFormat As String
         Private _pvkPair As String
+        Private _offsetValue As String
         Private _checkLen As String
-        Private _maxPinLen As String
-        Private _zpk As String
+        Private _acct As String
         Private _decTable As String
         Private _pinValData As String
-        Private _offsetValue As String
-        Private _expPinValData As String
+
         Dim _cryptAcctNum As String
         Dim _decimalisedAcctNum As String
         Dim _naturalPin As String
@@ -52,7 +47,7 @@ Namespace HostCommands.BuildIn
         ''' Constructor.
         ''' </summary>
         ''' <remarks>
-        ''' The constructor sets up the EA message parsing fields.
+        ''' The constructor sets up the EE message parsing fields.
         ''' </remarks>
         Public Sub New()
             ReadXMLDefinitions()
@@ -68,16 +63,12 @@ Namespace HostCommands.BuildIn
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
             XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
             If XMLParseResult = ErrorCodes.ER_00_NO_ERROR Then
-                _zpk = kvp.ItemCombination("ZPK Scheme", "ZPK")
                 _pvkPair = kvp.ItemCombination("PVK Scheme", "PVK")
-                _maxPinLen = kvp.Item("Maximum PIN Length")
-                _pinBlock = kvp.Item("PIN Block")
-                _pinBlockFormat = kvp.Item("PIN Block Format Code")
+                _offsetValue = kvp.Item("Offset")
                 _checkLen = kvp.Item("Check Length")
                 _acct = kvp.Item("Account Number")
                 _decTable = kvp.Item("Decimalisation Table")
                 _pinValData = kvp.Item("PIN Validation Data")
-                _offsetValue = kvp.Item("Offset")
             End If
         End Sub
 
@@ -91,13 +82,6 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim cryptZPK As New HexKey(_zpk)
-            Dim clearZPK As String = Utility.DecryptUnderLMK(cryptZPK.ToString, cryptZPK.Scheme, LMKPairs.LMKPair.Pair06_07, "0")
-            If Utility.IsParityOK(clearZPK, Utility.ParityCheck.OddParity) = False Then
-                mr.AddElement(ErrorCodes.ER_10_SOURCE_KEY_PARITY_ERROR)
-                Return mr
-            End If
-
             Dim cryptPVK As New HexKey(_pvkPair)
             Dim clearPVK As String = Utility.DecryptUnderLMK(cryptPVK.ToString, cryptPVK.Scheme, LMKPairs.LMKPair.Pair14_15, "0")
             If Utility.IsParityOK(clearPVK, Utility.ParityCheck.OddParity) = False Then
@@ -110,19 +94,7 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            Dim clearPB As String = TripleDES.TripleDESDecrypt(New HexKey(clearZPK), _pinBlock)
-            Dim PBFormat As PIN_Block_Format = PIN.PINBlockFormat.ToPINBlockFormat(_pinBlockFormat)
-            If PBFormat = PIN_Block_Format.InvalidPBCode Then
-                mr.AddElement(ErrorCodes.ER_23_INVALID_PIN_BLOCK_FORMAT_CODE)
-                Return mr
-            End If
-
-            Dim clearPIN As String = PIN.PINBlockFormat.ToPIN(clearPB, _acct, PBFormat)
-
-            If clearPIN.Length < 4 OrElse clearPIN.Length > 12 Then
-                mr.AddElement(ErrorCodes.ER_24_PIN_IS_FEWER_THAN_4_OR_MORE_THAN_12_DIGITS_LONG)
-                Return mr
-            End If
+            Dim _expPinValData As String
 
             _expPinValData = _pinValData.Substring(0, _pinValData.IndexOf("N"))
             _expPinValData = _expPinValData + _acct.Substring(_acct.Length - 5, 5)
@@ -133,11 +105,10 @@ Namespace HostCommands.BuildIn
             _naturalPin = _decimalisedAcctNum.Substring(0, Convert.ToInt32(_checkLen))
             _derivedPin = Utility.AddNoCarry(_naturalPin, _offsetValue.Substring(0, _offsetValue.IndexOf("F")))
 
-            If _derivedPin <> clearPIN Then
-                mr.AddElement(ErrorCodes.ER_01_VERIFICATION_FAILURE)
-            Else
-                mr.AddElement(ErrorCodes.ER_00_NO_ERROR)
-            End If
+            Dim cryptPIN As String = EncryptPINForHostStorage(_derivedPin)
+
+            mr.AddElement(ErrorCodes.ER_00_NO_ERROR)
+            mr.AddElement(cryptPIN)
 
             Return mr
 

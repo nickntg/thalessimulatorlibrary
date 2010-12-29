@@ -436,6 +436,13 @@ Public Class Utility
     ''' Decimalises a string.
     ''' </remarks>
     Public Shared Function Decimalise(ByVal undecimalisedString As String, ByVal decimalisationTable As String) As String
+        Const EMPTY_DEC_TABLE As String = "FFFFFFFFFFFFFFFF"
+        Const DEFAULT_DEC_TABLE As String = "9876543210123456"
+
+        If decimalisationTable = EMPTY_DEC_TABLE Then
+            decimalisationTable = DEFAULT_DEC_TABLE
+        End If
+
         Dim output As String = ""
         For cnt As Integer = 0 To undecimalisedString.Length - 1
             Dim ch As Char = undecimalisedString.Chars(cnt)

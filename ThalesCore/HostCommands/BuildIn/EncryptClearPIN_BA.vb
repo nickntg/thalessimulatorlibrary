@@ -53,6 +53,14 @@ Namespace HostCommands.BuildIn
             If XMLParseResult = ErrorCodes.ER_00_NO_ERROR Then
                 _clearPIN = kvp.Item("PIN")
                 _acctNbr = kvp.Item("Account Number")
+
+                'As per http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=239725
+                'we want to accomodate clear PINs with an F.
+                If _clearPIN.IndexOf("F") > 0 Then
+                    Dim newPin As String = _clearPIN.Replace("F", "")
+                    _clearPIN = newPin.PadLeft(_clearPIN.Length, "0"c)
+                End If
+
             End If
         End Sub
 
