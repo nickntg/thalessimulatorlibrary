@@ -9,7 +9,7 @@ xxxx/xx/xx: Version 0.9.3 beta released.
   place, the decimalization table 9876543210123456 is used. This applies to all algorithms and commands
   that use IBM PIN.
 * BA command has been changed to also work with PINs that are padded with F.
-* Fixed the EA command to work correctly with double-length PVKs.
+* Fixed the DE and EA commands to work correctly with double-length PVKs.
 * Added an implementation of the NG command.
 
 2010/11/08: Version 0.9.2 beta released.

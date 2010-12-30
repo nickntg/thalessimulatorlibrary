@@ -231,12 +231,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_5D284572BEDA4460A96C45F5E146FE24"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_5D8F4CE4D47D45FFB62F3F2C44CAB9C2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -268,6 +262,12 @@
         "Entry"
         {
         "MsmKey" = "8:_680DF226C8EF48E19ED73AEFB742E9FD"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_69EFE20BA42048E29AF2EA85BC426605"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1366,26 +1366,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5D284572BEDA4460A96C45F5E146FE24"
-            {
-            "SourcePath" = "8:..\\ThalesCore\\HostCommands\\BuildIn\\DecryptEncryptedPIN_NG.vb"
-            "TargetName" = "8:DecryptEncryptedPIN_NG.vb"
-            "Tag" = "8:"
-            "Folder" = "8:_34E5D042E47843C09BC22C7FE4328E6E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5D8F4CE4D47D45FFB62F3F2C44CAB9C2"
             {
             "SourcePath" = "8:..\\ThalesCore\\XMLDefs\\HostCommands\\TranslatePINFromVISAToThales_BQ.xml"
@@ -1490,6 +1470,26 @@
             {
             "SourcePath" = "8:..\\ThalesCore\\XMLDefs\\HostCommands\\MultiFormatCVK.xml"
             "TargetName" = "8:MultiFormatCVK.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_E2AE7C7E8EB94A15A9630785EDFF29E4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_69EFE20BA42048E29AF2EA85BC426605"
+            {
+            "SourcePath" = "8:..\\ThalesCore\\XMLDefs\\HostCommands\\DecryptEncryptedPIN_NG.xml"
+            "TargetName" = "8:DecryptEncryptedPIN_NG.xml"
             "Tag" = "8:"
             "Folder" = "8:_E2AE7C7E8EB94A15A9630785EDFF29E4"
             "Condition" = "8:"
@@ -2447,7 +2447,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Thales Simulator"
         "ProductCode" = "8:{2FCDCA55-E848-4364-9FA8-7245B5B0A3F1}"
-        "PackageCode" = "8:{E063AB2D-E16D-4B39-946C-B1DDFEFA429C}"
+        "PackageCode" = "8:{B2975F9D-09AA-4388-ACD2-F8A665CA0C09}"
         "UpgradeCode" = "8:{1B09877B-9850-4D4E-8CAB-B6DB8DA0C6A2}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
