@@ -677,6 +677,11 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("00", TestTran(cryptZPK + cryptPVK + "12" + result.Substring(2) + "01" + "04" + acct + decTable + pinValData + offset, New VerifyInterchangePINWithIBMAlgorithm_EA()).Substring(0, 2))
     End Sub
 
+    <TestMethod()> _
+    Public Sub DecryptEncryptedPIN()
+        Assert.AreEqual("001234F", TestTran("12345678901201234", New DecryptEncryptedPIN_NG()))
+    End Sub
+
     'Dump major events to the console window.
     Private Sub o_MajorLogEvent(ByVal sender As Core.ThalesMain, ByVal s As String) Handles o.MajorLogEvent
         Console.WriteLine(s)
