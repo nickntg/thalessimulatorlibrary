@@ -79,6 +79,27 @@ Imports ThalesSim.Core.Message
 
     <TestMethod()> _
     Public Sub TestGenerateZPK()
+        'TESTS IN PROGRESS
+        'Dim ksn As New ThalesSim.Core.Cryptography.DUKPT.KeySerialNumber("FFFF9876543210E00000", "605")
+        'Dim ksn2 As New ThalesSim.Core.Cryptography.DUKPT.KeySerialNumber("9A0003000002DD20000B", "708")
+        'Dim dk As New ThalesSim.Core.Cryptography.DUKPT.DerivedKey()
+        'Dim IPEK As String = dk.calculateIPEK(ksn, "0123456789ABCDEFFEDCBA9876543210")
+        'Dim derived As String = dk.calculateDerivedKey(New ThalesSim.Core.Cryptography.DUKPT.KeySerialNumber("FFFF9876543210E00001", "605"), "0123456789ABCDEFFEDCBA9876543210")
+        'System.Diagnostics.Debug.WriteLine(derived)
+        'derived = dk.calculateDerivedKey(New ThalesSim.Core.Cryptography.DUKPT.KeySerialNumber("FFFF9876543210E00002", "605"), "0123456789ABCDEFFEDCBA9876543210")
+        'System.Diagnostics.Debug.WriteLine(derived)
+        'derived = dk.calculateDerivedKey(New ThalesSim.Core.Cryptography.DUKPT.KeySerialNumber("FFFF9876543210E00003", "605"), "0123456789ABCDEFFEDCBA9876543210")
+        'System.Diagnostics.Debug.WriteLine(derived)
+        'derived = dk.calculateDerivedKey(New ThalesSim.Core.Cryptography.DUKPT.KeySerialNumber("FFFF9876543210E00009", "605"), "0123456789ABCDEFFEDCBA9876543210")
+        'System.Diagnostics.Debug.WriteLine(derived)
+        'derived = dk.calculateDerivedKey(New ThalesSim.Core.Cryptography.DUKPT.KeySerialNumber("FFFF9876543210E0000C", "605"), "0123456789ABCDEFFEDCBA9876543210")
+        'System.Diagnostics.Debug.WriteLine(derived)
+
+        'derived = dk.calculateDerivedKey(New ThalesSim.Core.Cryptography.DUKPT.KeySerialNumber("9A0003000002DD20000B", "708"), "0123456789ABCDEFFEDCBA9876543210")
+
+        Dim res As String = TestTran("U8E3D3E2FD5919657F05A1AA90D32A014U12E294DA05CE8761CC557F8D4786D21F7089A0003000002DD20000BF497689DC4224B200101000000000000", New TranslatePINFromDUKPTToZPK3DES_G0())
+
+
         AuthorizedStateOn()
         SwitchToDoubleLengthZMKs()
         Dim ZMK As String = TestTran("0000U", New GenerateKey_A0).Substring(2, 33)
