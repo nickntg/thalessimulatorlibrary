@@ -55,6 +55,7 @@ Namespace Cryptography.DUKPT
 
             '3) Clear the 21 right-most bits of R8.
             reg8str = Utility.ANDHexStringsOffset(reg8str, _E00000, 10)
+            'reg8str = Utility.ANDHexStringsOffset(reg8str, _E00000, reg8str.Length - 6) '10
 
             '4) Copy the 21 right-most bits of KSNR into R3.
             reg3 = Utility.ANDHexStrings(ksn.transactionCounter, _1FFFFF)
