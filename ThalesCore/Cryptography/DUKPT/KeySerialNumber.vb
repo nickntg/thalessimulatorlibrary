@@ -16,12 +16,15 @@
 ' Contributed by rjw - May 2010
 
 Namespace Cryptography.DUKPT
+
     Public Class KeySerialNumber
         Private _baseKeyId As String
         Private _trsmId As String
         Private _transactionCounter As String
         Private _paddedKsn As String
         Private _unpaddedKsn As String
+
+        Public IinitialKey As String
 
         Public Property baseKeyId() As String
             Get
@@ -84,12 +87,13 @@ Namespace Cryptography.DUKPT
             unpaddedKsn = KSN
 
             Dim p As Integer = 0
+            Dim n = Convert.ToInt32(KSNDescriptor.Substring(0, 1))
+            baseKeyId = KSN.Substring(p, n)
+            p += n
 
-            baseKeyId = KSN.Substring(p, Convert.ToInt32(KSNDescriptor.Substring(0, 1)))
-            p += Convert.ToInt32(KSNDescriptor.Substring(0, 1))
-
-            trsmId = KSN.Substring(p, Convert.ToInt32(KSNDescriptor.Substring(2, 1)))
-            p += Convert.ToInt32(KSNDescriptor.Substring(2, 1))
+            n = Convert.ToInt32(KSNDescriptor.Substring(2, 1))
+            trsmId = KSN.Substring(p, n)
+            p += n
 
             transactionCounter = Convert.ToString(Convert.ToInt32(KSN(p - 1), 16) And &H1, 16) + KSN.Substring(p, KSN.Length - p)
         End Sub
