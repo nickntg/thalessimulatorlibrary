@@ -13,6 +13,7 @@ xxxx/xx/xx: Version 0.9.3 beta released.
 * Added an implementation of the NG command.
 * Changed EC command to force odd parity on the key.
 * Fixed BU error where key variants ended up being ignored.
+* Fixed DUKPT code and G0 command, thanks to code provided by Hamdi.
 
 2010/11/08: Version 0.9.2 beta released.
 ----------------------------------------
