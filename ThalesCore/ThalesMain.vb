@@ -41,6 +41,7 @@ Public Class ThalesMain
     Private DoubleLengthZMKs As Boolean
     Private LegacyMode As Boolean
     Private ExpectTrailers As Boolean
+    Private HeaderLength As Integer
 
     'Listening thread for hosts
     Private LT As Threading.Thread
@@ -144,7 +145,8 @@ Public Class ThalesMain
                "Log level: " + Logger.CurrentLogLevel.ToString + vbCrLf + _
                "Check LMK parity: " + CheckLMKParity.ToString + vbCrLf + _
                "XML host command definitions: " + HostDefsDir + vbCrLf + _
-               "Use double-length ZMKs: " + DoubleLengthZMKs.ToString
+               "Use double-length ZMKs: " + DoubleLengthZMKs.ToString + _
+               "Header length: " + HeaderLength.ToString
     End Function
 
     ''' <summary>
@@ -242,6 +244,7 @@ Public Class ThalesMain
             DoubleLengthZMKs = Convert.ToBoolean(GetParameterValue(doc, "DoubleLengthZMKs"))
             LegacyMode = Convert.ToBoolean(GetParameterValue(doc, "LegacyMode"))
             ExpectTrailers = Convert.ToBoolean(GetParameterValue(doc, "ExpectTrailers"))
+            HeaderLength = Convert.ToInt32(GetParameterValue(doc, "HeaderLength"))
 
             StartUpCore(Convert.ToString(GetParameterValue(doc, "FirmwareNumber")), _
                         Convert.ToString(GetParameterValue(doc, "DSPFirmwareNumber")), _
@@ -305,6 +308,7 @@ Public Class ThalesMain
             DoubleLengthZMKs = Convert.ToBoolean(list("DOUBLELENGTHZMKS"))
             LegacyMode = Convert.ToBoolean(list("LEGACYMODE"))
             ExpectTrailers = Convert.ToBoolean(list("EXPECTTRAILERS"))
+            HeaderLength = Convert.ToInt32(list("HEADERLENGTH"))
 
             If HostDefsDir = "" Then HostDefsDir = Utility.GetExecutingDirectory
             If VBsources = "" Then VBsources = Utility.GetExecutingDirectory
@@ -339,6 +343,7 @@ Public Class ThalesMain
         DoubleLengthZMKs = True
         LegacyMode = False
         ExpectTrailers = False
+        HeaderLength = 4
 
         StartUpCore("0007-E000", _
                     "0001", _
@@ -361,6 +366,7 @@ Public Class ThalesMain
         Resources.AddResource(Resources.DOUBLE_LENGTH_ZMKS, DoubleLengthZMKs)
         Resources.AddResource(Resources.LEGACY_MODE, LegacyMode)
         Resources.AddResource(Resources.EXPECT_TRAILERS, ExpectTrailers)
+        Resources.AddResource(Resources.HEADER_LENGTH, HeaderLength)
 
         'Make sure it ends with a directory separator, both for Windows and Linux.
         HostDefsDir = Utility.AppendDirectorySeparator(HostDefsDir)
@@ -718,8 +724,10 @@ Public Class ThalesMain
             'Utility.ByteArrayToHexString(Utility.GetBytesFromString(msg.MessageData), sHex)
             'Logger.MajorDebug("TEMP: Hex dump is [" + sHex + "]")
 
-            Dim messageHeader As String = msg.GetSubstring(4)
-            msg.AdvanceIndex(4)
+            'Dim messageHeader As String = msg.GetSubstring(4)
+            'msg.AdvanceIndex(4)
+            Dim messageHeader As String = msg.GetSubstring(HeaderLength)
+            msg.AdvanceIndex(HeaderLength)
             Dim commandCode As String = msg.GetSubstring(2)
             msg.AdvanceIndex(2)
 

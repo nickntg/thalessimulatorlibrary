@@ -106,6 +106,12 @@ Public Class Resources
     ''' <remarks></remarks>
     Public Const EXPECT_TRAILERS As String = "EXPECT_TRAILERS"
 
+    ''' <summary>
+    ''' Resource name for the header length.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const HEADER_LENGTH As String = "HEADER_LENGTH"
+
     Private Shared _lst As New SortedList(Of String, Object)
 
     ''' <summary>
