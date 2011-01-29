@@ -16,3 +16,4 @@ StartInAuthorizedState=True
 DoubleLengthZMKs=True
 LegacyMode=False
 ExpectTrailers=False
+HeaderLength=4
