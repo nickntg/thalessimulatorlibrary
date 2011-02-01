@@ -7,7 +7,7 @@
   <Field>
     <Name>PIN</Name>
     <Length>CLEAR_PIN_LENGTH</Length>
-    <Type>Numeric</Type>
+    <Type>Hexadecimal</Type>
   </Field>
 
   <Field>

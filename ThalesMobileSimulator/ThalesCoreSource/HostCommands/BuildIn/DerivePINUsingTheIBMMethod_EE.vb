@@ -13,7 +13,6 @@
 '' along with this program; if not, write to the Free Software
 '' Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '' 
-' Contributed by rjw - May 2010
 
 Imports ThalesSim.Core.Message
 Imports ThalesSim.Core.Cryptography
@@ -23,34 +22,32 @@ Imports ThalesSim.Core.PIN.PINBlockFormat
 Namespace HostCommands.BuildIn
 
     ''' <summary>
-    ''' Generates an IBM PIN Offset.
+    ''' Derives a PIN using the IBM method.
     ''' </summary>
     ''' <remarks>
-    ''' This class implements the DE Racal command.
+    ''' This class implements the EE Thales command.
     ''' </remarks>
-    <ThalesCommandCode("DE", "DF", "", "Generates an IBM PIN Offset")> _
-    Public Class GenerateIBMOffset_DE
+    <ThalesCommandCode("EE", "EF", "", "Derive a PIN using the IBM method.")> _
+    Public Class DerivePINUsingTheIBMMethod_EE
         Inherits AHostCommand
 
-        Private _pvk As String
-        Private _maxPinLen As String
-        Private _encPin As String
-        Private _clearPin As String
+        Private _pvkPair As String
+        Private _offsetValue As String
         Private _checkLen As String
         Private _acct As String
         Private _decTable As String
         Private _pinValData As String
-        Private _offsetValue As String
-        Private _expPinValData As String
+
         Dim _cryptAcctNum As String
         Dim _decimalisedAcctNum As String
         Dim _naturalPin As String
+        Dim _derivedPin As String
 
         ''' <summary>
         ''' Constructor.
         ''' </summary>
         ''' <remarks>
-        ''' The constructor sets up the DE message parsing fields.
+        ''' The constructor sets up the EE message parsing fields.
         ''' </remarks>
         Public Sub New()
             ReadXMLDefinitions()
@@ -66,8 +63,8 @@ Namespace HostCommands.BuildIn
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
             XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
             If XMLParseResult = ErrorCodes.ER_00_NO_ERROR Then
-                _pvk = kvp.ItemCombination("PVK Scheme", "PVK")
-                _encPin = kvp.Item("PIN")
+                _pvkPair = kvp.ItemCombination("PVK Scheme", "PVK")
+                _offsetValue = kvp.Item("Offset")
                 _checkLen = kvp.Item("Check Length")
                 _acct = kvp.Item("Account Number")
                 _decTable = kvp.Item("Decimalisation Table")
@@ -85,19 +82,19 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim cryptPVK As New HexKey(_pvk)
+            Dim cryptPVK As New HexKey(_pvkPair)
             Dim clearPVK As String = Utility.DecryptUnderLMK(cryptPVK.ToString, cryptPVK.Scheme, LMKPairs.LMKPair.Pair14_15, "0")
             If Utility.IsParityOK(clearPVK, Utility.ParityCheck.OddParity) = False Then
-                mr.AddElement(ErrorCodes.ER_10_SOURCE_KEY_PARITY_ERROR)
+                mr.AddElement(ErrorCodes.ER_11_DESTINATION_KEY_PARITY_ERROR)
                 Return mr
             End If
 
-            Dim clearPin As String = DecryptPINUnderHostStorage(_encPin)
-
-            If clearPin.Length < 4 OrElse clearPin.Length > 12 Then
-                mr.AddElement(ErrorCodes.ER_24_PIN_IS_FEWER_THAN_4_OR_MORE_THAN_12_DIGITS_LONG)
+            If Convert.ToInt32(_checkLen) < 4 Then
+                mr.AddElement(ErrorCodes.ER_15_INVALID_INPUT_DATA)
                 Return mr
             End If
+
+            Dim _expPinValData As String
 
             _expPinValData = _pinValData.Substring(0, _pinValData.IndexOf("N"))
             _expPinValData = _expPinValData + _acct.Substring(_acct.Length - 5, 5)
@@ -106,12 +103,12 @@ Namespace HostCommands.BuildIn
             _cryptAcctNum = TripleDES.TripleDESEncrypt(New HexKey(clearPVK), _expPinValData)
             _decimalisedAcctNum = Utility.Decimalise(_cryptAcctNum, _decTable)
             _naturalPin = _decimalisedAcctNum.Substring(0, Convert.ToInt32(_checkLen))
-            _offsetValue = Utility.SubtractNoBorrow(clearPin, _decimalisedAcctNum.Substring(0, 4))
+            _derivedPin = Utility.AddNoCarry(_naturalPin, _offsetValue.Substring(0, _offsetValue.IndexOf("F")))
 
-            Log.Logger.MinorInfo("Resulting Offset: " + _offsetValue)
+            Dim cryptPIN As String = EncryptPINForHostStorage(_derivedPin)
 
             mr.AddElement(ErrorCodes.ER_00_NO_ERROR)
-            mr.AddElement(_offsetValue.PadRight(12, "F"c))
+            mr.AddElement(cryptPIN)
 
             Return mr
 

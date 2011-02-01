@@ -45,12 +45,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_10F83A8479C24E1C8E8136C7F0441E38"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_125C86ABBD314683B45F276A3D8B6F49"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -94,6 +88,12 @@
         "Entry"
         {
         "MsmKey" = "8:_189CB329F20D4A2A8B4B8D9D46C13776"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_1B092BE479AE4C7990C4E15C38E0004B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -155,6 +155,12 @@
         {
         "MsmKey" = "8:_3A695488DD3F4DE2A013C978410FAE1F"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3C5FAC79D7087D7178911DAB16D45BA4"
+        "OwnerKey" = "8:_90689CBB59B74434903770B7EC5FB634"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -299,12 +305,6 @@
         {
         "MsmKey" = "8:_88F442CB9182467CBDFD21FEF9E8C6F0"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_89C71755C7D58193CC0B75532718E1B9"
-        "OwnerKey" = "8:_90689CBB59B74434903770B7EC5FB634"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -538,7 +538,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_89C71755C7D58193CC0B75532718E1B9"
+        "OwnerKey" = "8:_3C5FAC79D7087D7178911DAB16D45BA4"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -746,26 +746,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_10F83A8479C24E1C8E8136C7F0441E38"
-            {
-            "SourcePath" = "8:..\\ThalesCore\\XMLDefs\\HostCommands\\DerivePINUsingTheIBMMethod.xml"
-            "TargetName" = "8:DerivePINUsingTheIBMMethod.xml"
-            "Tag" = "8:"
-            "Folder" = "8:_E2AE7C7E8EB94A15A9630785EDFF29E4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_125C86ABBD314683B45F276A3D8B6F49"
             {
             "SourcePath" = "8:..\\ThalesCore\\XMLDefs\\HostCommands\\VerifyTerminalPINWithVISAAlgorithm_DC.xml"
@@ -910,6 +890,26 @@
             {
             "SourcePath" = "8:..\\ThalesCore\\XMLDefs\\HostCommands\\TranslateTMPTPKPVKFromZMKToLMK_FC.xml"
             "TargetName" = "8:TranslateTMPTPKPVKFromZMKToLMK_FC.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_E2AE7C7E8EB94A15A9630785EDFF29E4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1B092BE479AE4C7990C4E15C38E0004B"
+            {
+            "SourcePath" = "8:..\\ThalesCore\\XMLDefs\\HostCommands\\DerivePINUsingTheIBMMethod_EE.xml"
+            "TargetName" = "8:DerivePINUsingTheIBMMethod_EE.xml"
             "Tag" = "8:"
             "Folder" = "8:_E2AE7C7E8EB94A15A9630785EDFF29E4"
             "Condition" = "8:"
@@ -1124,6 +1124,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3C5FAC79D7087D7178911DAB16D45BA4"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ThalesCore, Version=0.9.3.0, Culture=neutral, PublicKeyToken=3b1da66c080a0b02, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_3C5FAC79D7087D7178911DAB16D45BA4"
+                    {
+                    "Name" = "8:ThalesCore.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:ThalesCore.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_34E5D042E47843C09BC22C7FE4328E6E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_41DD884C0E0C469B8A5384A48AA4DAAB"
@@ -1604,37 +1635,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_89C71755C7D58193CC0B75532718E1B9"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ThalesCore, Version=0.9.3.0, Culture=neutral, PublicKeyToken=3b1da66c080a0b02, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_89C71755C7D58193CC0B75532718E1B9"
-                    {
-                    "Name" = "8:ThalesCore.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:ThalesCore.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_34E5D042E47843C09BC22C7FE4328E6E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_90C8D4403F204214B49CBB0F5624F018"

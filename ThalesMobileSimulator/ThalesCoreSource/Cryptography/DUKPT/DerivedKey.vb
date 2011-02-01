@@ -19,15 +19,18 @@
 Namespace Cryptography.DUKPT
 
     Public Class DerivedKey
+        'Public Shared Ipek As String
+
         Public Shared Function calculateIPEK(ByVal ksn As KeySerialNumber, ByVal bdk As String) As String
-            Dim ipek As String
             Dim xorbdk As String
+            Dim ipek As String
             Dim iKsn As String = Utility.ANDHexStringsOffset(ksn.paddedKsn, "E00000", 14).Substring(0, 16)
 
 
             ipek = TripleDES.TripleDESEncrypt(New HexKey(bdk), iKsn)
             xorbdk = Utility.XORHexStringsFull(bdk.ToString, "C0C0C0C000000000C0C0C0C000000000")
-            ipek = ipek + TripleDES.TripleDESEncrypt(New HexKey(xorbdk), iKsn)
+            Ipek = Ipek + TripleDES.TripleDESEncrypt(New HexKey(xorbdk), iKsn)
+            ksn.IinitialKey = ipek
             Return ipek
         End Function
 
@@ -50,11 +53,14 @@ Namespace Cryptography.DUKPT
             '1) Copy IKEY into CURKEY.
             curkey = DUKPT.DerivedKey.calculateIPEK(ksn, bdk)
 
+
             '2) Copy KSNR into R8.
-            reg8str = ksn.unpaddedKsn
+            reg8str = ksn.unpaddedKsn.Substring(ksn.unpaddedKsn.Length - 16, 16)
 
             '3) Clear the 21 right-most bits of R8.
-            reg8str = Utility.ANDHexStringsOffset(reg8str, _E00000, 10)
+            'reg8str = Utility.ANDHexStringsOffset(reg8str, _E00000, 10)
+
+            reg8str = Utility.ANDHexStringsOffset(reg8str, _E00000, reg8str.Length - 6) '10
 
             '4) Copy the 21 right-most bits of KSNR into R3.
             reg3 = Utility.ANDHexStrings(ksn.transactionCounter, _1FFFFF)
@@ -65,7 +71,7 @@ Namespace Cryptography.DUKPT
             Do While Convert.ToInt32(shiftr) <> 0
                 temp = Utility.ANDHexStrings(shiftr, reg3)
                 If Convert.ToInt32(temp) <> 0 Then
-                    reg8str = Utility.ORHexStringsFull(reg8str, shiftr, 10)
+                    reg8str = Utility.ORHexStringsFull(reg8str, shiftr, reg8str.Length - 6) '10
                     r8astr = Utility.XORHexStringsFull(reg8str, curkey.Substring(16, 16))
                     r8astr = DES.DESEncrypt(curkey.Substring(0, 16), r8astr)
                     r8astr = Utility.XORHexStringsFull(r8astr, curkey.Substring(16, 16))

@@ -164,6 +164,8 @@
     <Compile Include="ThalesCoreSource\HostCommands\AHostCommand.vb" />
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\CancelAuthState_RA.vb" />
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\CommandChaining_NK.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\DecryptEncryptedPIN_NG.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\DerivePINUsingTheIBMMethod_EE.vb" />
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\EchoTest_B2.vb" />
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\EncryptClearPIN_BA.vb" />
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\ExportKey_A8.vb" />
@@ -227,6 +229,7 @@
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateZPKFromZMKToLMK_FA.vb" />
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyAndGenerateVISAPVV_CU.vb" />
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyAndTranslateMAC_ME.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyARQCAndOrGenerateARPC_KQ.vb" />
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyDukptPINWithIBMAlgorithm_CK.vb" />
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyDukptPINWithVisaAlgorithm_CM.vb" />
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\VerifyDynamicCVV_PM.vb" />
@@ -284,6 +287,8 @@
   <ItemGroup>
     <Content Include="keys.ico" />
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\CommandChaining_NK.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\DecryptEncryptedPIN_NG.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\DerivePINUsingTheIBMMethod_EE.xml" />
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\EchoTest_B2.xml" />
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\EncryptClearPIN_BA.xml" />
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\ExportKey_A8.xml" />
@@ -348,6 +353,7 @@
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateZPKFromZMKToLMK_FA.xml" />
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyAndGenerateVISAPVV_CU.xml" />
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyAndTranslateMAC_ME.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyARQCAndOrGenerateARPC_KQ.xml" />
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyDukptPINWithIBMAlgorithm_CK.xml" />
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyDukptPINWithVISAAlgorithm_CM.xml" />
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\VerifyDynamicCVV_PM.xml" />

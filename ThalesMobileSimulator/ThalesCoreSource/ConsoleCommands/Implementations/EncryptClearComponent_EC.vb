@@ -77,6 +77,9 @@ Namespace ConsoleCommands
             ValidateKeySchemeAndLength(keyLen, keyScheme, ks)
             ValidateKeyTypeCode(keyType, LMKKeyPair, var)
 
+            'Ensure odd parity on the key.
+            clearComponent = Utility.MakeParity(clearComponent, Utility.ParityCheck.OddParity)
+
             Dim cryptKey As String = Utility.EncryptUnderLMK(clearComponent, ks, LMKKeyPair, var)
             Dim chkVal As String = TripleDES.TripleDESEncrypt(New HexKey(clearComponent), ZEROES)
 
