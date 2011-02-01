@@ -667,7 +667,7 @@ Imports ThalesSim.Core.Message
         Dim offset As String = "0000FFFFFFFF"
 
         'Derive the PIN encrypted under LMK.
-        Dim result As String = TestTran(cryptPVK + offset + "04" + acct + decTable + pinValData, New DerivePINUsingTheIBMMethod())
+        Dim result As String = TestTran(cryptPVK + offset + "04" + acct + decTable + pinValData, New DerivePINUsingTheIBMMethod_EE())
         If Not result.StartsWith("00") Then
             Assert.Fail("Error deriving IBM PIN")
         End If

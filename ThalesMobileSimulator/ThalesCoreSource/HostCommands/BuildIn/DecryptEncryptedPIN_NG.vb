@@ -21,14 +21,14 @@ Imports ThalesSim.Core
 Namespace HostCommands.BuildIn
 
     ''' <summary>
-    ''' Encrypts a clear PIN.
+    ''' Decrypts an encrypted PIN.
     ''' </summary>
-    ''' <remarks>This implements the BA Thales command.</remarks>
-    <ThalesCommandCode("BA", "BB", "", "Encrypts a clear PIN")> _
-    Public Class EncryptClearPIN_BA
+    ''' <remarks>This implements the NG Thales command.</remarks>
+    <ThalesCommandCode("NG", "NH", "", "Decrypts an encrypted PIN.")> _
+    Public Class DecryptEncryptedPIN_NG
         Inherits AHostCommand
 
-        Private _clearPIN As String
+        Private _cryptPIN As String
         Private _acctNbr As String
 
         ''' <summary>
@@ -51,16 +51,8 @@ Namespace HostCommands.BuildIn
         Public Overrides Sub AcceptMessage(ByVal msg As Message.Message)
             XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
             If XMLParseResult = ErrorCodes.ER_00_NO_ERROR Then
-                _clearPIN = kvp.Item("PIN")
+                _cryptPIN = kvp.Item("PIN")
                 _acctNbr = kvp.Item("Account Number")
-
-                'As per http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=239725
-                'we want to accomodate clear PINs with an F.
-                If _clearPIN.IndexOf("F") > 0 Then
-                    Dim newPin As String = _clearPIN.Replace("F", "")
-                    _clearPIN = newPin.PadLeft(_clearPIN.Length, "0"c)
-                End If
-
             End If
         End Sub
 
@@ -74,20 +66,14 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            _clearPIN = _clearPIN.Substring(1)
+            Dim clearPIN As String = DecryptPINUnderHostStorage(_cryptPIN)
+            clearPIN = clearPIN.PadRight(_cryptPIN.Length, "F"c)
 
-            If _clearPIN.Length < 4 OrElse _clearPIN.Length > 12 Then
-                mr.AddElement(ErrorCodes.ER_24_PIN_IS_FEWER_THAN_4_OR_MORE_THAN_12_DIGITS_LONG)
-                Return mr
-            End If
-
-            Dim cryptPIN As String = EncryptPINForHostStorage(_clearPIN)
-
-            Log.Logger.MinorInfo("Clear PIN: " + _clearPIN)
-            Log.Logger.MinorInfo("Encrypted PIN: " + cryptPIN)
+            Log.Logger.MinorInfo("Encrypted PIN: " + _cryptPIN)
+            Log.Logger.MinorInfo("Clear PIN: " + clearPIN)
 
             mr.AddElement(ErrorCodes.ER_00_NO_ERROR)
-            mr.AddElement(cryptPIN)
+            mr.AddElement(clearPIN)
 
             Return mr
 

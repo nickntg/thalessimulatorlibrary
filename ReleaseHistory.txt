@@ -1,7 +1,7 @@
 ﻿ThalesSim Release History
 =========================
 
-xxxx/xx/xx: Version 0.9.3 beta released.
+2011/02/01: Version 0.9.3 beta released.
 ----------------------------------------
 * Added an implementation of the KQ command (contributed by nahsan, converted for XML definitions).
 * Added an implementation of the EE command.

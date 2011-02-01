@@ -76,12 +76,18 @@ Namespace HostCommands.BuildIn
         Public Overrides Function ConstructResponse() As Message.MessageResponse
             Dim mr As New MessageResponse
 
-            Dim LMKKeyPair As LMKPairs.LMKPair, var As Integer
+            Dim LMKKeyPair As LMKPairs.LMKPair, var As String = ""
 
             If _keyTypeCode = "FF" Then
-                If Me.ValidateKeyTypeCode(_keyType, LMKKeyPair, var.ToString, mr) = False Then Return mr
+                'Per http://thalessim.codeplex.com/workitem/8145, need to be more careful
+                'how var is passed by reference.
+                If Me.ValidateKeyTypeCode(_keyType, LMKKeyPair, var, mr) = False Then Return mr
             Else
-                Core.LMKPairs.LMKTypeCodeToLMKPair(_keyTypeCode, LMKKeyPair, var)
+                'http://thalessim.codeplex.com/workitem/8145
+                Dim intVar As Integer
+                Core.LMKPairs.LMKTypeCodeToLMKPair(_keyTypeCode, LMKKeyPair, intVar)
+                var = intVar.ToString
+
                 If LMKKeyPair < LMKPairs.LMKPair.Pair00_01 Then
                     mr.AddElement(ErrorCodes.ER_15_INVALID_INPUT_DATA)
                     Return mr
@@ -101,7 +107,7 @@ Namespace HostCommands.BuildIn
             End If
 
             Dim cryptKey As New HexKey(_key)
-            Dim clearKey As String = Utility.DecryptUnderLMK(cryptKey.ToString, cryptKey.Scheme, LMKKeyPair, var.ToString)
+            Dim clearKey As String = Utility.DecryptUnderLMK(cryptKey.ToString, cryptKey.Scheme, LMKKeyPair, var)
             If Utility.IsParityOK(clearKey, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes.ER_10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
