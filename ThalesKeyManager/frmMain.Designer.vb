@@ -23,21 +23,21 @@ Partial Class frmMain
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container
-        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("ZMK")
-        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("ZPK")
-        Dim TreeNode3 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("PVK")
-        Dim TreeNode4 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("TMK")
-        Dim TreeNode5 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("TPK")
-        Dim TreeNode6 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("CVK")
-        Dim TreeNode7 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("TAK")
-        Dim TreeNode8 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("ZAK")
-        Dim TreeNode9 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("BDK")
-        Dim TreeNode10 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("MK_AC")
-        Dim TreeNode11 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("MK_SMC")
-        Dim TreeNode12 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("MK_DAC")
-        Dim TreeNode13 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("MK_CVC3")
-        Dim TreeNode14 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("ZEK")
-        Dim TreeNode15 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Undefined")
+        Dim TreeNode16 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("ZMK")
+        Dim TreeNode17 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("ZPK")
+        Dim TreeNode18 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("PVK")
+        Dim TreeNode19 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("TMK")
+        Dim TreeNode20 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("TPK")
+        Dim TreeNode21 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("CVK")
+        Dim TreeNode22 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("TAK")
+        Dim TreeNode23 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("ZAK")
+        Dim TreeNode24 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("BDK")
+        Dim TreeNode25 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("MK_AC")
+        Dim TreeNode26 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("MK_SMC")
+        Dim TreeNode27 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("MK_DAC")
+        Dim TreeNode28 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("MK_CVC3")
+        Dim TreeNode29 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("ZEK")
+        Dim TreeNode30 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Undefined")
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
         Me.OFD = New System.Windows.Forms.OpenFileDialog
         Me.cmdLoadKeyFile = New System.Windows.Forms.Button
@@ -50,10 +50,15 @@ Partial Class frmMain
         Me.cmdAddClearKey = New System.Windows.Forms.Button
         Me.TV = New System.Windows.Forms.TreeView
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
-        Me.SFD = New System.Windows.Forms.SaveFileDialog
         Me.KC = New ThalesKeyManager.KeyControl
+        Me.SFD = New System.Windows.Forms.SaveFileDialog
+        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip
+        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem
+        Me.UseNormalStorageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
+        Me.UseOLDStorageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
         Me.gbLoad.SuspendLayout()
         Me.gbKeys.SuspendLayout()
+        Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'OFD
@@ -76,7 +81,7 @@ Partial Class frmMain
         '
         Me.gbLoad.Controls.Add(Me.cmdStartFresh)
         Me.gbLoad.Controls.Add(Me.cmdLoadKeyFile)
-        Me.gbLoad.Location = New System.Drawing.Point(12, 12)
+        Me.gbLoad.Location = New System.Drawing.Point(12, 27)
         Me.gbLoad.Name = "gbLoad"
         Me.gbLoad.Size = New System.Drawing.Size(840, 75)
         Me.gbLoad.TabIndex = 3
@@ -101,7 +106,7 @@ Partial Class frmMain
         Me.gbKeys.Controls.Add(Me.TV)
         Me.gbKeys.Controls.Add(Me.KC)
         Me.gbKeys.Enabled = False
-        Me.gbKeys.Location = New System.Drawing.Point(12, 93)
+        Me.gbKeys.Location = New System.Drawing.Point(12, 109)
         Me.gbKeys.Name = "gbKeys"
         Me.gbKeys.Size = New System.Drawing.Size(840, 316)
         Me.gbKeys.TabIndex = 4
@@ -150,45 +155,45 @@ Partial Class frmMain
         Me.TV.ImageList = Me.ImageList1
         Me.TV.Location = New System.Drawing.Point(6, 19)
         Me.TV.Name = "TV"
-        TreeNode1.Name = "Node0"
-        TreeNode1.Text = "ZMK"
-        TreeNode1.ToolTipText = "Zone Master Keys"
-        TreeNode2.Name = "Node1"
-        TreeNode2.Text = "ZPK"
-        TreeNode2.ToolTipText = "Zone PIN Keys"
-        TreeNode3.Name = "Node2"
-        TreeNode3.Text = "PVK"
-        TreeNode3.ToolTipText = "PIN Verification Keys"
-        TreeNode4.Name = "Node3"
-        TreeNode4.Text = "TMK"
-        TreeNode4.ToolTipText = "Terminal Master Keys"
-        TreeNode5.Name = "Node4"
-        TreeNode5.Text = "TPK"
-        TreeNode5.ToolTipText = "Terminal PIN Keys"
-        TreeNode6.Name = "Node5"
-        TreeNode6.Text = "CVK"
-        TreeNode6.ToolTipText = "Card Verification Keys"
-        TreeNode7.Name = "Node6"
-        TreeNode7.Text = "TAK"
-        TreeNode8.Name = "Node7"
-        TreeNode8.Text = "ZAK"
-        TreeNode9.Name = "Node8"
-        TreeNode9.Text = "BDK"
-        TreeNode9.ToolTipText = "Base Derivation Keys"
-        TreeNode10.Name = "Node9"
-        TreeNode10.Text = "MK_AC"
-        TreeNode11.Name = "Node10"
-        TreeNode11.Text = "MK_SMC"
-        TreeNode12.Name = "Node11"
-        TreeNode12.Text = "MK_DAC"
-        TreeNode13.Name = "Node12"
-        TreeNode13.Text = "MK_CVC3"
-        TreeNode14.Name = "Node13"
-        TreeNode14.Text = "ZEK"
-        TreeNode15.Name = "Node14"
-        TreeNode15.Text = "Undefined"
-        TreeNode15.ToolTipText = "Clear Keys"
-        Me.TV.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode1, TreeNode2, TreeNode3, TreeNode4, TreeNode5, TreeNode6, TreeNode7, TreeNode8, TreeNode9, TreeNode10, TreeNode11, TreeNode12, TreeNode13, TreeNode14, TreeNode15})
+        TreeNode16.Name = "Node0"
+        TreeNode16.Text = "ZMK"
+        TreeNode16.ToolTipText = "Zone Master Keys"
+        TreeNode17.Name = "Node1"
+        TreeNode17.Text = "ZPK"
+        TreeNode17.ToolTipText = "Zone PIN Keys"
+        TreeNode18.Name = "Node2"
+        TreeNode18.Text = "PVK"
+        TreeNode18.ToolTipText = "PIN Verification Keys"
+        TreeNode19.Name = "Node3"
+        TreeNode19.Text = "TMK"
+        TreeNode19.ToolTipText = "Terminal Master Keys"
+        TreeNode20.Name = "Node4"
+        TreeNode20.Text = "TPK"
+        TreeNode20.ToolTipText = "Terminal PIN Keys"
+        TreeNode21.Name = "Node5"
+        TreeNode21.Text = "CVK"
+        TreeNode21.ToolTipText = "Card Verification Keys"
+        TreeNode22.Name = "Node6"
+        TreeNode22.Text = "TAK"
+        TreeNode23.Name = "Node7"
+        TreeNode23.Text = "ZAK"
+        TreeNode24.Name = "Node8"
+        TreeNode24.Text = "BDK"
+        TreeNode24.ToolTipText = "Base Derivation Keys"
+        TreeNode25.Name = "Node9"
+        TreeNode25.Text = "MK_AC"
+        TreeNode26.Name = "Node10"
+        TreeNode26.Text = "MK_SMC"
+        TreeNode27.Name = "Node11"
+        TreeNode27.Text = "MK_DAC"
+        TreeNode28.Name = "Node12"
+        TreeNode28.Text = "MK_CVC3"
+        TreeNode29.Name = "Node13"
+        TreeNode29.Text = "ZEK"
+        TreeNode30.Name = "Node14"
+        TreeNode30.Text = "Undefined"
+        TreeNode30.ToolTipText = "Clear Keys"
+        Me.TV.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode16, TreeNode17, TreeNode18, TreeNode19, TreeNode20, TreeNode21, TreeNode22, TreeNode23, TreeNode24, TreeNode25, TreeNode26, TreeNode27, TreeNode28, TreeNode29, TreeNode30})
         Me.TV.SelectedImageIndex = 0
         Me.TV.Size = New System.Drawing.Size(203, 248)
         Me.TV.TabIndex = 5
@@ -200,11 +205,6 @@ Partial Class frmMain
         Me.ImageList1.Images.SetKeyName(0, "clear.ico")
         Me.ImageList1.Images.SetKeyName(1, "keys.ico")
         '
-        'SFD
-        '
-        Me.SFD.Filter = "Thales Key Manager files|*.txt"
-        Me.SFD.Title = "Select the Thales Key Manager file to write"
-        '
         'KC
         '
         Me.KC.Enabled = False
@@ -214,22 +214,60 @@ Partial Class frmMain
         Me.KC.Size = New System.Drawing.Size(619, 248)
         Me.KC.TabIndex = 0
         '
+        'SFD
+        '
+        Me.SFD.Filter = "Thales Key Manager files|*.txt"
+        Me.SFD.Title = "Select the Thales Key Manager file to write"
+        '
+        'MenuStrip1
+        '
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1})
+        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
+        Me.MenuStrip1.Name = "MenuStrip1"
+        Me.MenuStrip1.Size = New System.Drawing.Size(864, 24)
+        Me.MenuStrip1.TabIndex = 5
+        Me.MenuStrip1.Text = "MenuStrip1"
+        '
+        'ToolStripMenuItem1
+        '
+        Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UseNormalStorageToolStripMenuItem, Me.UseOLDStorageToolStripMenuItem})
+        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(77, 20)
+        Me.ToolStripMenuItem1.Text = "Key storage"
+        '
+        'UseNormalStorageToolStripMenuItem
+        '
+        Me.UseNormalStorageToolStripMenuItem.Name = "UseNormalStorageToolStripMenuItem"
+        Me.UseNormalStorageToolStripMenuItem.Size = New System.Drawing.Size(167, 22)
+        Me.UseNormalStorageToolStripMenuItem.Text = "Use normal storage"
+        '
+        'UseOLDStorageToolStripMenuItem
+        '
+        Me.UseOLDStorageToolStripMenuItem.Name = "UseOLDStorageToolStripMenuItem"
+        Me.UseOLDStorageToolStripMenuItem.Size = New System.Drawing.Size(167, 22)
+        Me.UseOLDStorageToolStripMenuItem.Text = "Use OLD storage"
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(864, 416)
+        Me.ClientSize = New System.Drawing.Size(864, 437)
         Me.Controls.Add(Me.gbKeys)
         Me.Controls.Add(Me.gbLoad)
+        Me.Controls.Add(Me.MenuStrip1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.MainMenuStrip = Me.MenuStrip1
         Me.MaximizeBox = False
         Me.Name = "frmMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Thales Key Manager"
         Me.gbLoad.ResumeLayout(False)
         Me.gbKeys.ResumeLayout(False)
+        Me.MenuStrip1.ResumeLayout(False)
+        Me.MenuStrip1.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Friend WithEvents OFD As System.Windows.Forms.OpenFileDialog
@@ -245,4 +283,8 @@ Partial Class frmMain
     Friend WithEvents cmdAddEncryptedKey As System.Windows.Forms.Button
     Friend WithEvents cmdAddClearKey As System.Windows.Forms.Button
     Friend WithEvents SFD As System.Windows.Forms.SaveFileDialog
+    Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
+    Friend WithEvents ToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents UseNormalStorageToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents UseOLDStorageToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 End Class

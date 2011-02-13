@@ -148,4 +148,11 @@ Public Class frmMain
         TV.SelectedNode = keyNode
     End Sub
 
+    Private Sub UseNormalStorageToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UseNormalStorageToolStripMenuItem.Click
+        ThalesSim.Core.Cryptography.LMK.LMKStorage.UseOldLMKStorage = False
+    End Sub
+
+    Private Sub UseOLDStorageToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UseOLDStorageToolStripMenuItem.Click
+        ThalesSim.Core.Cryptography.LMK.LMKStorage.UseOldLMKStorage = True
+    End Sub
 End Class

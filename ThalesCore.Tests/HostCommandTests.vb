@@ -687,6 +687,12 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("001234F", TestTran("12345678901201234", New DecryptEncryptedPIN_NG()))
     End Sub
 
+    <TestMethod()> _
+    Public Sub TranslateFromOldToNewStorage()
+        Assert.AreEqual("00UDBA4FF8A2DC7386947EC21165DE0F728", TestTran("021U9431CB85DB136EA608B44528E50C68E5", New TranslateKeysFromOldLMKToNewLMK_BW()))
+        Assert.AreEqual("00X0FDC679935C438AAC1214C40F5B59FA2", TestTran("021U9431CB85DB136EA608B44528E50C68E5;002;0X0", New TranslateKeysFromOldLMKToNewLMK_BW()))
+    End Sub
+
     'Dump major events to the console window.
     Private Sub o_MajorLogEvent(ByVal sender As Core.ThalesMain, ByVal s As String) Handles o.MajorLogEvent
         Console.WriteLine(s)
