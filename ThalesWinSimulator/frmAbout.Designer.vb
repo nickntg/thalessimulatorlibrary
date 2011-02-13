@@ -46,7 +46,7 @@ Partial Class frmAbout
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(71, 13)
         Me.Label2.TabIndex = 2
-        Me.Label2.Text = "Version 0.9.3"
+        Me.Label2.Text = "Version 0.9.4"
         '
         'lnk
         '
