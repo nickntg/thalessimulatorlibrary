@@ -7,6 +7,7 @@ xxxx/xx/xx: Version 0.9.4 beta released.
 * Added support for an old LMK storage set. This is stored in file and uses the same name as
   the storage file name but adds the extension ".old".
 * Added an implementation of the BW command.
+* Fixed incorrect variant for ZMK on A6 command.
 
 2011/02/01: Version 0.9.3 beta released.
 ----------------------------------------
