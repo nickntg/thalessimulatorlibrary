@@ -24,10 +24,10 @@ Namespace HostCommands.BuildIn
     ''' Prints PIN solicitation data.
     ''' </summary>
     ''' <remarks>
-    ''' This class implements the PE Racal command. The implementation does not
+    ''' This class implements the PE Thales command. The implementation does not
     ''' perform any processing.
     ''' </remarks>
-    <ThalesCommandCode("PE", "PB", "PZ", "Prints PIN solicitation data")> _
+    <ThalesCommandCode("PE", "PF", "PZ", "Prints PIN solicitation data")> _
     Public Class PrintPINSolicitationData_PE
         Inherits NoImplementation
 
