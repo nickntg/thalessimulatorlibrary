@@ -9,6 +9,7 @@ xxxx/xx/xx: Version 0.9.4 beta released.
 * Added an implementation of the BW command.
 * Fixed incorrect variant for ZMK on A6 command.
 * Fixed incorrect response code of PE command.
+* Fixed incorrect IV parsing on M6 and M8 commands.
 
 2011/02/01: Version 0.9.3 beta released.
 ----------------------------------------

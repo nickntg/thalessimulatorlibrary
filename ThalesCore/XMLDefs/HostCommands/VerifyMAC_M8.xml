@@ -62,6 +62,9 @@
     <Name>IV</Name>
     <Length>16</Length>
     <Type>Hexadecimal</Type>
+    <DependentField>Mode Flag</DependentField>
+    <DependentValue>1,2</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
   </Field>
 
   <Field>
