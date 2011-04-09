@@ -40,7 +40,7 @@ Namespace ConsoleCommands
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Overrides Function ProcessMessage() As String
-            Return "Message header length: 04" + vbCrLf + _
+            Return "Message header length: " + Convert.ToInt32(Resources.GetResource(Resources.HEADER_LENGTH)).ToString + vbCrLf + _
                    "Protocol: Ethernet" + vbCrLf + _
                    "Character format: ASCII" + vbCrLf + _
                    "IP address: " + System.Net.Dns.GetHostAddresses(My.Computer.Name)(0).ToString + vbCrLf + _
