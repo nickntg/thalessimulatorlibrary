@@ -46,7 +46,7 @@
     <Length>48</Length>
     <Type>Hexadecimal</Type>
     <DependentField>#replace# Scheme</DependentField>
-    <DependentValue>Y</DependentValue>
+    <DependentValue>T</DependentValue>
   </Field>
 
   <Field>
