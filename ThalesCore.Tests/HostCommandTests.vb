@@ -370,26 +370,26 @@ Imports ThalesSim.Core.Message
 
     <TestMethod()> _
     Public Sub TestGenerateMAC()
-        Assert.AreEqual("00170C2BDB", TestTran("AD2EE63F23D8F733givemeSOMEMACing", New GenerateMAC_MA))
+        Assert.AreEqual("00170C2BDB", TestTran("AD2EE63F23D8F733676976656D65534F4D454D4143696E67", New GenerateMAC_MA))
     End Sub
 
     <TestMethod()> _
     Public Sub TestVerifyMAC()
-        Assert.AreEqual("01", TestTran("AD2EE63F23D8F733170C2BDBgivemeSOMEMACinG", New VerifyMAC_MC))
-        Assert.AreEqual("00", TestTran("AD2EE63F23D8F733170C2BDBgivemeSOMEMACing", New VerifyMAC_MC))
+        Assert.AreEqual("01", TestTran("AD2EE63F23D8F733170C2BDB676976656D65534F4D454D4143696E68", New VerifyMAC_MC))
+        Assert.AreEqual("00", TestTran("AD2EE63F23D8F733170C2BDB676976656D65534F4D454D4143696E67", New VerifyMAC_MC))
     End Sub
 
     <TestMethod()> _
     Public Sub TestVerifyTranslateMAC()
-        Assert.AreEqual("00D7DA46FC", TestTran("AD2EE63F23D8F73395BB142B1A349EC7170C2BDBgivemeSOMEMACing", New VerifyAndTranslateMAC_ME))
-        Assert.AreEqual("01", TestTran("AD2EE63F23D8F73395BB142B1A349EC7170C2BDBgivemeSOMEMACinG", New VerifyAndTranslateMAC_ME))
+        Assert.AreEqual("00D7DA46FC", TestTran("AD2EE63F23D8F73395BB142B1A349EC7170C2BDB676976656D65534F4D454D4143696E67", New VerifyAndTranslateMAC_ME))
+        Assert.AreEqual("01", TestTran("AD2EE63F23D8F73395BB142B1A349EC7170C2BDB676976656D65534F4D454D4143696E68", New VerifyAndTranslateMAC_ME))
     End Sub
 
     <TestMethod()> _
     Public Sub TestGenerateLargeMAC()
-        Assert.AreEqual("007F805A8874D3B604", TestTran("1UE84C6E8F364BB594D2F59F6E8A6BBBF5010givemeSOMEMACing", New GenerateMACForLargeMessage_MQ))
-        Assert.AreEqual("00832239FEDDD43CE1", TestTran("2UE84C6E8F364BB594D2F59F6E8A6BBBF57F805A8874D3B604014givemeSOMEMOREMACing", New GenerateMACForLargeMessage_MQ))
-        Assert.AreEqual("00D2BF9C1E86E5BB14", TestTran("3UE84C6E8F364BB594D2F59F6E8A6BBBF5832239FEDDD43CE1014givemeSOMEMOREMACing", New GenerateMACForLargeMessage_MQ))
+        Assert.AreEqual("007F805A8874D3B604", TestTran("1UE84C6E8F364BB594D2F59F6E8A6BBBF5010676976656D65534F4D454D4143696E67", New GenerateMACForLargeMessage_MQ))
+        Assert.AreEqual("00832239FEDDD43CE1", TestTran("2UE84C6E8F364BB594D2F59F6E8A6BBBF57F805A8874D3B604014676976656D65534F4D454D4F52454D4143696E67", New GenerateMACForLargeMessage_MQ))
+        Assert.AreEqual("00D2BF9C1E86E5BB14", TestTran("3UE84C6E8F364BB594D2F59F6E8A6BBBF5832239FEDDD43CE1014676976656D65534F4D454D4F52454D4143696E67", New GenerateMACForLargeMessage_MQ))
     End Sub
 
     <TestMethod()> _
@@ -458,25 +458,18 @@ Imports ThalesSim.Core.Message
     Public Sub TestVerifyDynamicCVV()
         ''PM12U2E774AEF908AFBA19D44D4A29AD7BD61A5338830099990279;010385338830099990279D14052216323014001072F001122330011200000
         'Dim resss As String = TestTran("12U2E774AEF908AFBA19D44D4A29AD7BD61A5338830099990279;01019" + CreateBytesWithData("5338830099990279D14052216323014001072F") + "001122330011200000", New VerifyDynamicCVV_PM())
-        Assert.AreEqual("00", TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784804;00019" + CreateBytesWithData("5413123556784804D09061019005997722553F") + "0000077200005XX255", New VerifyDynamicCVV_PM))
-        Assert.AreEqual("00", TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784803;00019" + CreateBytesWithData("5413123556784803D09061019005997723333F") + "0000077200005XX333", New VerifyDynamicCVV_PM))
-        Assert.AreEqual("00", TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784801;00019" + CreateBytesWithData("5413123556784801D09061019005997722253F") + "0000077200028XX225", New VerifyDynamicCVV_PM))
+        Assert.AreEqual("00", TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784804;00019" + "5413123556784804D09061019005997722553F" + "0000077200005XX255", New VerifyDynamicCVV_PM))
+        Assert.AreEqual("00", TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784803;00019" + "5413123556784803D09061019005997723333F" + "0000077200005XX333", New VerifyDynamicCVV_PM))
+        Assert.AreEqual("00", TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784801;00019" + "5413123556784801D09061019005997722253F" + "0000077200028XX225", New VerifyDynamicCVV_PM))
 
         'In authorized mode, we want to return the dynamic CVV when the CVV verification fails.
         AuthorizedStateOn()
-        Assert.AreEqual("01225", TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784801;00019" + CreateBytesWithData("5413123556784801D09061019005997722253F") + "0000077200028XX000", New VerifyDynamicCVV_PM))
+        Assert.AreEqual("01225", TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784801;00019" + "5413123556784801D09061019005997722253F" + "0000077200028XX000", New VerifyDynamicCVV_PM))
 
         'When not in authorized mode, we want to just say that it failed.
         AuthorizedStateOff()
-        Assert.AreEqual("01", TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784801;00019" + CreateBytesWithData("5413123556784801D09061019005997722253F") + "0000077200028XX000", New VerifyDynamicCVV_PM))
+        Assert.AreEqual("01", TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784801;00019" + "5413123556784801D09061019005997722253F" + "0000077200028XX000", New VerifyDynamicCVV_PM))
     End Sub
-
-    'Get a track-II with a string representation and return a string with a byte representation.
-    Private Function CreateBytesWithData(ByVal trackData As String) As String
-        Dim b((trackData.Length \ 2) - 1) As Byte
-        Utility.HexStringToByteArray(trackData, b)
-        Return Utility.GetStringFromBytes(b)
-    End Function
 
     <TestMethod()> _
     Public Sub TestHashDataBlock()
@@ -490,32 +483,19 @@ Imports ThalesSim.Core.Message
 
     'Test a hash
     Private Sub TestHash(ByVal hashID As String, ByVal data As String, ByVal expectedResult As String)
-        Dim res As String = TestTran(hashID + data.Length.ToString.PadLeft(5, "0"c) + data, New HashDataBlock_GM)
+        Dim dataToSend As String = ""
+        Utility.ByteArrayToHexString(Utility.GetBytesFromString(data), dataToSend)
+        Dim res As String = TestTran(hashID + data.Length.ToString.PadLeft(5, "0"c) + dataToSend, New HashDataBlock_GM)
         If res.Substring(0, 2) <> "00" Then
             Assert.Fail("Hash failed")
         End If
 
-        Dim resBytes() As Byte = bytesFromString(res.Substring(2))
-        Dim hexResult As String = ""
-        Utility.ByteArrayToHexString(resBytes, hexResult)
+        Dim hexResult As String = res.Substring(2)
 
         If hexResult <> expectedResult Then
             Assert.Fail("Hash failed for hash id " + hashID)
         End If
     End Sub
-
-    'ASC-convert a string to a byte-array.
-    Private Function bytesFromString(ByVal s As String) As Byte()
-        Return Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetBytes(s)
-    End Function
-
-    Private Function ASCIIBytesFromString(ByVal s As String) As String
-        Dim ret As String = ""
-        For i As Integer = 0 To s.Length - 1 Step 2
-            ret = ret + Text.ASCIIEncoding.Default.GetChars(New Byte() {Convert.ToByte(s.Substring(i, 2))})
-        Next
-        Return ret
-    End Function
 
     <TestMethod()> _
     Public Sub TestEchoCommand()
@@ -652,11 +632,11 @@ Imports ThalesSim.Core.Message
         Dim tranData As String = "000000000000000000000000000080000000000000000000005344657800000007800001240000"
         Dim tranDataLength As String = ""
         Utility.ByteArrayToHexString(New Byte() {Convert.ToByte(tranData.Length / 2)}, tranDataLength)
-        Assert.AreEqual("00", TestTran("00001UA67981CE67F36A4BD2DE46BA17D6F59608" + Utility.toBCD("6414000000036701") + ASCIIBytesFromString("0007") + ASCIIBytesFromString("53446578") + tranDataLength + ASCIIBytesFromString(tranData) + ";" + CreateBytesWithData("1D8F14549EDED2D6") + CreateBytesWithData("0000000000000000") + CreateBytesWithData("00000000"), New VerifyTruncatedApplicationCryptogram_K2))
+        Assert.AreEqual("00", TestTran("00001UA67981CE67F36A4BD2DE46BA17D6F59608" + "6414000000036701" + "0007" + "53446578" + tranDataLength + tranData + ";" + "1D8F14549EDED2D6" + "0000000000000000" + "00000000", New VerifyTruncatedApplicationCryptogram_K2))
         AuthorizedStateOff()
-        Assert.AreEqual("01", TestTran("00001UA67981CE67F36A4BD2DE46BA17D6F59608" + Utility.toBCD("6414000000036701") + ASCIIBytesFromString("0007") + ASCIIBytesFromString("53446578") + tranDataLength + ASCIIBytesFromString(tranData) + ";" + CreateBytesWithData("1D8F14549EDED2D7") + CreateBytesWithData("0000000000000000") + CreateBytesWithData("00000000"), New VerifyTruncatedApplicationCryptogram_K2))
+        Assert.AreEqual("01", TestTran("00001UA67981CE67F36A4BD2DE46BA17D6F59608" + "6414000000036701" + "0007" + "53446578" + tranDataLength + tranData + ";" + "1D8F14549EDED2D7" + "0000000000000000" + "00000000", New VerifyTruncatedApplicationCryptogram_K2))
         AuthorizedStateOn()
-        Assert.AreEqual("01" + CreateBytesWithData("1D8F14549EDED2D6"), TestTran("00001UA67981CE67F36A4BD2DE46BA17D6F59608" + Utility.toBCD("6414000000036701") + ASCIIBytesFromString("0007") + ASCIIBytesFromString("53446578") + tranDataLength + ASCIIBytesFromString(tranData) + ";" + CreateBytesWithData("1D8F14549EDED2D7") + CreateBytesWithData("0000000000000000") + CreateBytesWithData("00000000"), New VerifyTruncatedApplicationCryptogram_K2))
+        Assert.AreEqual("01" + "1D8F14549EDED2D6", TestTran("00001UA67981CE67F36A4BD2DE46BA17D6F59608" + "6414000000036701" + "0007" + "53446578" + tranDataLength + tranData + ";" + "1D8F14549EDED2D7" + "0000000000000000" + "00000000", New VerifyTruncatedApplicationCryptogram_K2))
         AuthorizedStateOff()
     End Sub
 
@@ -694,6 +674,11 @@ Imports ThalesSim.Core.Message
     Public Sub TranslateFromOldToNewStorage()
         Assert.AreEqual("00UDBA4FF8A2DC7386947EC21165DE0F728", TestTran("021U9431CB85DB136EA608B44528E50C68E5", New TranslateKeysFromOldLMKToNewLMK_BW()))
         Assert.AreEqual("00X0FDC679935C438AAC1214C40F5B59FA2", TestTran("021U9431CB85DB136EA608B44528E50C68E5;002;0X0", New TranslateKeysFromOldLMKToNewLMK_BW()))
+    End Sub
+
+    <TestMethod()> _
+    Public Sub TestKQ()
+        Dim res As String = TestTran("00104497E5A5A6A77309FA2F630480682047617390010100100003123456781D0000000001230000000000000250000000000008260101050012345678;4285D29AB5C9D125", New VerifyARQCAndOrGenerateARPC_KQ())
     End Sub
 
     'Dump major events to the console window.
