@@ -73,7 +73,9 @@ Namespace HostCommands.BuildIn
                 _tranDataLen = kvp.Item("Transaction Data Length")
                 _tranData = kvp.Item("Transaction Data")
                 _arqc = kvp.Item("ARQCTCAAC")
-                _arc = kvp.Item("APC")
+                If _modeFlag <> "0" Then
+                    _arc = kvp.Item("ARC")
+                End If
             End If
         End Sub
 
@@ -100,7 +102,7 @@ Namespace HostCommands.BuildIn
             KeyA = UDK.Substring(0, 16)
             KeyB = UDK.Substring(16, 16)
 
-            counter1 = _tranData.Length
+            counter1 = _tranData.Length \ 2
             counter2 = _mkAC.Length
             counter = Convert.ToInt32(counter1 / (counter2 / 2))
 

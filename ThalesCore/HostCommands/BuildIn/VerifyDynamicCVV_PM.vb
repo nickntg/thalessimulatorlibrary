@@ -94,11 +94,7 @@ Namespace HostCommands.BuildIn
                 Dim ATC As Integer = Convert.ToInt32(_ATC)
                 Utility.ByteArrayToHexString(New Byte() {Convert.ToByte(ATC \ 256), Convert.ToByte(ATC Mod 256)}, _ATCHex)
 
-                'Track data is in binary. We want a hex string with this data.
-                _TrackClearData = ""
-                For i As Integer = 0 To _TrackData.Length - 1
-                    _TrackClearData = _TrackClearData + Utility.GetBytesFromString(_TrackData.Substring(i, 1))(0).ToString("X2")
-                Next
+                _TrackClearData = _TrackData
             End If
         End Sub
 

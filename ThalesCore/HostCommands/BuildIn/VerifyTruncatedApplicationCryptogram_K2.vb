@@ -105,7 +105,7 @@ Namespace HostCommands.BuildIn
                 Return mr
             End If
 
-            Dim PANAndPANSeq As String = Utility.fromBCD(_panpanSeqNo)
+            Dim PANAndPANSeq As String = _panpanSeqNo 'Utility.fromBCD(_panpanSeqNo)
             Dim DerivedKey As HexKey = Nothing
             Select Case _cardKeyDerivationMethod
                 Case KEY_DERIVATION_METHOD_A
@@ -114,19 +114,19 @@ Namespace HostCommands.BuildIn
                     DerivedKey = EMV.KeyDerivation.GetDerivedMasterKey(clearKey, PANAndPANSeq, EMV.MasterKeyDerivationMethods.EMV_4_2_OptionB)
             End Select
 
-            Dim ATC As String = GetDecodedBytes(Utility.GetBytesFromString(_atc))
-            Dim UN As String = GetDecodedBytes(Utility.GetBytesFromString(_un))
+            Dim ATC As String = _atc 'GetDecodedBytes(Utility.GetBytesFromString(_atc))
+            Dim UN As String = _un 'GetDecodedBytes(Utility.GetBytesFromString(_un))
             Dim SessionKey As HexKey = Nothing
             Select Case _sessionKeyDerivationMethod
                 Case SESSION_KEY_DERIVATION_METHOD_MASTERCARD
                     SessionKey = EMV.KeyDerivation.GetSessionKey(DerivedKey, ATC, UN, EMV.SessionKeyDerivationMethods.MasterCard_Method)
             End Select
 
-            Dim TranData As String = GetDecodedBytes(Utility.GetBytesFromString(_transactionData))
+            Dim TranData As String = _transactionData  'GetDecodedBytes(Utility.GetBytesFromString(_transactionData))
             Dim DerivedAC As String = GetMac(TranData, SessionKey)
 
-            Dim passedAC As String = ""
-            Utility.ByteArrayToHexString(Utility.GetBytesFromString(_truncatedAC), passedAC)
+            Dim passedAC As String = _truncatedAC '""
+            'Utility.ByteArrayToHexString(Utility.GetBytesFromString(_truncatedAC), passedAC)
 
             Log.Logger.MinorInfo("Crypt IMK: " + cryptKey.ToString)
             Log.Logger.MinorInfo("Clear IMK: " + clearKey.ToString)
@@ -143,7 +143,8 @@ Namespace HostCommands.BuildIn
             Else
                 mr.AddElement(ErrorCodes.ER_01_VERIFICATION_FAILURE)
                 If IsInAuthorizedState() Then
-                    mr.AddElement(GetEncodedBytes(DerivedAC))
+                    mr.AddElement(DerivedAC)
+                    'mr.AddElement(GetEncodedBytes(DerivedAC))
                 End If
             End If
 
