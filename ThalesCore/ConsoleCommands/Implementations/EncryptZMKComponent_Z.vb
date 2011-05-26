@@ -57,7 +57,7 @@ Namespace ConsoleCommands
             Dim encrKey As String = Utility.EncryptUnderLMK(hxkey.ToString, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, LMKPairs.LMKPair.Pair04_05, "0")
             Dim chkVal As String = TripleDES.TripleDESEncrypt(hxkey, ZEROES)
 
-            Return "Encrypted ZMK component: " + MakeKeyPresentable(hxkey.ToString) + vbCrLf + _
+            Return "Encrypted ZMK component: " + MakeKeyPresentable(encrKey.ToString) + vbCrLf + _
                    "Key check value: " + MakeCheckValuePresentable(chkVal) + vbCrLf
         End Function
 
