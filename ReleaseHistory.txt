@@ -13,6 +13,7 @@ xxxx/xx/xx: Version 0.9.4 beta released.
 * Fixed incorrect display of header length on QH command.
 * Fixed incorrect declaration in XML definitions that resulted in unusable triple-length keys.
 * Fixed incorrect handling of BINARY data in several commands.
+* Console command Z now returns the encrypted and not the clear component.
 
 2011/02/01: Version 0.9.3 beta released.
 ----------------------------------------
