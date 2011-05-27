@@ -51,6 +51,7 @@
     <Import Include="System.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleCommandTests.vb" />
     <Compile Include="EncryptionTests.vb" />
     <Compile Include="HostCommandTests.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
