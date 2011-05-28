@@ -208,7 +208,12 @@ Namespace Message.XML
 
                             If fld.Length <> 0 Then
                                 'Normal read.
-                                val = msg.MessageData.Substring(msg.CurrentIndex, fld.Length)
+                                If (fld.MessageFieldType <> MessageFieldTypes.Binary) Then
+                                    val = msg.MessageData.Substring(msg.CurrentIndex, fld.Length)
+                                Else
+                                    'For binary, we expect 2 hex characters.
+                                    val = msg.MessageData.Substring(msg.CurrentIndex, fld.Length * 2)
+                                End If
                             Else
                                 'Read the rest of the message.
                                 val = msg.MessageData.Substring(msg.CurrentIndex, msg.CharsLeft)
@@ -227,7 +232,7 @@ Namespace Message.XML
 
                                 'Check format.
                                 Select Case fld.MessageFieldType
-                                    Case MessageFieldTypes.Hexadecimal
+                                    Case MessageFieldTypes.Hexadecimal, MessageFieldTypes.Binary
                                         If Utility.IsHexString(val) = False Then
                                             Log.Logger.MinorDebug(String.Format("Invalid value detected for field [{0}].", fld.Name))
                                             Log.Logger.MinorDebug(String.Format("Received [{0}] but expected a hexadecimal value.", val))
@@ -261,7 +266,11 @@ Namespace Message.XML
                             End If
 
                             'Advance the message index.
-                            msg.AdvanceIndex(fld.Length)
+                            If fld.MessageFieldType <> MessageFieldTypes.Binary Then
+                                msg.AdvanceIndex(fld.Length)
+                            Else
+                                msg.AdvanceIndex(fld.Length * 2)
+                            End If
 
                             'Mark this field as parsed if the repetitions are done.
                             If j = repetitions Then fld.Skip = True

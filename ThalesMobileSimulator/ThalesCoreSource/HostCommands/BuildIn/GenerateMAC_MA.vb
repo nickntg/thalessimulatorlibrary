@@ -55,7 +55,8 @@ Namespace HostCommands.BuildIn
             XML.MessageParser.Parse(msg, XMLMessageFields, kvp, XMLParseResult)
             If XMLParseResult = ErrorCodes.ER_00_NO_ERROR Then
                 _tak = kvp.ItemCombination("TAC Scheme", "TAC")
-                _data = Utility.GetBytesFromString(kvp.Item("Data"))
+                ReDim _data((kvp.Item("Data").Length - 1) \ 2)
+                Utility.HexStringToByteArray(kvp.Item("Data"), _data)
             End If
         End Sub
 

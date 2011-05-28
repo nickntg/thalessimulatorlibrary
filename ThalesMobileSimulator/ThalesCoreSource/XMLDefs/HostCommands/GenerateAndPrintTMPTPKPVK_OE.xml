@@ -11,7 +11,7 @@
     <ValidValue>|</ValidValue>
     <SkipUntilValid>true</SkipUntilValid>
   </Field>
-
+  
   <Field>
     <Name>Reserved</Name>
     <Length>1</Length>

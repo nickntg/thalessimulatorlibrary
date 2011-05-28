@@ -1,7 +1,7 @@
 ﻿ThalesSim Release History
 =========================
 
-xxxx/xx/xx: Version 0.9.4 beta released.
+2011/05/28: Version 0.9.4 beta released.
 ----------------------------------------
 * Fixed incorrect definition of the OE command.
 * Added support for an old LMK storage set. This is stored in file and uses the same name as
@@ -14,6 +14,7 @@ xxxx/xx/xx: Version 0.9.4 beta released.
 * Fixed incorrect declaration in XML definitions that resulted in unusable triple-length keys.
 * Fixed incorrect handling of BINARY data in several commands.
 * Console command Z now returns the encrypted and not the clear component.
+* Added unit tests for console commands.
 
 2011/02/01: Version 0.9.3 beta released.
 ----------------------------------------
