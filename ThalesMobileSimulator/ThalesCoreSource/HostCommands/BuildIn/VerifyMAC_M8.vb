@@ -58,7 +58,7 @@ Namespace HostCommands.BuildIn
                 PaddingMethod = kvp.Item("Padding Method")
                 keyType = kvp.Item("Key Type")
                 key = kvp.ItemCombination("Key Scheme", "Key")
-                IV = kvp.Item("IV")
+                IV = kvp.ItemOptional("IV")
                 msgLength = kvp.Item("Message Length")
                 strmsg = kvp.Item("Message")
                 expectedMAC = kvp.Item("MAC")

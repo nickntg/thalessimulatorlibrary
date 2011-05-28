@@ -208,6 +208,7 @@
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateCVKFromLMKToZMK_AU.vb" />
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateCVKFromZMKToLMK_AW.vb" />
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateKeyScheme_B0.vb" />
+    <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslateKeysFromOldLMKToNewLMK_BW.vb" />
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslatePINFromDUKPTToZPK3DES_G0.vb" />
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslatePINFromDUKTPToZPK_CI.vb" />
     <Compile Include="ThalesCoreSource\HostCommands\BuildIn\TranslatePINFromLMKToZPK_JG.vb" />
@@ -332,6 +333,7 @@
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateCVKFromLMKToZMK_AU.xml" />
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateCVKFromZMKToLMK_AW.xml" />
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateKeyScheme_B0.xml" />
+    <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslateKeysFromOldLMKToNewLMK_BW.xml" />
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslatePINFromDUKPTToZPK3DES_G0.xml" />
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslatePINFromDUKPTToZPK_CI.xml" />
     <Content Include="ThalesCoreSource\XMLDefs\HostCommands\TranslatePINFromLMKToZPK_JG.xml" />

@@ -229,7 +229,7 @@ Namespace ConsoleCommands
                     End Select
                 Case "3"
                     Select Case keyScheme
-                        Case "X"
+                        Case "Y"
                             ks = KeySchemeTable.KeyScheme.TripleLengthKeyAnsi
                         Case "T"
                             ks = KeySchemeTable.KeyScheme.TripleLengthKeyVariant

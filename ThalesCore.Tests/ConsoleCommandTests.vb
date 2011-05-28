@@ -105,6 +105,81 @@ Imports ThalesSim.Core.ConsoleCommands
                         TestCommand(New String() {k.ToString(), "S", ZEROES}, New TripleLengthDESCalculator_T()))
     End Sub
 
+    <TestMethod()> _
+    Public Sub TestEncryptClearComponent()
+        AuthorizedStateOn()
+        Dim k As HexKey = GetRandomKey(HexKey.KeyLength.DoubleLength)
+        Assert.AreEqual("Encrypted Component: " + Breakup(Utility.EncryptUnderLMK(k.ToString(), KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, LMKPairs.LMKPair.Pair04_05, "0")) + vbCrLf + _
+                        "Key check value: " + Breakup(TripleDES.TripleDESEncrypt(k, ZEROES).Substring(0, 6)), _
+                        TestCommand(New String() {"000", "U", k.ToString()}, New EncryptClearComponent_EC()))
+
+        Assert.AreEqual("Encrypted Component: " + Breakup(Utility.EncryptUnderLMK(k.ToString(), KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, LMKPairs.LMKPair.Pair06_07, "0")) + vbCrLf + _
+                        "Key check value: " + Breakup(TripleDES.TripleDESEncrypt(k, ZEROES).Substring(0, 6)), _
+                        TestCommand(New String() {"001", "X", k.ToString()}, New EncryptClearComponent_EC()))
+
+        k = GetRandomKey(HexKey.KeyLength.TripleLength)
+        Assert.AreEqual("Encrypted Component: " + Breakup(Utility.EncryptUnderLMK(k.ToString(), KeySchemeTable.KeyScheme.TripleLengthKeyAnsi, LMKPairs.LMKPair.Pair26_27, "0")) + vbCrLf + _
+                        "Key check value: " + Breakup(TripleDES.TripleDESEncrypt(k, ZEROES).Substring(0, 6)), _
+                        TestCommand(New String() {"008", "Y", k.ToString()}, New EncryptClearComponent_EC()))
+    End Sub
+
+    <TestMethod()> _
+    Public Sub TestExportKey()
+        AuthorizedStateOn()
+        Dim k As HexKey = Nothing, ZMK As HexKey = Nothing, cryptZMK As String = "", cryptKey As String = "", cryptUnderZMK As String = ""
+        GenerateTestKeyAndZMKKey(k, LMKPairs.LMKPair.Pair06_07, KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, ZMK, cryptZMK, cryptKey, cryptUnderZMK)
+        Assert.AreEqual("Key encrypted under ZMK: " + Breakup(cryptUnderZMK) + vbCrLf + _
+                        "Key Check Value: " + Breakup(TripleDES.TripleDESEncrypt(k, ZEROES).Substring(0, 6)), _
+                        TestCommand(New String() {"001", "U", cryptZMK, cryptKey}, New ExportKey_KE()))
+    End Sub
+
+    <TestMethod()> _
+    Public Sub TestFormKeyFromComponents()
+        AuthorizedStateOn()
+        Dim cmp1 As HexKey = GetRandomKey(HexKey.KeyLength.DoubleLength)
+        Dim cmp2 As HexKey = GetRandomKey(HexKey.KeyLength.DoubleLength)
+        Dim cmp3 As HexKey = GetRandomKey(HexKey.KeyLength.DoubleLength)
+        Dim zmk As HexKey = New HexKey(Utility.XORHexStringsFull(Utility.XORHexStringsFull(cmp1.ToString, cmp2.ToString), cmp3.ToString))
+        Dim cryptZMK As String = Utility.EncryptUnderLMK(zmk.ToString, KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, LMKPairs.LMKPair.Pair04_05, "0")
+        Assert.AreEqual("Encrypted key: " + Breakup(cryptZMK) + vbCrLf + _
+                        "Key check value: " + Breakup(TripleDES.TripleDESEncrypt(zmk, ZEROES).Substring(0, 6)), _
+                        TestCommand(New String() {"2", "000", "U", "X", "3", cmp1.ToString, cmp2.ToString, cmp3.ToString}, New FormKeyFromComponents_FK()))
+    End Sub
+
+    <TestMethod()> _
+    Public Sub TestZMKFromEncryptedComponents()
+        AuthorizedStateOn()
+        Dim cmp1 As HexKey = GetRandomKey(HexKey.KeyLength.DoubleLength)
+        Dim cmp2 As HexKey = GetRandomKey(HexKey.KeyLength.DoubleLength)
+        Dim cmp3 As HexKey = GetRandomKey(HexKey.KeyLength.DoubleLength)
+        Dim zmk As HexKey = New HexKey(Utility.XORHexStringsFull(Utility.XORHexStringsFull(cmp1.ToString, cmp2.ToString), cmp3.ToString))
+        Dim cryptZMK As String = Utility.EncryptUnderLMK(zmk.ToString, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, LMKPairs.LMKPair.Pair04_05, "0")
+        Assert.AreEqual("Encrypted key: " + Breakup(cryptZMK) + vbCrLf + _
+                        "Key check value: " + Breakup(TripleDES.TripleDESEncrypt(zmk, ZEROES).Substring(0, 6)), _
+                        TestCommand(New String() {"3", Utility.RemoveKeyType(Utility.EncryptUnderLMK(cmp1.ToString, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, LMKPairs.LMKPair.Pair04_05, "0")), _
+                                                       Utility.RemoveKeyType(Utility.EncryptUnderLMK(cmp2.ToString, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, LMKPairs.LMKPair.Pair04_05, "0")), _
+                                                       Utility.RemoveKeyType(Utility.EncryptUnderLMK(cmp3.ToString, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, LMKPairs.LMKPair.Pair04_05, "0"))}, New FormZMKFromEncryptedComponents_D()))
+    End Sub
+
+    <TestMethod()> _
+    Public Sub TestImportKey()
+        AuthorizedStateOn()
+        Dim k As HexKey = Nothing, ZMK As HexKey = Nothing, cryptZMK As String = "", cryptKey As String = "", cryptUnderZMK As String = ""
+        GenerateTestKeyAndZMKKey(k, LMKPairs.LMKPair.Pair06_07, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, ZMK, cryptZMK, cryptKey, cryptUnderZMK)
+        Assert.AreEqual("Key under LMK: " + Breakup(cryptKey) + vbCrLf + _
+                        "Key Check Value: " + Breakup(TripleDES.TripleDESEncrypt(k, ZEROES).Substring(0, 6)), _
+                        TestCommand(New String() {"001", "X", cryptZMK, cryptUnderZMK}, New ImportKey_IK()))
+    End Sub
+
+    'Generate a randoom key, a random zmk and encrypt key under zmk and both under lmk.
+    Private Sub GenerateTestKeyAndZMKKey(ByRef k As HexKey, ByVal kLMK As LMKPairs.LMKPair, ByVal kScheme As KeySchemeTable.KeyScheme, ByRef ZMK As HexKey, ByRef cryptZMK As String, ByRef cryptKey As String, ByRef cryptUnderZMK As String)
+        k = GetRandomKey(HexKey.KeyLength.DoubleLength)
+        ZMK = GetRandomKey(HexKey.KeyLength.DoubleLength)
+        cryptZMK = Utility.EncryptUnderLMK(ZMK.ToString, KeySchemeTable.KeyScheme.DoubleLengthKeyVariant, LMKPairs.LMKPair.Pair04_05, "0")
+        cryptKey = Utility.EncryptUnderLMK(k.ToString, kScheme, kLMK, "0")
+        cryptUnderZMK = Utility.EncryptUnderZMK(ZMK.ToString, k.ToString, kScheme)
+    End Sub
+
     'Generates a random key of specified length.
     Private Function GetRandomKey(ByVal l As HexKey.KeyLength) As HexKey
         Select Case l
@@ -120,10 +195,19 @@ Imports ThalesSim.Core.ConsoleCommands
     'Enters a space to a string every four characters.
     Private Function Breakup(ByVal s As String) As String
         Dim ret As String = ""
-        For i As Integer = 0 To s.Length - 1 Step 4
-            ret = ret + s.Substring(i, 4) + " "
+        Dim key As String = Utility.RemoveKeyType(s)
+        For i As Integer = 0 To key.Length - 1 Step 4
+            If i + 4 <= key.Length Then
+                ret = ret + key.Substring(i, 4) + " "
+            Else
+                ret = ret + key.Substring(i)
+            End If
         Next
-        Return ret
+        If key <> s Then
+            Return s.Substring(0, 1) + " " + ret
+        Else
+            Return ret
+        End If
     End Function
 
     'Put the simulator in the authorized state.

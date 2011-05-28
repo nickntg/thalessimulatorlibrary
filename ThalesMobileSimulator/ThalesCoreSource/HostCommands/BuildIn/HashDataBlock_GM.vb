@@ -64,7 +64,8 @@ Namespace HostCommands.BuildIn
             If XMLParseResult = ErrorCodes.ER_00_NO_ERROR Then
                 _hashID = kvp.Item("Hash Identifier")
                 Dim dataLen As String = kvp.Item("Data Length")
-                _bytes = Utility.GetBytesFromString(kvp.Item("Message Data"))
+                ReDim _bytes((kvp.Item("Message Data").Length - 1) \ 2)
+                Utility.HexStringToByteArray(kvp.Item("Message Data"), _bytes)
                 If Convert.ToInt32(dataLen) <> _bytes.GetLength(0) Then
                     XMLParseResult = ErrorCodes.ER_80_DATA_LENGTH_ERROR
                 End If
@@ -94,17 +95,18 @@ Namespace HostCommands.BuildIn
                     hash = New Security.Cryptography.SHA1Managed
                 Case MD5
                     hash = New Security.Cryptography.MD5CryptoServiceProvider
-                    'These are not supported in the mobile version.
-                    'Case SHA_256
-                    '    hash = New Security.Cryptography.SHA256Managed
-                    'Case SHA_384
-                    '    hash = New Security.Cryptography.SHA384Managed
-                    'Case SHA_512
-                    '    hash = New Security.Cryptography.SHA512Managed
+                'These are not supported in the mobile version.
+                'Case SHA_256
+                '    hash = New Security.Cryptography.SHA256Managed
+                'Case SHA_384
+                '    hash = New Security.Cryptography.SHA384Managed
+                'Case SHA_512
+                '    hash = New Security.Cryptography.SHA512Managed
             End Select
 
             Dim result() As Byte = hash.ComputeHash(_bytes)
-            Dim resultStr As String = Utility.GetStringFromBytes(result)
+            Dim resultStr As String = ""
+            Utility.ByteArrayToHexString(result, resultStr)
 
             mr.AddElement(ErrorCodes.ER_00_NO_ERROR)
             mr.AddElement(resultStr)

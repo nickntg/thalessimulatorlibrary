@@ -88,7 +88,8 @@ Namespace HostCommands.BuildIn
             If ValidateFunctionRequirement(KeyTypeTable.KeyFunction.Export, LMKKeyPair, var, mr) = False Then Return mr
 
             Dim cryptZMK As New HexKey(_zmk)
-            Dim clearZMK As String = Utility.DecryptUnderLMK(cryptZMK.ToString, cryptZMK.Scheme, LMKPairs.LMKPair.Pair04_05, var)
+            'Changed to use correct ZMK variant and not target key variant.
+            Dim clearZMK As String = Utility.DecryptUnderLMK(cryptZMK.ToString, cryptZMK.Scheme, LMKPairs.LMKPair.Pair04_05, "0")
             If Utility.IsParityOK(clearZMK, Utility.ParityCheck.OddParity) = False Then
                 mr.AddElement(ErrorCodes.ER_10_SOURCE_KEY_PARITY_ERROR)
                 Return mr
