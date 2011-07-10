@@ -1,6 +1,10 @@
 ﻿ThalesSim Release History
 =========================
 
+xxxx/xx/xx: Version 0.9.5 beta released.
+----------------------------------------
+* Fixed incorrect key scheme definition of A0 command.
+
 2011/05/28: Version 0.9.4 beta released.
 ----------------------------------------
 * Fixed incorrect definition of the OE command.

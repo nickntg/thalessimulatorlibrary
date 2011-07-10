@@ -19,7 +19,7 @@
   <Field>
     <Name>Key Scheme LMK</Name>
     <Length>1</Length>
-    <Type>Hexadecimal</Type>
+    <Type>Character</Type>
   </Field>
 
   <Field>
@@ -33,7 +33,7 @@
   <Field>
     <Name>Key Scheme ZMK</Name>
     <Length>1</Length>
-    <Type>Hexadecimal</Type>
+    <Type>Character</Type>
     <DependentField>Mode</DependentField>
     <DependentValue>1</DependentValue>
     <ExclusiveDependency>false</ExclusiveDependency>
