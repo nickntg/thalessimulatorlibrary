@@ -109,6 +109,8 @@
     <Compile Include="Cryptography\MAC\ISO9797MAC.vb" />
     <Compile Include="Cryptography\MAC\ISO9797Pad.vb" />
     <Compile Include="Cryptography\MAC\ISO9797PaddingMethods.vb" />
+    <Compile Include="Cryptography\RSA\RSAFunctions.vb" />
+    <Compile Include="Cryptography\RSA\RSAKey.vb" />
     <Compile Include="Exceptions\XDecryptError.vb" />
     <Compile Include="Exceptions\XEncryptError.vb" />
     <Compile Include="Exceptions\XFunctionNotPermitted.vb" />
@@ -139,6 +141,7 @@
     <Compile Include="HostCommands\BuildIn\GenerateIBMOffset_DE.vb" />
     <Compile Include="HostCommands\BuildIn\GenerateMAC_M6.vb" />
     <Compile Include="HostCommands\BuildIn\HashDataBlock_GM.vb" />
+    <Compile Include="HostCommands\BuildIn\RSAEncryptTo3DES_SA.vb" />
     <Compile Include="HostCommands\BuildIn\TranslateBDKFromLMKToZMK_DY.vb" />
     <Compile Include="HostCommands\BuildIn\TranslateBDKFromZMKToLMK_DW.vb" />
     <Compile Include="HostCommands\BuildIn\TranslateKeysFromOldLMKToNewLMK_BW.vb" />
@@ -329,6 +332,7 @@
     <Content Include="XMLDefs\HostCommands\MultiFormatZMK.xml" />
     <Content Include="XMLDefs\HostCommands\MultiFormatKey.xml" />
     <Content Include="XMLDefs\HostCommands\PINBlockFormat.xml" />
+    <Content Include="XMLDefs\HostCommands\RSAEncryptTo3DES_SA.xml" />
     <Content Include="XMLDefs\HostCommands\SetHSMDelay_LG.xml" />
     <Content Include="XMLDefs\HostCommands\SingleCommand.xml" />
     <Content Include="XMLDefs\HostCommands\TranslateBDKFromLMKToZMK_DY.xml" />

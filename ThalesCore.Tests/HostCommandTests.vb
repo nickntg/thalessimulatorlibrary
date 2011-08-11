@@ -681,6 +681,18 @@ Imports ThalesSim.Core.Message
         Dim res As String = TestTran("00104497E5A5A6A77309FA2F630480682047617390010100100003123456781D0000000001230000000000000250000000000008260101050012345678;4285D29AB5C9D125", New VerifyARQCAndOrGenerateARPC_KQ())
     End Sub
 
+    <TestMethod()> _
+    Public Sub TestCustomRSATo3DESTranslationSA()
+        Dim acct As String = "407000025321"
+        Dim clearPIN As String = "1234"
+        Dim clearZPK As String = "C7152C20BC2C830EA7EC9E8334ABE3FE"
+        Dim cryptZPK As String = "U1EF828AA8F6B80EB83E19FBC373F3A85"
+        Dim RSAPB As String = "8F106A7ED0E7240E6C66B05720AC1EF9CFC0C6533154FAEA27FE1A58317A33CEC00B252C5240BBEA6B2E54DF9DB76202F1F4C3A4A4A784D42D38897BD6139028B706E9C576E5F5895E9840AE94E4FEB46820D8E06458617A80149C97FE8C7E00360A4ADDF43CE8113B4C34A825F711D18E1FD085EDF39A2E0D7452167F49FA72"
+        Dim expectedClearPB As String = PIN.PINBlockFormat.ToPINBlock(clearPIN, acct, PIN.PINBlockFormat.PIN_Block_Format.AnsiX98)
+        Dim expectedCryptPB As String = Cryptography.TripleDES.TripleDESEncrypt(New Cryptography.HexKey(clearZPK), expectedClearPB)
+        Assert.AreEqual("00" + expectedCryptPB, TestTran("010101" + acct + (RSAPB.Length \ 2).ToString.PadLeft(4, "0"c) + RSAPB + ";" + cryptZPK + "01", New RSAEncryptTo3DES_SA()))
+    End Sub
+
     'Dump major events to the console window.
     Private Sub o_MajorLogEvent(ByVal sender As Core.ThalesMain, ByVal s As String) Handles o.MajorLogEvent
         Console.WriteLine(s)

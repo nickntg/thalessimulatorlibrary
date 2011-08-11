@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Translates a PIN from RSA to 3DES encryption</CommandName>
+  <Request>SA</Request>
+  <Response>SB</Response>
+
+  <Field>
+    <Name>Pad Mode Identifier</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+    <ValidValue>01</ValidValue>
+    <RejectionCodeIfInvalid>50</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>Source PIN Block Format</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+    <ValidValue>01</ValidValue>
+    <RejectionCodeIfInvalid>23</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>Destination PIN Block Format</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Account Number</Name>
+    <Length>12</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>RSA Encrypted PIN Block Length</Name>
+    <Length>4</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>RSA Encrypted PIN Block</Name>
+    <Length>1</Length>
+    <DynamicFieldLength>RSA Encrypted PIN Block Length</DynamicFieldLength>
+    <Type>Binary</Type>
+  </Field>
+
+  <Field>
+    <Name>Delimiter</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <ValidValue>;</ValidValue>
+  </Field>
+
+  <Field>
+    <Name>PIN Session Key</Name>
+    <IncludeFile>MultiFormatKey.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Private Key Flag</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+</CommandConfiguration>

@@ -98,4 +98,12 @@ Public Class frmMain
         txtLog.ScrollToCaret()
     End Sub
 
+    'Private Sub frmMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+    '    Dim key As RSAKey = RSAFunctions.GetStandardRSAKey
+    '    Dim pbcrypt() As Byte = RSAFunctions.GetRSAEncryptedPINBlock(key, "1234", "407000025321")
+    '    Dim pbclear As String = RSAFunctions.GetRSADecryptedPINBlock(key, pbcrypt)
+    '    Dim pinclear As String = PIN.PINBlockFormat.ToPIN(pbclear, "407000025321", Core.PIN.PINBlockFormat.PIN_Block_Format.AnsiX98)
+    '    Dim pbstring As String = String.Empty
+    '    Utility.ByteArrayToHexString(pbcrypt, pbstring)
+    'End Sub
 End Class
