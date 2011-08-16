@@ -159,7 +159,7 @@ Partial Class frmMain
         '
         Me.rbWarning.Location = New System.Drawing.Point(8, 96)
         Me.rbWarning.Name = "rbWarning"
-        Me.rbWarning.Size = New System.Drawing.Size(77, 24)
+        Me.rbWarning.Size = New System.Drawing.Size(71, 24)
         Me.rbWarning.TabIndex = 3
         Me.rbWarning.Tag = "2"
         Me.rbWarning.Text = "Warning"

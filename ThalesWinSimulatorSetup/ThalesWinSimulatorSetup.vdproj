@@ -39,6 +39,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_0C7891EB424261720FF6FD27FD21CF05"
+        "OwnerKey" = "8:_90689CBB59B74434903770B7EC5FB634"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0CE614E0972F47BFB976C5D577C7788A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -155,12 +161,6 @@
         {
         "MsmKey" = "8:_3A695488DD3F4DE2A013C978410FAE1F"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3C5FAC79D7087D7178911DAB16D45BA4"
-        "OwnerKey" = "8:_90689CBB59B74434903770B7EC5FB634"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -310,6 +310,12 @@
         "Entry"
         {
         "MsmKey" = "8:_88F442CB9182467CBDFD21FEF9E8C6F0"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_8CCD4555FBE54BE6B219EE186B769F4A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -544,7 +550,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3C5FAC79D7087D7178911DAB16D45BA4"
+        "OwnerKey" = "8:_0C7891EB424261720FF6FD27FD21CF05"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -730,6 +736,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0C7891EB424261720FF6FD27FD21CF05"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ThalesCore, Version=0.9.4.0, Culture=neutral, PublicKeyToken=3b1da66c080a0b02, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_0C7891EB424261720FF6FD27FD21CF05"
+                    {
+                    "Name" = "8:ThalesCore.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:ThalesCore.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_34E5D042E47843C09BC22C7FE4328E6E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0CE614E0972F47BFB976C5D577C7788A"
@@ -1130,37 +1167,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3C5FAC79D7087D7178911DAB16D45BA4"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ThalesCore, Version=0.9.4.0, Culture=neutral, PublicKeyToken=3b1da66c080a0b02, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_3C5FAC79D7087D7178911DAB16D45BA4"
-                    {
-                    "Name" = "8:ThalesCore.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:ThalesCore.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_34E5D042E47843C09BC22C7FE4328E6E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_41DD884C0E0C469B8A5384A48AA4DAAB"
@@ -1647,6 +1653,26 @@
             {
             "SourcePath" = "8:..\\ThalesCore\\XMLDefs\\HostCommands\\GenerateCheckValue_BU.xml"
             "TargetName" = "8:GenerateCheckValue_BU.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_E2AE7C7E8EB94A15A9630785EDFF29E4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8CCD4555FBE54BE6B219EE186B769F4A"
+            {
+            "SourcePath" = "8:..\\ThalesCore\\XMLDefs\\HostCommands\\RSAEncryptTo3DES_SA.xml"
+            "TargetName" = "8:RSAEncryptTo3DES_SA.xml"
             "Tag" = "8:"
             "Folder" = "8:_E2AE7C7E8EB94A15A9630785EDFF29E4"
             "Condition" = "8:"
@@ -2472,14 +2498,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Thales Simulator"
-        "ProductCode" = "8:{FB57A2D1-CD50-4A8E-AD62-E5268EE12081}"
-        "PackageCode" = "8:{9754A847-A27C-43B7-AEE2-706AB0D9EBE9}"
+        "ProductCode" = "8:{CF50EA5F-C749-4FCE-91EA-BBD7696FA898}"
+        "PackageCode" = "8:{74903EFF-5DE0-43AC-88A4-230BDAD0FD39}"
         "UpgradeCode" = "8:{1B09877B-9850-4D4E-8CAB-B6DB8DA0C6A2}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.9.4"
+        "ProductVersion" = "8:0.9.5"
         "Manufacturer" = "8:NTG"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://thalessim.codeplex.com/"

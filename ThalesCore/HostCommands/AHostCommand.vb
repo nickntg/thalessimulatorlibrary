@@ -354,7 +354,7 @@ Namespace HostCommands
         ''' </remarks>
         Protected Function GeneratePVV(ByVal AccountNumber As String, ByVal PVKI As String, ByVal PIN As String, ByVal PVKPair As String) As String
 
-            Dim stage1 As String = AccountNumber.Substring(0, 11) + PVKI + PIN.Substring(0, 4)
+            Dim stage1 As String = AccountNumber.Substring(1, 11) + PVKI + PIN.Substring(0, 4)
             Dim stage2 As String = TripleDES.TripleDESEncrypt(New HexKey(PVKPair), stage1)
             Dim PVV As String = "", i As Integer
 

@@ -21,7 +21,7 @@
       <Value Profile="(Default)">1234</Value>
     </Setting>
     <Setting Name="PAN" Type="System.String" Scope="User">
-      <Value Profile="(Default)">5044070000253211</Value>
+      <Value Profile="(Default)">5044070000253237</Value>
     </Setting>
   </Settings>
 </SettingsFile>
