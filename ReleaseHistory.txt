@@ -5,6 +5,9 @@ xxxx/xx/xx: Version 0.9.5 beta released.
 ----------------------------------------
 * Fixed incorrect key scheme definition of A0 command.
 * Added a partial implementation for a custom Thales command.
+* Fixed an error in the PVV generation method. For users that have
+  established test cards using a previous version of the simulator,
+  this is a breaking change and the PVV needs to be re-calculated.
 
 2011/05/28: Version 0.9.4 beta released.
 ----------------------------------------
