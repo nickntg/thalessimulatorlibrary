@@ -694,6 +694,21 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("00" + expectedCryptPB, TestTran("010101" + acct + (RSAPB.Length \ 2).ToString.PadLeft(4, "0"c) + RSAPB + ";" + cryptZPK + "01", New RSAEncryptTo3DES_SA()))
     End Sub
 
+    <TestMethod()> _
+    Public Sub TestGenerateMACMABMS()
+        Dim cryptZAK As String = "U4F24FC3AADA72104B6BE1D1E296CA774"
+        Dim res As String = TestTran("1111" + cryptZAK + "001030303030303030303131313131313131", New GeneraceMACMABUsingAnsiX919ForLargeMessage_MS())
+        Assert.AreEqual("00A9D4D96683B51333", res)
+        res = TestTran("2111" + cryptZAK + res.Substring(2) + "001030303030303030303131313131313131", New GeneraceMACMABUsingAnsiX919ForLargeMessage_MS())
+        Assert.AreEqual("00DA46CEC9E61AF065", res)
+        res = TestTran("2111" + cryptZAK + res.Substring(2) + "001030303030303030303131313131313131", New GeneraceMACMABUsingAnsiX919ForLargeMessage_MS())
+        Assert.AreEqual("0056A27E35442BD07D", res)
+        res = TestTran("2111" + cryptZAK + res.Substring(2) + "001030303030303030303131313131313131", New GeneraceMACMABUsingAnsiX919ForLargeMessage_MS())
+        Assert.AreEqual("00B12874BED7137303", res)
+        res = TestTran("3111" + cryptZAK + res.Substring(2) + "001030303030303030303131313131313131", New GeneraceMACMABUsingAnsiX919ForLargeMessage_MS())
+        Assert.AreEqual("000D99127F7734AA58", res)
+    End Sub
+
     'Dump major events to the console window.
     Private Sub o_MajorLogEvent(ByVal sender As Core.ThalesMain, ByVal s As String) Handles o.MajorLogEvent
         Console.WriteLine(s)

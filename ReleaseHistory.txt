@@ -8,6 +8,7 @@ xxxx/xx/xx: Version 0.9.5 beta released.
 * Fixed an error in the PVV generation method. For users that have
   established test cards using a previous version of the simulator,
   this is a breaking change and the PVV needs to be re-calculated.
+* Added an implementation of the MS command, thanks to Cory W.
 
 2011/05/28: Version 0.9.4 beta released.
 ----------------------------------------
