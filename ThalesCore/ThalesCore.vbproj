@@ -109,6 +109,8 @@
     <Compile Include="Cryptography\MAC\ISO9797MAC.vb" />
     <Compile Include="Cryptography\MAC\ISO9797Pad.vb" />
     <Compile Include="Cryptography\MAC\ISO9797PaddingMethods.vb" />
+    <Compile Include="Cryptography\MAC\ISOX919Blocks.vb" />
+    <Compile Include="Cryptography\MAC\ISOX919MAC.vb" />
     <Compile Include="Cryptography\RSA\RSAFunctions.vb" />
     <Compile Include="Cryptography\RSA\RSAKey.vb" />
     <Compile Include="Exceptions\XDecryptError.vb" />
@@ -137,6 +139,7 @@
     <Compile Include="HostCommands\BuildIn\DerivePINUsingTheIBMMethod_EE.vb" />
     <Compile Include="HostCommands\BuildIn\EchoTest_B2.vb" />
     <Compile Include="HostCommands\BuildIn\EncryptClearPIN_BA.vb" />
+    <Compile Include="HostCommands\BuildIn\GeneraceMACMABUsingAnsiX919ForLargeMessage_MS.vb" />
     <Compile Include="HostCommands\BuildIn\GenerateBDK_BI.vb" />
     <Compile Include="HostCommands\BuildIn\GenerateIBMOffset_DE.vb" />
     <Compile Include="HostCommands\BuildIn\GenerateMAC_M6.vb" />
@@ -299,6 +302,7 @@
     <Content Include="XMLDefs\HostCommands\EncryptClearPIN_BA.xml" />
     <Content Include="XMLDefs\HostCommands\FormKeyFromEncryptedComponents_A4.xml" />
     <Content Include="XMLDefs\HostCommands\FormZMKFromThreeComponents_GG.xml" />
+    <Content Include="XMLDefs\HostCommands\GeneraceMACMABUsingAnsiX919ForLargeMessage_MS.xml" />
     <Content Include="XMLDefs\HostCommands\GenerateAndPrintComponent_A2.xml" />
     <Content Include="XMLDefs\HostCommands\GenerateAndPrintSplitComponents_NE.xml" />
     <Content Include="XMLDefs\HostCommands\GenerateAndPrintTMPTPKPVK_OE.xml" />
