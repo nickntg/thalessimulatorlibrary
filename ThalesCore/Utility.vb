@@ -663,7 +663,19 @@ Public Class Utility
     ''' <returns></returns>
     ''' <remarks></remarks>
     Public Shared Function GetBytesFromString(ByVal str As String) As Byte()
-        Return System.Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetBytes(str)
+        Return GetBytesFromString(str, System.Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage))
+        'Return System.Text.ASCIIEncoding.GetEncoding(Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage).GetBytes(str)
+    End Function
+
+    ''' <summary>
+    ''' Converts a string to a byte array using a specific encoding.
+    ''' </summary>
+    ''' <param name="str">String to convert to bytes.</param>
+    ''' <param name="encoding">Encoding to use.</param>
+    ''' <returns>Byte array with converted string.</returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetBytesFromString(ByVal str As String, ByVal encoding As System.Text.Encoding) As Byte()
+        Return encoding.GetBytes(str)
     End Function
 
     ''' <summary>

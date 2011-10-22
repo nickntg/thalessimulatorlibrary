@@ -9,6 +9,8 @@ xxxx/xx/xx: Version 0.9.5 beta released.
   established test cards using a previous version of the simulator,
   this is a breaking change and the PVV needs to be re-calculated.
 * Added an implementation of the MS command, thanks to Cory W.
+* Added EBCDIC translation capability.
+* Added an Atalla variant implementation for the A6 key import command.
 
 2011/05/28: Version 0.9.4 beta released.
 ----------------------------------------

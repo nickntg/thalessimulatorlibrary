@@ -42,6 +42,7 @@ Public Class ThalesMain
     Private LegacyMode As Boolean
     Private ExpectTrailers As Boolean
     Private HeaderLength As Integer
+    Private EBCDIC As Boolean
 
     'Listening thread for hosts
     Private LT As Threading.Thread
@@ -145,8 +146,9 @@ Public Class ThalesMain
                "Log level: " + Logger.CurrentLogLevel.ToString + vbCrLf + _
                "Check LMK parity: " + CheckLMKParity.ToString + vbCrLf + _
                "XML host command definitions: " + HostDefsDir + vbCrLf + _
-               "Use double-length ZMKs: " + DoubleLengthZMKs.ToString + _
-               "Header length: " + HeaderLength.ToString
+               "Use double-length ZMKs: " + DoubleLengthZMKs.ToString + vbCrLf + _
+               "Header length: " + HeaderLength.ToString + vbCrLf + _
+               "EBCDIC: " + EBCDIC.ToString
     End Function
 
     ''' <summary>
@@ -245,6 +247,7 @@ Public Class ThalesMain
             LegacyMode = Convert.ToBoolean(GetParameterValue(doc, "LegacyMode"))
             ExpectTrailers = Convert.ToBoolean(GetParameterValue(doc, "ExpectTrailers"))
             HeaderLength = Convert.ToInt32(GetParameterValue(doc, "HeaderLength"))
+            EBCDIC = Convert.ToBoolean(GetParameterValue(doc, "EBCDIC"))
 
             StartUpCore(Convert.ToString(GetParameterValue(doc, "FirmwareNumber")), _
                         Convert.ToString(GetParameterValue(doc, "DSPFirmwareNumber")), _
@@ -309,6 +312,7 @@ Public Class ThalesMain
             LegacyMode = Convert.ToBoolean(list("LEGACYMODE"))
             ExpectTrailers = Convert.ToBoolean(list("EXPECTTRAILERS"))
             HeaderLength = Convert.ToInt32(list("HEADERLENGTH"))
+            EBCDIC = Convert.ToBoolean(list("EBCDIC"))
 
             If HostDefsDir = "" Then HostDefsDir = Utility.GetExecutingDirectory
             If VBsources = "" Then VBsources = Utility.GetExecutingDirectory
@@ -344,6 +348,7 @@ Public Class ThalesMain
         LegacyMode = False
         ExpectTrailers = False
         HeaderLength = 4
+        EBCDIC = False
 
         StartUpCore("0007-E000", _
                     "0001", _
@@ -367,6 +372,7 @@ Public Class ThalesMain
         Resources.AddResource(Resources.LEGACY_MODE, LegacyMode)
         Resources.AddResource(Resources.EXPECT_TRAILERS, ExpectTrailers)
         Resources.AddResource(Resources.HEADER_LENGTH, HeaderLength)
+        Resources.AddResource(Resources.EBCDIC, EBCDIC)
 
         'Make sure it ends with a directory separator, both for Windows and Linux.
         HostDefsDir = Utility.AppendDirectorySeparator(HostDefsDir)

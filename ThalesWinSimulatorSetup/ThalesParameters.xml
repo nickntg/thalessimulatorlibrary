@@ -54,6 +54,9 @@
 
     		<!-- Indicates the length of the message header. -->
     		<HeaderLength value="4" />
+
+		<!-- Indicates whether we should use EBCDIC encoding instead of ASCII. -->
+		<EBCDIC value="false" />
 		
 	</Parameters>
 
