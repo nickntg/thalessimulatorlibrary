@@ -196,6 +196,12 @@ Namespace TCP
                         ByteCount += 1
                         'If we have a logical packet, fire our event.
                         If recBytesOffset = len Then
+
+                            'Check for EBCDIC encoding
+                            If IsEBCDICEnabled() Then
+                                recBytes = System.Text.Encoding.Convert(System.Text.Encoding.GetEncoding(37), System.Text.Encoding.ASCII, recBytes)
+                            End If
+
                             RaiseEvent MessageArrived(Me, recBytes, recBytesOffset)
                             ReDim recBytes(-1)
                             len = -1
@@ -219,8 +225,14 @@ Namespace TCP
 
             Dim Buffer() As Byte
 
+            'Check for EBCDIC encoding
+            If IsEBCDICEnabled Then
+                Buffer = Utility.GetBytesFromString("  " + sendData, System.Text.Encoding.GetEncoding(37))
+            Else
+                Buffer = Utility.GetBytesFromString("  " + sendData)
+            End If
+
             'Fixed bug where this was behaving completely wrong.
-            Buffer = Utility.GetBytesFromString("  " + sendData)
             Buffer(0) = Convert.ToByte(sendData.Length \ 256)
             Buffer(1) = Convert.ToByte(sendData.Length Mod 256)
 
@@ -236,7 +248,7 @@ Namespace TCP
         ''' <remarks>
         ''' This method sends a byte array message to the remote party.
         ''' </remarks>
-        Public Sub send(ByVal buffer() As Byte)
+        Private Sub send(ByVal buffer() As Byte)
 
             Dim b() As Byte
             ReDim b(buffer.GetLength(0) + 2 - 1)
@@ -250,6 +262,21 @@ Namespace TCP
                 ReDim b(-1)
             End SyncLock
         End Sub
+
+        ''' <summary>
+        ''' Determines whether EBCDIC encoding is enabled.
+        ''' </summary>
+        ''' <returns>True if EBCDIC encoding is enabled, false otherwise.</returns>
+        ''' <remarks></remarks>
+        Private Function IsEBCDICEnabled() As Boolean
+            Try
+                Return Convert.ToBoolean(Resources.GetResource(Resources.EBCDIC))
+            Catch ex As Exception
+                'Catch this if the client has been instantiated
+                'without reading the xml parameters.
+                Return False
+            End Try
+        End Function
 
     End Class
 

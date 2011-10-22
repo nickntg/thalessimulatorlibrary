@@ -17,3 +17,4 @@ DoubleLengthZMKs=True
 LegacyMode=False
 ExpectTrailers=False
 HeaderLength=4
+EBCDIC=False

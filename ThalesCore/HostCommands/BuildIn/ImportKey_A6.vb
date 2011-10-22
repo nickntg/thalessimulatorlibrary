@@ -35,6 +35,7 @@ Namespace HostCommands.BuildIn
         Private _key As String = ""
         Private _lmkScheme As String = ""
         Private _targetKeyScheme As KeySchemeTable.KeyScheme
+        Private _atallaVariant As String
 
         ''' <summary>
         ''' Constructor.
@@ -65,6 +66,8 @@ Namespace HostCommands.BuildIn
                 Else
                     _targetKeyScheme = KeySchemeTable.KeyScheme.Unspecified
                 End If
+
+                _atallaVariant = kvp.ItemOptional("Atalla Variant")
             End If
         End Sub
 
@@ -97,7 +100,7 @@ Namespace HostCommands.BuildIn
 
             'Changed to use the DecryptUnderZMK method instead of directly performing 3DES decrypt.
             'See http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=217215.
-            Dim clearKey As String = DecryptUnderZMK(clearZMK, Utility.RemoveKeyType(_key), _targetKeyScheme)
+            Dim clearKey As String = DecryptUnderZMK(clearZMK, Utility.RemoveKeyType(_key), _targetKeyScheme, _atallaVariant)
             If Utility.IsParityOK(clearKey, Utility.ParityCheck.OddParity) = False Then
                 _warnParity = True
             End If
