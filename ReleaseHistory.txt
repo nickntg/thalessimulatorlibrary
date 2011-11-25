@@ -1,7 +1,7 @@
 ﻿ThalesSim Release History
 =========================
 
-xxxx/xx/xx: Version 0.9.5 beta released.
+2011/11/25: Version 0.9.5 beta released.
 ----------------------------------------
 * Fixed incorrect key scheme definition of A0 command.
 * Added a partial implementation for a custom Thales command.
@@ -10,7 +10,7 @@ xxxx/xx/xx: Version 0.9.5 beta released.
   this is a breaking change and the PVV needs to be re-calculated.
 * Added an implementation of the MS command, thanks to Cory W.
 * Added EBCDIC translation capability.
-* Added an Atalla variant implementation for the A6 key import command.
+* Added an Atalla variant implementation for the A6, FA, AW, MI, FC, FK and BY commands.
 
 2011/05/28: Version 0.9.4 beta released.
 ----------------------------------------

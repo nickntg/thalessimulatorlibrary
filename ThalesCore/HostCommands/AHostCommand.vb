@@ -290,7 +290,7 @@ Namespace HostCommands
                                            ByVal AtallaVariant As String) As String
             Dim result As String = ""
 
-            clearZMK = TransformUsingAtallaVariant(clearZMK, AtallaVariant)
+            clearZMK = Utility.TransformUsingAtallaVariant(clearZMK, AtallaVariant)
 
             Select Case ZMK_KeyScheme
                 Case KeySchemeTable.KeyScheme.SingleDESKey, KeySchemeTable.KeyScheme.DoubleLengthKeyAnsi, KeySchemeTable.KeyScheme.TripleLengthKeyAnsi, KeySchemeTable.KeyScheme.Unspecified
@@ -305,39 +305,6 @@ Namespace HostCommands
             End Select
 
             Return result
-        End Function
-
-        ''' <summary>
-        ''' Transforms a hex ZMK using an Atalla variant.
-        ''' </summary>
-        ''' <param name="key">Hex key to transform.</param>
-        ''' <param name="AtallaVariant">Atalla variant.</param>
-        ''' <returns>Transformed key.</returns>
-        ''' <remarks></remarks>
-        Protected Function TransformUsingAtallaVariant(ByVal key As String, ByVal AtallaVariant As String) As String
-            If AtallaVariant = String.Empty OrElse AtallaVariant = "" Then
-                Return key
-            End If
-
-            Dim var As Integer = Convert.ToInt32(AtallaVariant)
-            Dim varLen As Integer = &H8 * var
-            Dim varStr As String = String.Empty
-
-            If varLen <> 8 Then
-                varStr = Convert.ToString(varLen, 16).PadRight(16, "0"c)
-            Else
-                varStr = "08".PadRight(16, "0"c)
-            End If
-
-            Dim hKey As New HexKey(key)
-            hKey.PartA = Utility.XORHexStrings(hKey.PartA, varStr)
-            If hKey.KeyLen <> HexKey.KeyLength.SingleLength Then
-                hKey.PartB = Utility.XORHexStrings(hKey.PartB, varStr)
-                If hKey.KeyLen <> HexKey.KeyLength.DoubleLength Then
-                    hKey.PartC = Utility.XORHexStrings(hKey.PartC, varStr)
-                End If
-            End If
-            Return hKey.ToString
         End Function
 
         ''' <summary>

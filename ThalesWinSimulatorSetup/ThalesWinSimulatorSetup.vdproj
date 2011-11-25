@@ -2525,7 +2525,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Thales Simulator"
         "ProductCode" = "8:{CF50EA5F-C749-4FCE-91EA-BBD7696FA898}"
-        "PackageCode" = "8:{74903EFF-5DE0-43AC-88A4-230BDAD0FD39}"
+        "PackageCode" = "8:{2A2614D9-BA38-485A-BDC9-631A3B51BE02}"
         "UpgradeCode" = "8:{1B09877B-9850-4D4E-8CAB-B6DB8DA0C6A2}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
