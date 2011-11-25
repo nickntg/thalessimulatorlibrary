@@ -15,6 +15,38 @@
   </Field>
 
   <Field>
+    <Name>Atalla Variant 1</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <OptionValue>0</OptionValue>
+    <OptionValue>1</OptionValue>
+    <OptionValue>2</OptionValue>
+    <OptionValue>3</OptionValue>
+    <OptionValue>4</OptionValue>
+    <OptionValue>5</OptionValue>
+    <OptionValue>6</OptionValue>
+    <OptionValue>7</OptionValue>
+    <OptionValue>8</OptionValue>
+    <OptionValue>9</OptionValue>
+  </Field>
+
+  <Field>
+    <Name>Atalla Variant 2</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <OptionValue>0</OptionValue>
+    <OptionValue>1</OptionValue>
+    <OptionValue>2</OptionValue>
+    <OptionValue>3</OptionValue>
+    <OptionValue>4</OptionValue>
+    <OptionValue>5</OptionValue>
+    <OptionValue>6</OptionValue>
+    <OptionValue>7</OptionValue>
+    <OptionValue>8</OptionValue>
+    <OptionValue>9</OptionValue>
+  </Field>
+
+  <Field>
     <Name>Delimiter</Name>
     <Length>1</Length>
     <Type>Character</Type>

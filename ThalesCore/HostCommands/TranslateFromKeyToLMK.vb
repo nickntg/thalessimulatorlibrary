@@ -36,6 +36,7 @@ Namespace HostCommands
         Private _keyCheckValue As String
         Private _sourceKeyScheme As KeySchemeTable.KeyScheme
         Private _targetKeyScheme As KeySchemeTable.KeyScheme
+        Private _atallaVariant As String = String.Empty
 
         ''' <summary>
         ''' Source LMK pair.
@@ -167,6 +168,8 @@ Namespace HostCommands
                 Else
                     _targetKeyScheme = KeySchemeTable.KeyScheme.Unspecified
                 End If
+
+                _atallaVariant = kvp.ItemOptional("Atalla Variant 1") + kvp.ItemOptional("Atalla Variant 2")
             End If
         End Sub
 
@@ -208,7 +211,7 @@ Namespace HostCommands
             'This catered only for single-length key situations (see http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=70958).
             'clearTarget = TripleDES.TripleDESDecrypt(New HexKey(clearSource), _targetKEY)
 
-            clearTarget = DecryptUnderZMK(clearSource, Utility.RemoveKeyType(_targetKEY), _targetKeyScheme) ' KeySchemeTable.KeyScheme.DoubleLengthKeyVariant)
+            clearTarget = DecryptUnderZMK(clearSource, Utility.RemoveKeyType(_targetKEY), _targetKeyScheme, _atallaVariant) ' KeySchemeTable.KeyScheme.DoubleLengthKeyVariant)
             clearTarget = Utility.RemoveKeyType(clearTarget)
 
             Dim finalTarget As String = clearTarget
