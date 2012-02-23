@@ -181,10 +181,10 @@ Namespace ConsoleCommands
                     ReDim clearKeys(idx - 1)
 
                     For i As Integer = 0 To clearKeys.GetUpperBound(0)
-                        clearKeys(i) = Utility.DecryptUnderLMK(components(i), ks, LMKKeyPair, var)
+                        clearKeys(i) = Utility.DecryptUnderLMK(Utility.RemoveKeyType(components(i)), ks, LMKKeyPair, var)
                     Next
 
-                    finalKey = New HexKey(XORAllKeys(components))
+                    finalKey = New HexKey(XORAllKeys(clearKeys))
             End Select
 
             'Force odd parity, encrypt under LMK and get check value.

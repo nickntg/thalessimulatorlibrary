@@ -21,18 +21,18 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4CDF2D7FE496BCCA7B0316744CCD5E6F"
-        "OwnerKey" = "8:_E913BF4207E248188D5EFBF63BCFBD39"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_E913BF4207E248188D5EFBF63BCFBD39"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
+        "MsmKey" = "8:_F9142B0C886FEB19FB495B87C02C36D5"
+        "OwnerKey" = "8:_E913BF4207E248188D5EFBF63BCFBD39"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_E913BF4207E248188D5EFBF63BCFBD39"
         "MsmSig" = "8:_UNDEFINED"
@@ -40,7 +40,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4CDF2D7FE496BCCA7B0316744CCD5E6F"
+        "OwnerKey" = "8:_F9142B0C886FEB19FB495B87C02C36D5"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -224,14 +224,14 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4CDF2D7FE496BCCA7B0316744CCD5E6F"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F9142B0C886FEB19FB495B87C02C36D5"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ThalesCore, Version=0.9.4.0, Culture=neutral, PublicKeyToken=3b1da66c080a0b02, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ThalesCore, Version=0.9.5.0, Culture=neutral, PublicKeyToken=3b1da66c080a0b02, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_4CDF2D7FE496BCCA7B0316744CCD5E6F"
+                    "_F9142B0C886FEB19FB495B87C02C36D5"
                     {
                     "Name" = "8:ThalesCore.dll"
                     "Attributes" = "3:512"
@@ -311,14 +311,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Thales Simulator Service"
-        "ProductCode" = "8:{E9E6C7FD-27BB-476F-96CF-CDF750DEEA35}"
-        "PackageCode" = "8:{F4B2B9C1-64CA-4249-B525-2B6097B75299}"
+        "ProductCode" = "8:{31149C72-6A3D-4595-929F-D2A0B70CDFF2}"
+        "PackageCode" = "8:{7E9BCC15-FE73-4472-865A-8D7DE8FAF647}"
         "UpgradeCode" = "8:{6A37A5EE-00E2-4006-9E93-C8DFD2E0CE14}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.9.5"
+        "ProductVersion" = "8:0.9.6"
         "Manufacturer" = "8:NTG"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
