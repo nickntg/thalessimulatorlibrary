@@ -183,8 +183,8 @@ Namespace PIN
                 Case PIN_Block_Format.ISO9564_1
                     Dim s2 As String = "0000" + AccountNumber_Or_PaddingString.Substring(0, 12)
                     Dim s1 As String = Core.Utility.XORHexStrings(s2, PINBlock)
-                    Dim PINLength As Integer = Convert.ToInt32(s1.Substring(1, 1))
-                    Return s1.Substring(2, PINLength)
+                    Dim PINLength As Integer = Convert.ToInt32(s1.Substring(11, 1))
+                    Return s1.Substring(12, PINLength)
                 Case PIN_Block_Format.Plus
                     Throw New Exceptions.XUnsupportedPINBlockFormat("Unsupported PIN block format PLUS")
                 Case Else
