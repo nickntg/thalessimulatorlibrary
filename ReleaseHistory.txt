@@ -1,7 +1,7 @@
 ﻿ThalesSim Release History
 =========================
 
-xxxx/xx/xx: Version 0.9.6 beta released.
+2012/05/29: Version 0.9.6 beta released.
 ----------------------------------------
 * Fixed a problem with the FK command where it incorrectly created
   a new key if encrypted components were used.
