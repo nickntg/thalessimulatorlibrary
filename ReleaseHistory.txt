@@ -1,6 +1,13 @@
 ﻿ThalesSim Release History
 =========================
 
+Unreleased
+----------------------------------------
+* Worked around the .Net limitation of weak/semi-weak key handling. Contributed
+ by smiles11uk.
+* Updated test cases to use correctly format TAK after smiles11uk's fix.
+* Updated the Key Manager to correctly update variants of single-length keys.
+
 2012/05/29: Version 0.9.6 beta released.
 ----------------------------------------
 * Fixed a problem with the FK command where it incorrectly created

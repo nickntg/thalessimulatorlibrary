@@ -303,21 +303,21 @@ Imports ThalesSim.Core.Message
     <TestMethod()> _
     Public Sub TestTranslateTAKFromZMKToLMK()
         SwitchToSingleLengthZMKs()
-        Assert.AreEqual("00AD2EE63F23D8F733EDFE6926B3B9D27C", TestTran("4ED06495741C280CE6CF9DB3EC5D766F", New TranslateTAKFromZMKToLMK_MI))
+        Assert.AreEqual("00C6F34693FB39CB6EEDFE6926B3B9D27C", TestTran("4ED06495741C280CE6CF9DB3EC5D766F", New TranslateTAKFromZMKToLMK_MI))
         SwitchToDoubleLengthZMKs()
     End Sub
 
     <TestMethod()> _
     Public Sub TestTranslateTAKFromLMKToZMK()
         SwitchToSingleLengthZMKs()
-        Assert.AreEqual("00E6CF9DB3EC5D766FEDFE6926B3B9D27C", TestTran("4ED06495741C280CAD2EE63F23D8F733", New TranslateTAKFromLMKToZMK_MG))
+        Assert.AreEqual("00E6CF9DB3EC5D766FEDFE6926B3B9D27C", TestTran("4ED06495741C280CC6F34693FB39CB6E", New TranslateTAKFromLMKToZMK_MG))
         SwitchToDoubleLengthZMKs()
     End Sub
 
     <TestMethod()> _
     Public Sub TestTranslateTAKFromLMKToTMK()
         SwitchToSingleLengthZMKs()
-        Assert.AreEqual("00D3A9103B524C49ACEDFE6926B3B9D27C", TestTran("0406FBB23A5214DFAD2EE63F23D8F733", New TranslateTAKFromLMKToTMK_AG))
+        Assert.AreEqual("00D3A9103B524C49ACEDFE6926B3B9D27C", TestTran("0406FBB23A5214DFC6F34693FB39CB6E", New TranslateTAKFromLMKToTMK_AG))
         SwitchToDoubleLengthZMKs()
     End Sub
 
@@ -374,19 +374,19 @@ Imports ThalesSim.Core.Message
 
     <TestMethod()> _
     Public Sub TestGenerateMAC()
-        Assert.AreEqual("00170C2BDB", TestTran("AD2EE63F23D8F733676976656D65534F4D454D4143696E67", New GenerateMAC_MA))
+        Assert.AreEqual("00170C2BDB", TestTran("C6F34693FB39CB6E676976656D65534F4D454D4143696E67", New GenerateMAC_MA))
     End Sub
 
     <TestMethod()> _
     Public Sub TestVerifyMAC()
-        Assert.AreEqual("01", TestTran("AD2EE63F23D8F733170C2BDB676976656D65534F4D454D4143696E68", New VerifyMAC_MC))
-        Assert.AreEqual("00", TestTran("AD2EE63F23D8F733170C2BDB676976656D65534F4D454D4143696E67", New VerifyMAC_MC))
+        Assert.AreEqual("01", TestTran("C6F34693FB39CB6E170C2BDB676976656D65534F4D454D4143696E68", New VerifyMAC_MC))
+        Assert.AreEqual("00", TestTran("C6F34693FB39CB6E170C2BDB676976656D65534F4D454D4143696E67", New VerifyMAC_MC))
     End Sub
 
     <TestMethod()> _
     Public Sub TestVerifyTranslateMAC()
-        Assert.AreEqual("00D7DA46FC", TestTran("AD2EE63F23D8F73395BB142B1A349EC7170C2BDB676976656D65534F4D454D4143696E67", New VerifyAndTranslateMAC_ME))
-        Assert.AreEqual("01", TestTran("AD2EE63F23D8F73395BB142B1A349EC7170C2BDB676976656D65534F4D454D4143696E68", New VerifyAndTranslateMAC_ME))
+        Assert.AreEqual("00D7DA46FC", TestTran("C6F34693FB39CB6EE96E2363E063746F170C2BDB676976656D65534F4D454D4143696E67", New VerifyAndTranslateMAC_ME))
+        Assert.AreEqual("01", TestTran("C6F34693FB39CB6EE96E2363E063746F170C2BDB676976656D65534F4D454D4143696E68", New VerifyAndTranslateMAC_ME))
     End Sub
 
     <TestMethod()> _

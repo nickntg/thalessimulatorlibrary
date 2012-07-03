@@ -46,20 +46,40 @@ Namespace Cryptography
 
                 If DESCryptoServiceProvider.IsWeakKey(bKey) Then
                     Log.Logger.MajorWarning("***DES Encrypt with weak key***")
-                    For i As Integer = 0 To 7
-                        bResult(i) = bData(i)
-                    Next
-                    Return
                 End If
+
+
+                'NEW STUFF TO GET AROUND WEAK KEYS vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+                Dim DESalg As System.Security.Cryptography.DES
+                Dim desTransform As ICryptoTransform
+                Dim mi As Reflection.MethodInfo
+
+                DESalg = System.Security.Cryptography.DES.Create
+
+                desProvider = CType(DESalg, DESCryptoServiceProvider)
+                desProvider.Mode = CipherMode.ECB
+                'desProvider.Key = bKey
+                desProvider.IV = bNullVector
+                desProvider.Padding = PaddingMode.None
+                'Note the last param here indicates mode of operation 1 = decypt 0 = encrypt
+                Dim Par As Object() = {bKey, desProvider.Mode, bNullVector, desProvider.FeedbackSize, 0}
+
+                mi = desProvider.GetType().GetMethod("_NewEncryptor", Reflection.BindingFlags.NonPublic Or Reflection.BindingFlags.Instance)
+                Try
+
+                    Dim res As Object = mi.Invoke(desProvider, Par)
+
+                    desTransform = CType(res, ICryptoTransform)
+
+                Catch ex As Exception
+                    Log.Logger.MajorWarning("Transform invocation error " & ex.ToString)
+                    desTransform = desProvider.CreateDecryptor(bKey, bNullVector)
+                End Try
+                'NEW STUFF TO GET AROUND WEAK KEYS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
                 outStream = New MemoryStream(bResult)
 
-                desProvider.Mode = CipherMode.ECB
-                desProvider.Key = bKey
-                desProvider.IV = bNullVector
-                desProvider.Padding = PaddingMode.None
-
-                csMyCryptoStream = New CryptoStream(outStream, desProvider.CreateEncryptor(bKey, bNullVector), CryptoStreamMode.Write)
+                csMyCryptoStream = New CryptoStream(outStream, desTransform, CryptoStreamMode.Write)
                 csMyCryptoStream.Write(bData, 0, 8)
                 csMyCryptoStream.Close()
             Catch ex As Exception
@@ -86,27 +106,45 @@ Namespace Cryptography
 
                 If DESCryptoServiceProvider.IsWeakKey(bKey) Then
                     Log.Logger.MajorWarning("***DES Decrypt with weak key***")
-                    For i As Integer = 0 To 7
-                        bResult(i) = bData(i)
-                    Next
-                    Return
                 End If
+                'NEW STUFF TO GET AROUND WEAK KEYS vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+                Dim DESalg As System.Security.Cryptography.DES
+                Dim desTransform As ICryptoTransform
+                Dim mi As Reflection.MethodInfo
 
+                DESalg = System.Security.Cryptography.DES.Create
+
+                desProvider = CType(DESalg, DESCryptoServiceProvider)
                 desProvider.Mode = CipherMode.ECB
-                desProvider.Key = bKey
+                'desProvider.Key = bKey
                 desProvider.IV = bNullVector
                 desProvider.Padding = PaddingMode.None
+                'Note the last param here indicates mode of operation 1 = decypt 0 = encrypt
+                Dim Par As Object() = {bKey, desProvider.Mode, bNullVector, desProvider.FeedbackSize, 1}
 
+                mi = desProvider.GetType().GetMethod("_NewEncryptor", Reflection.BindingFlags.NonPublic Or Reflection.BindingFlags.Instance)
+                Try
+
+                    Dim res As Object = mi.Invoke(desProvider, Par)
+
+                    desTransform = CType(res, ICryptoTransform)
+
+                Catch ex As Exception
+                    Log.Logger.MajorWarning("Transform invocation error " & ex.ToString)
+                    desTransform = desProvider.CreateDecryptor(bKey, bNullVector)
+                End Try
+                'NEW STUFF TO GET AROUND WEAK KEYS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 outStream = New MemoryStream(bResult)
-                csMyCryptoStream = New CryptoStream(outStream, desProvider.CreateDecryptor(bKey, bNullVector), CryptoStreamMode.Write)
+
+                csMyCryptoStream = New CryptoStream(outStream, desTransform, CryptoStreamMode.Write)
                 csMyCryptoStream.Write(bData, 0, 8)
                 csMyCryptoStream.Close()
+
             Catch ex As Exception
                 Throw New Exceptions.XDecryptError(ex.Message())
             End Try
 
         End Sub
-
         ''' <summary>
         ''' Encrypts a hex string.
         ''' </summary>
