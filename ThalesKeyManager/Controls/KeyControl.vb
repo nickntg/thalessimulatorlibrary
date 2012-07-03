@@ -52,7 +52,11 @@ Public Class KeyControl
     Private Sub UpdateDisplay()
         hClearValue.LoadKey(m_KI.Key.GetClearValue)
         hANSIValue.LoadKey(m_KI.Key.GetANSIValue)
-        If m_KI.Key.GetClearValue.Length <> 16 Then hVariantValue.LoadKey(m_KI.Key.GetVariantValue)
+        If m_KI.Key.GetClearValue.Length <> 16 Then
+            hVariantValue.LoadKey(m_KI.Key.GetVariantValue)
+        Else
+            hVariantValue.ClearKey()
+        End If
         hPlainValue.LoadKey(m_KI.Key.GetEncryptedValue)
         txtCV.Text = m_KI.Key.GetCheckValue
         cboKeyType.SelectedItem = m_KI.Key.KeyType.ToString
