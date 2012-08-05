@@ -429,6 +429,60 @@ Namespace HostCommands
         End Function
 
         ''' <summary>
+        ''' Generates a AMEX CSC.
+        ''' </summary>
+        ''' <remarks>
+        ''' This method generates a AMEX CSC.
+        ''' </remarks>
+        Protected Function GenerateCSC(ByVal CSCKPair As String, ByVal AccountNumber As String, ByVal ExpirationDate As String, ByVal SVC As String, ByVal CSCVersion As Integer) As String
+
+            Dim CSCKA As String = Utility.RemoveKeyType(CSCKPair).Substring(0, 16)
+            Dim CSCKB As String = Utility.RemoveKeyType(CSCKPair).Substring(16)
+            Dim block As String
+            Dim result As String = ""
+
+            If AccountNumber.Substring(0, 2) = "37" Then
+                block = ExpirationDate + AccountNumber.Substring(2, 12)
+            ElseIf AccountNumber.Substring(0, 2) = "34" Then
+                block = AccountNumber.Substring(2, 12) + ExpirationDate
+            Else
+                Return "-1"
+            End If
+
+            If CSCVersion = 0 Then
+                result = TripleDES.TripleDESEncrypt(New HexKey(CSCKA + CSCKB), block)
+            ElseIf CSCVersion = 2 Then
+                block = (block + SVC).PadRight(32, "0"c)
+                result = TripleDES.TripleDESEncrypt(New HexKey(CSCKA + CSCKB), block).Substring(16, 16)
+            Else
+                Return "-1"
+            End If
+
+            Dim CSC As String = "", i As Integer = 0
+            For i = 0 To result.Length - 1
+                If Char.IsDigit(result.Chars(i)) Then
+                    CSC += result.Chars(i)
+                End If
+            Next
+            i = 0
+            Dim conv As Integer
+
+            While CSC.Length < 12
+                If Not Char.IsDigit(result.Chars(i)) Then
+                    conv = Asc(result.Chars(i)) - 64
+                    If i >= 5 Then
+                        conv = (conv + 5) Mod 10
+                    End If
+                    CSC += Chr(conv + 48)
+                End If
+                i += 1
+            End While
+
+            Return CSC
+
+        End Function
+
+        ''' <summary>
         ''' Generates a MAC.
         ''' </summary>
         ''' <remarks>

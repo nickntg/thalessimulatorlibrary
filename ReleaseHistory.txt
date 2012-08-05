@@ -7,6 +7,7 @@ Unreleased
  by smiles11uk.
 * Updated test cases to use correctly format TAK after smiles11uk's fix.
 * Updated the Key Manager to correctly update variants of single-length keys.
+* Added RY command, contributed by volosnikpk.
 
 2012/05/29: Version 0.9.6 beta released.
 ----------------------------------------

@@ -140,6 +140,7 @@
     <Compile Include="HostCommands\BuildIn\EchoTest_B2.vb" />
     <Compile Include="HostCommands\BuildIn\EncryptClearPIN_BA.vb" />
     <Compile Include="HostCommands\BuildIn\GeneraceMACMABUsingAnsiX919ForLargeMessage_MS.vb" />
+    <Compile Include="HostCommands\BuildIn\GenerateAMEXCSC_RY.vb" />
     <Compile Include="HostCommands\BuildIn\GenerateBDK_BI.vb" />
     <Compile Include="HostCommands\BuildIn\GenerateIBMOffset_DE.vb" />
     <Compile Include="HostCommands\BuildIn\GenerateMAC_M6.vb" />
@@ -303,6 +304,7 @@
     <Content Include="XMLDefs\HostCommands\FormKeyFromEncryptedComponents_A4.xml" />
     <Content Include="XMLDefs\HostCommands\FormZMKFromThreeComponents_GG.xml" />
     <Content Include="XMLDefs\HostCommands\GeneraceMACMABUsingAnsiX919ForLargeMessage_MS.xml" />
+    <Content Include="XMLDefs\HostCommands\GenerateAMEXCSC_RY.xml" />
     <Content Include="XMLDefs\HostCommands\GenerateAndPrintComponent_A2.xml" />
     <Content Include="XMLDefs\HostCommands\GenerateAndPrintSplitComponents_NE.xml" />
     <Content Include="XMLDefs\HostCommands\GenerateAndPrintTMPTPKPVK_OE.xml" />
