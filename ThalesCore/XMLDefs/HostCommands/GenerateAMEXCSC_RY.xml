@@ -37,24 +37,36 @@
     <Name>Service Code</Name>
     <Length>3</Length>
     <Type>Numeric</Type>
+    <DependentField>Flag</DependentField>
+    <DependentValue>2</DependentValue>
+    <ExclusiveDependency>true</ExclusiveDependency>
   </Field>
 
   <Field>
     <Name>5CSC</Name>
     <Length>5</Length>
     <Type>Character</Type>
+    <DependentField>Mode</DependentField>
+    <DependentValue>4</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
   </Field>
 
   <Field>
     <Name>4CSC</Name>
     <Length>4</Length>
     <Type>Character</Type>
+    <DependentField>Mode</DependentField>
+    <DependentValue>4</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
   </Field>
 
   <Field>
     <Name>3CSC</Name>
     <Length>3</Length>
     <Type>Character</Type>
+    <DependentField>Mode</DependentField>
+    <DependentValue>4</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
   </Field>
 
 </CommandConfiguration>

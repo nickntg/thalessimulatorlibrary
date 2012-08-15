@@ -453,7 +453,7 @@ Namespace HostCommands
                 result = TripleDES.TripleDESEncrypt(New HexKey(CSCKA + CSCKB), block)
             ElseIf CSCVersion = 2 Then
                 block = (block + SVC).PadRight(32, "0"c)
-                result = TripleDES.TripleDESEncrypt(New HexKey(CSCKA + CSCKB), block).Substring(16, 16)
+                result = TripleDES.TripleDESEncryptCBC(New HexKey(CSCKA + CSCKB), block).Substring(16, 16)
             Else
                 Return "-1"
             End If
