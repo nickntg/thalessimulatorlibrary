@@ -106,39 +106,44 @@ Namespace HostCommands.BuildIn
             Log.Logger.MinorInfo("Resulting CSC4: " + CSC.Substring(5, 4))
             Log.Logger.MinorInfo("Resulting CSC3: " + CSC.Substring(9, 3))
 
-            If _mode = "3" Then
+            If _mode = "3" Then     'Generate CSC values
                 mr.AddElement(ErrorCodes.ER_00_NO_ERROR)
                 mr.AddElement(_mode)
-                mr.AddElement(CSC)
-            ElseIf _mode = "4" Then
+                If _flag = "3" Then     'if 3=AEVV then return only 3csc
+                    mr.AddElement(CSC.Substring(9, 3))
+                Else                    'else return all CSC values
+                    mr.AddElement(CSC)
+                End If
+            ElseIf _mode = "4" Then 'Verify CSC values
+
                 If _5csc = "FFFFF" Then
-                    vr = "1"
+                    vr += "1"    'Skip verification
                 ElseIf _5csc = CSC.Substring(0, 5) Then
-                    vr = "0"
+                    vr += "0"    'Passed
                 Else
-                    vr = "2"
+                    vr += "2"    'Failed
                 End If
 
                 If _4csc = "FFFF" Then
-                    vr = "1"
+                    vr += "1"    'Skip verification
                 ElseIf _4csc = CSC.Substring(5, 4) Then
-                    vr = "0"
+                    vr += "0"    'Passed
                 Else
-                    vr = "2"
+                    vr += "2"    'Failed
                 End If
 
                 If _3csc = "FFF" Then
-                    vr = "1"
+                    vr += "1"    'Skip verification
                 ElseIf _3csc = CSC.Substring(9, 3) Then
-                    vr = "0"
+                    vr += "0"    'Passed
                 Else
-                    vr = "2"
+                    vr += "2"    'Failed
                 End If
 
                 If InStr(vr, "2") = 0 Then
                     mr.AddElement(ErrorCodes.ER_00_NO_ERROR)
                 Else
-                    mr.AddElement(ErrorCodes.ER_15_INVALID_INPUT_DATA)
+                    mr.AddElement(ErrorCodes.ER_01_VERIFICATION_FAILURE)
                 End If
                 mr.AddElement(_mode)
                 mr.AddElement(vr)

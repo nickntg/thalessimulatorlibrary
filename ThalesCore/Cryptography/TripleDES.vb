@@ -25,10 +25,10 @@ Namespace Cryptography
     Public Class TripleDES
 
         ''' <summary>
-        ''' Performs an encryption operation.
+        ''' Performs an encryption operation using ECB.
         ''' </summary>
         ''' <remarks>
-        ''' Performs an encryption operation.
+        ''' Performs an encryption operation using ECB.
         ''' </remarks>
         Public Shared Function TripleDESEncrypt(ByVal key As HexKey, ByVal data As String) As String
 
@@ -47,6 +47,29 @@ Namespace Cryptography
             End If
             Return result
         End Function
+        ''' <summary>
+        ''' Performs an encryption operation using CBC.
+        ''' </summary>
+        ''' <remarks>
+        ''' Performs an encryption operation using CBC.
+        ''' </remarks>
+        Public Shared Function TripleDESEncryptCBC(ByVal key As HexKey, ByVal data As String) As String
+
+            If (data Is Nothing) OrElse (data.Length <> 16 AndAlso data.Length <> 32 AndAlso data.Length <> 48) Then Throw New Exceptions.XInvalidData("Invalid data for 3DEncrypt")
+
+            Dim result, resulta, resultb As String
+            If data.Length = 16 Then
+                result = TripleDESEncryptSingleLength(key, data)
+            ElseIf data.Length = 32 Then
+                resulta = TripleDESEncryptSingleLength(key, data.Substring(0, 16))
+                result = resulta + TripleDESEncryptSingleLength(key, Core.Utility.XORHexStrings(resulta, data.Substring(16, 16)))
+            Else
+                resulta = TripleDESEncryptSingleLength(key, data.Substring(0, 16))
+                resultb = TripleDESEncryptSingleLength(key, Core.Utility.XORHexStrings(resulta, data.Substring(16, 16)))
+                result = resulta + resultb + TripleDESEncryptSingleLength(key, Core.Utility.XORHexStrings(resulta, data.Substring(32, 16)))
+            End If
+            Return result
+        End Function
 
         Private Shared Function TripleDESEncryptSingleLength(ByVal key As HexKey, ByVal data As String) As String
             Dim result As String = ""
@@ -57,10 +80,10 @@ Namespace Cryptography
         End Function
 
         ''' <summary>
-        ''' Performs a decrypt operation.
+        ''' Performs a decrypt operation using ECB.
         ''' </summary>
         ''' <remarks>
-        ''' Performs a decryption operation.
+        ''' Performs a decryption operation using ECB.
         ''' </remarks>
         Public Shared Function TripleDESDecrypt(ByVal key As HexKey, ByVal data As String) As String
             If (data Is Nothing) OrElse (data.Length <> 16 AndAlso data.Length <> 32 AndAlso data.Length <> 48) Then Throw New Exceptions.XInvalidData("Invalid data for 3DEncrypt")
@@ -75,6 +98,28 @@ Namespace Cryptography
                 result = TripleDESDecryptSingleLength(key, data.Substring(0, 16)) + _
                          TripleDESDecryptSingleLength(key, data.Substring(16, 16)) + _
                          TripleDESDecryptSingleLength(key, data.Substring(32, 16))
+            End If
+            Return result
+        End Function
+        ''' <summary>
+        ''' Performs a decrypt operation using CBC.
+        ''' </summary>
+        ''' <remarks>
+        ''' Performs a decryption operation using CBC.
+        ''' </remarks>
+        Public Shared Function TripleDESDecryptCBC(ByVal key As HexKey, ByVal data As String) As String
+            If (data Is Nothing) OrElse (data.Length <> 16 AndAlso data.Length <> 32 AndAlso data.Length <> 48) Then Throw New Exceptions.XInvalidData("Invalid data for 3DEncrypt")
+
+            Dim result, resulta, resultb As String
+            If data.Length = 16 Then
+                result = TripleDESDecryptSingleLength(key, data)
+            ElseIf data.Length = 32 Then
+                resulta = TripleDESDecryptSingleLength(key, data.Substring(0, 16))
+                result = resulta + Core.Utility.XORHexStrings(data.Substring(0, 16), TripleDESDecryptSingleLength(key, data.Substring(16, 16)))
+            Else
+                resulta = TripleDESDecryptSingleLength(key, data.Substring(0, 16))
+                resultb = Core.Utility.XORHexStrings(data.Substring(0, 16), TripleDESDecryptSingleLength(key, data.Substring(16, 16)))
+                result = resulta + resultb + Core.Utility.XORHexStrings(data.Substring(16, 16), TripleDESDecryptSingleLength(key, data.Substring(32, 16)))
             End If
             Return result
         End Function

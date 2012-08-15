@@ -159,12 +159,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3C5FAC79D7087D7178911DAB16D45BA4"
-        "OwnerKey" = "8:_90689CBB59B74434903770B7EC5FB634"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_41DD884C0E0C469B8A5384A48AA4DAAB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -471,6 +465,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_DA73F7EA41E94830B7E1EB2C210503B0"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_DBB31EF11B56404FBF4BDB252DF9E0BE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -525,6 +525,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_E75054C2663466FD6FBA8B66DABCE976"
+        "OwnerKey" = "8:_90689CBB59B74434903770B7EC5FB634"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_E809A2A60BAF4A10992AA65502118C60"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -556,7 +562,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3C5FAC79D7087D7178911DAB16D45BA4"
+        "OwnerKey" = "8:_E75054C2663466FD6FBA8B66DABCE976"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -656,9 +662,9 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "Version" = "8:3.5.30729"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.0"
                 "AllowLaterVersions" = "11:FALSE"
-                "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=76617"
+                "InstallUrl" = "8:http://www.microsoft.com/en-us/download/details.aspx?id=17718"
                 }
             }
         }
@@ -1142,37 +1148,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3C5FAC79D7087D7178911DAB16D45BA4"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ThalesCore, Version=0.9.5.0, Culture=neutral, PublicKeyToken=3b1da66c080a0b02, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_3C5FAC79D7087D7178911DAB16D45BA4"
-                    {
-                    "Name" = "8:ThalesCore.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:ThalesCore.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_34E5D042E47843C09BC22C7FE4328E6E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_41DD884C0E0C469B8A5384A48AA4DAAB"
@@ -2175,6 +2150,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DA73F7EA41E94830B7E1EB2C210503B0"
+            {
+            "SourcePath" = "8:..\\ThalesCore\\XMLDefs\\HostCommands\\GenerateAMEXCSC_RY.xml"
+            "TargetName" = "8:GenerateAMEXCSC_RY.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_E2AE7C7E8EB94A15A9630785EDFF29E4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DBB31EF11B56404FBF4BDB252DF9E0BE"
             {
             "SourcePath" = "8:..\\ThalesCore\\XMLDefs\\HostCommands\\GenerateZEKorZAK_FI.xml"
@@ -2355,6 +2350,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E75054C2663466FD6FBA8B66DABCE976"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ThalesCore, Version=0.9.6.0, Culture=neutral, PublicKeyToken=3b1da66c080a0b02, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_E75054C2663466FD6FBA8B66DABCE976"
+                    {
+                    "Name" = "8:ThalesCore.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:ThalesCore.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_34E5D042E47843C09BC22C7FE4328E6E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E809A2A60BAF4A10992AA65502118C60"
             {
             "SourcePath" = "8:..\\ThalesCore\\XMLDefs\\HostCommands\\TranslateTAKFromLMKToZMK_MG.xml"
@@ -2525,8 +2551,9 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Thales Simulator"
         "ProductCode" = "8:{09544701-D982-4E42-AB7C-96E338B7BF4E}"
-        "PackageCode" = "8:{C009C242-60EA-4FAC-B858-411602074E2A}"
+        "PackageCode" = "8:{BE91CD34-29DC-42CA-B7B9-1732886D4258}"
         "UpgradeCode" = "8:{1B09877B-9850-4D4E-8CAB-B6DB8DA0C6A2}"
+        "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
