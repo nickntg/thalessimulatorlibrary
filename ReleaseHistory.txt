@@ -9,6 +9,8 @@ Unreleased
 * Updated the Key Manager to correctly update variants of single-length keys.
 * Added RY command, contributed by volosnikpk.
 * Upgraded solution to use Visual Studio 2010.
+* Fixed a problem with the DES algorithm when using weak or semi-weak keys.
+  Contributed by Bernard.
 
 2012/05/29: Version 0.9.6 beta released.
 ----------------------------------------

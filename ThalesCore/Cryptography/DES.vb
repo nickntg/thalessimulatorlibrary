@@ -73,7 +73,7 @@ Namespace Cryptography
 
                 Catch ex As Exception
                     Log.Logger.MajorWarning("Transform invocation error " & ex.ToString)
-                    desTransform = desProvider.CreateDecryptor(bKey, bNullVector)
+                    desTransform = desProvider.CreateEncryptor(bKey, bNullVector)
                 End Try
                 'NEW STUFF TO GET AROUND WEAK KEYS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
