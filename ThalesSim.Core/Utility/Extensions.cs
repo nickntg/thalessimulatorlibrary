@@ -233,7 +233,50 @@ namespace ThalesSim.Core.Utility
                 throw new InvalidOperationException("Text must be hexadecimal");
             }
 
+            var bytes = text.GetHexBytes();
+            if (bytes.Any(b => !b.IsParityOk(parity)))
+            {
+                return false;
+            }
+
             return true;
+        }
+
+        public static bool IsParityOk(this byte b, Parity parity)
+        {
+            if (parity == Parity.None)
+            {
+                return true;
+            }
+
+            var ones = Convert.ToString(b, 2).Replace("0", "");
+            return (ones.Length % 2 != 0 || parity != Parity.Odd) && (ones.Length % 2 != 1 || parity != Parity.Even);
+        }
+
+        public static string MakeParity (this string text, Parity parity)
+        {
+            if (parity == Parity.None)
+            {
+                return text;
+            }
+
+            var schemeChar = string.Empty;
+            if (text.StartsWithKeyScheme())
+            {
+                schemeChar = text.Substring(0, 1);
+            }
+
+            var bytes = text.GetHexBytes();
+
+            for (var i = 0; i < bytes.Length; i++)
+            {
+                if (!bytes[i].IsParityOk(parity))
+                {
+                    bytes[i] = (byte) (bytes[i] ^ 0x01);
+                }
+            }
+
+            return schemeChar + bytes.GetHexString();
         }
 
         #endregion
@@ -275,6 +318,21 @@ namespace ThalesSim.Core.Utility
                 default:
                     throw new InvalidCastException(string.Format("Cannot parse {0} as an LMK pair", text));
             }
+        }
+
+        #endregion
+
+        #region File/directory
+
+        public static string AppendTrailingSeparator (this string text)
+        {
+            var sep = "\\";
+            if (!text.Contains("\\"))
+            {
+                sep = "/";
+            }
+
+            return !text.EndsWith(sep) ? text + sep : text;
         }
 
         #endregion

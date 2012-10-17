@@ -205,5 +205,56 @@ namespace ThalesSim.Tests.Unit.Utility
         {
             Assert.AreEqual(expected, text.GetLmkPair());
         }
+
+        [Test]
+        [TestCase("noparitycheck", Parity.None, true)]
+        [TestCase("", Parity.None, true)]
+        [TestCase("01", Parity.Odd, true)]
+        [TestCase("00", Parity.Even, true)]
+        [TestCase("0123456789ABCDEF", Parity.Odd, true)]
+        [TestCase("0022446688AACCEE", Parity.Even, true)]
+        [TestCase("0122446688AACCEE", Parity.Even, false)]
+        [TestCase("1123456789ABCDEF", Parity.Odd, false)]
+        [TestCase("U0123456789ABCDEF", Parity.Odd, true)]
+        [TestCase("X0022446688AACCEE", Parity.Even, true)]
+        [TestCase("T0122446688AACCEE", Parity.Even, false)]
+        [TestCase("Y1123456789ABCDEF", Parity.Odd, false)]
+        public void TestParity (string text, Parity parity, bool expected)
+        {
+            Assert.AreEqual(expected, text.IsParityOk(parity));
+        }
+
+        [Test]
+        [TestCase(0, Parity.Even, true)]
+        [TestCase(1, Parity.Even, false)]
+        [TestCase(1, Parity.Odd, true)]
+        [TestCase(0, Parity.Odd, false)]
+        [TestCase(0xFF, Parity.Odd, false)]
+        [TestCase(0xFF, Parity.Even, true)]
+        public void TestByteParity (byte b, Parity parity, bool expected)
+        {
+            Assert.AreEqual(expected, b.IsParityOk(parity));
+        }
+
+        [Test]
+        [TestCase("noparity", Parity.None, "noparity")]
+        [TestCase("00", Parity.Even, "00")]
+        [TestCase("01", Parity.Odd, "01")]
+        [TestCase("00", Parity.Odd, "01")]
+        [TestCase("01", Parity.Even, "00")]
+        [TestCase("0123456789ABCDEF", Parity.Even, "0022446688AACCEE")]
+        [TestCase("0022446688AACCEE", Parity.Odd, "0123456789ABCDEF")]
+        public void TestMakeParity (string text, Parity parity, string expected)
+        {
+            Assert.AreEqual(expected, text.MakeParity(parity));
+        }
+
+        [Test]
+        [TestCase("c:\\test", "c:\\test\\")]
+        [TestCase("/var/test", "/var/test/")]
+        public void TestDirSeparatorTrail (string text, string expected)
+        {
+            Assert.AreEqual(expected, text.AppendTrailingSeparator());
+        }
     }
 }
