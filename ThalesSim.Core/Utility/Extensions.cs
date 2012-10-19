@@ -183,7 +183,12 @@ namespace ThalesSim.Core.Utility
 
         public static KeyScheme GetKeyScheme (this string text)
         {
-            text = text.ToUpper();
+            if (string.IsNullOrEmpty(text))
+            {
+                throw new InvalidCastException("Cannot derive key scheme from empty/null string");
+            }
+
+            text = text.ToUpper().Substring(0,1);
             switch (text)
             {
                 case "X":

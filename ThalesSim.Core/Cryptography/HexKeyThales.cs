@@ -14,7 +14,7 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-using System;
+using ThalesSim.Core.Utility;
 
 namespace ThalesSim.Core.Cryptography
 {
@@ -24,21 +24,45 @@ namespace ThalesSim.Core.Cryptography
 
         public string Key { get; private set; }
 
+        public string ClearKey { get; private set; }
+
         public HexKeyThales (string keyTypeCode, string key)
         {
             Code = new KeyTypeCode(keyTypeCode);
 
             Key = key;
+
+            DecryptKey();
         }
 
-        public HexKey GetClearLmk()
+        private void DecryptKey()
         {
-            throw new NotImplementedException();
-        }
+            var scheme = KeyScheme.Unspecified;
 
-        public HexKey GetClearKey()
-        {
-            throw new NotImplementedException();
+            if (Key.StartsWithKeyScheme())
+            {
+                scheme = Key.GetKeyScheme();
+            }
+
+            string result;
+            var lmk = new HexKey(LMK.LmkStorage.LmkVariant(Code.Pair, Code.Variant));
+
+            switch (scheme)
+            {
+                case KeyScheme.Unspecified:
+                case KeyScheme.SingleLengthKey:
+                case KeyScheme.DoubleLengthKeyAnsi:
+                case KeyScheme.TripleLengthKeyAnsi:
+                    result = lmk.Decrypt(Key.StripKeyScheme());
+                    break;
+                default:
+                    result = lmk.DecryptVariant(Key.StripKeyScheme());
+                    break;
+            }
+
+            ClearKey = scheme != KeyScheme.Unspecified && scheme != KeyScheme.SingleLengthKey
+                           ? scheme.GetKeySchemeChar() + result
+                           : result;
         }
     }
 }
