@@ -17,6 +17,7 @@
 using NUnit.Framework;
 using ThalesSim.Core.Cryptography;
 using ThalesSim.Core.Cryptography.LMK;
+using ThalesSim.Core.Cryptography.PIN;
 using ThalesSim.Core.Utility;
 
 namespace ThalesSim.Tests.Unit.Utility
@@ -187,6 +188,30 @@ namespace ThalesSim.Tests.Unit.Utility
         }
 
         [Test]
+        [TestCase("00", LmkPair.Pair04_05, 0)]
+        [TestCase("01", LmkPair.Pair06_07, 0)]
+        [TestCase("02", LmkPair.Pair14_15, 0)]
+        [TestCase("03", LmkPair.Pair16_17, 0)]
+        [TestCase("04", LmkPair.Pair18_19, 0)]
+        [TestCase("05", LmkPair.Pair20_21, 0)]
+        [TestCase("06", LmkPair.Pair22_23, 0)]
+        [TestCase("07", LmkPair.Pair24_25, 0)]
+        [TestCase("08", LmkPair.Pair26_27, 0)]
+        [TestCase("09", LmkPair.Pair28_29, 0)]
+        [TestCase("0A", LmkPair.Pair30_31, 0)]
+        [TestCase("0B", LmkPair.Pair32_33, 0)]
+        [TestCase("10", LmkPair.Pair04_05, 1)]
+        [TestCase("42", LmkPair.Pair14_15, 4)]
+        public void TestLmkPairMappingForTwoCharacters (string text, LmkPair expected, int variantExpected)
+        {
+            int variant;
+            var pair = text.GetLmkPairFromTwoDigits(out variant);
+
+            Assert.AreEqual(expected, pair);
+            Assert.AreEqual(variantExpected, variant);
+        }
+
+        [Test]
         [TestCase("00", LmkPair.Pair04_05)]
         [TestCase("01", LmkPair.Pair06_07)]
         [TestCase("02", LmkPair.Pair14_15)]
@@ -199,8 +224,9 @@ namespace ThalesSim.Tests.Unit.Utility
         [TestCase("09", LmkPair.Pair28_29)]
         [TestCase("0A", LmkPair.Pair30_31)]
         [TestCase("0B", LmkPair.Pair32_33)]
-        [TestCase("10", LmkPair.Pair04_05)]
-        [TestCase("42", LmkPair.Pair14_15)]
+        [TestCase("0C", LmkPair.Pair34_35)]
+        [TestCase("0D", LmkPair.Pair36_37)]
+        [TestCase("0E", LmkPair.Pair38_39)]
         public void TestLmkPairMapping (string text, LmkPair expected)
         {
             Assert.AreEqual(expected, text.GetLmkPair());
@@ -255,6 +281,18 @@ namespace ThalesSim.Tests.Unit.Utility
         public void TestDirSeparatorTrail (string text, string expected)
         {
             Assert.AreEqual(expected, text.AppendTrailingSeparator());
+        }
+
+        [Test]
+        [TestCase("01", PinBlockFormat.AnsiX98)]
+        [TestCase("02", PinBlockFormat.Docutel)]
+        [TestCase("03", PinBlockFormat.Diebold)]
+        [TestCase("04", PinBlockFormat.Plus)]
+        [TestCase("05", PinBlockFormat.Iso94564_1)]
+        public void TestPinBlockMapping (string text, PinBlockFormat expected)
+        {
+            Assert.AreEqual(expected, text.GetPinBlockFormat());
+            Assert.AreEqual(text, expected.GetPinBlockFormat());
         }
     }
 }

@@ -19,6 +19,7 @@ using System.Linq;
 using System.Text;
 using ThalesSim.Core.Cryptography;
 using ThalesSim.Core.Cryptography.LMK;
+using ThalesSim.Core.Cryptography.PIN;
 
 namespace ThalesSim.Core.Utility
 {
@@ -283,6 +284,47 @@ namespace ThalesSim.Core.Utility
 
         #region LMK
 
+        public static LmkPair GetLmkPairFromTwoDigits (this string text, out int variant)
+        {
+            variant = 0;
+
+            switch (text.ToUpper())
+            {
+                case "00":
+                    return LmkPair.Pair04_05;
+                case "01":
+                    return LmkPair.Pair06_07;
+                case "02":
+                    return LmkPair.Pair14_15;
+                case "03":
+                    return LmkPair.Pair16_17;
+                case "04":
+                    return LmkPair.Pair18_19;
+                case "05":
+                    return LmkPair.Pair20_21;
+                case "06":
+                    return LmkPair.Pair22_23;
+                case "07":
+                    return LmkPair.Pair24_25;
+                case "08":
+                    return LmkPair.Pair26_27;
+                case "09":
+                    return LmkPair.Pair28_29;
+                case "0A":
+                    return LmkPair.Pair30_31;
+                case "0B":
+                    return LmkPair.Pair32_33;
+                case "10":
+                    variant = 1;
+                    return LmkPair.Pair04_05;
+                case "42":
+                    variant = 4;
+                    return LmkPair.Pair14_15;
+                default:
+                    throw new InvalidCastException(string.Format("Cannot parse {0} as an LMK pair from two digits", text));
+            }
+        }
+
         public static LmkPair GetLmkPair (this string text)
         {
             switch (text.ToUpper())
@@ -311,12 +353,126 @@ namespace ThalesSim.Core.Utility
                     return LmkPair.Pair30_31;
                 case "0B":
                     return LmkPair.Pair32_33;
-                case "10":
-                    return LmkPair.Pair04_05;
-                case "42":
-                    return LmkPair.Pair14_15;
+                case "0C":
+                    return LmkPair.Pair34_35;
+                case "0D":
+                    return LmkPair.Pair36_37;
+                case "0E":
+                    return LmkPair.Pair38_39;
                 default:
                     throw new InvalidCastException(string.Format("Cannot parse {0} as an LMK pair", text));
+            }
+        }
+
+        #endregion
+
+        #region PIN
+
+        public static bool IsPinBlockFormatSupported (this string text)
+        {
+            try
+            {
+                var format = text.GetPinBlockFormat();
+                return true;
+            }
+            catch (InvalidCastException)
+            {
+                return false;
+            }
+        }
+
+        public static PinBlockFormat GetPinBlockFormat (this string text)
+        {
+            switch (text)
+            {
+                case "01":
+                    return PinBlockFormat.AnsiX98;
+                case "02":
+                    return PinBlockFormat.Docutel;
+                case "03":
+                    return PinBlockFormat.Diebold;
+                case "04":
+                    return PinBlockFormat.Plus;
+                case "05":
+                    return PinBlockFormat.Iso94564_1;
+                default:
+                    throw new InvalidCastException(string.Format("PIN block format {0} not valid or unsupported", text));
+            }
+        }
+
+        public static string GetPinBlockFormat (this PinBlockFormat format)
+        {
+            switch (format)
+            {
+                case PinBlockFormat.AnsiX98:
+                    return "01";
+                case PinBlockFormat.Docutel:
+                    return "02";
+                case PinBlockFormat.Diebold:
+                    return "03";
+                case PinBlockFormat.Plus:
+                    return "04";
+                case PinBlockFormat.Iso94564_1:
+                    return "05";
+                default:
+                    throw new InvalidCastException(string.Format("PIN block format {0} not valid or unsupported", format));
+            }
+        }
+
+        public static string GetPinBlock (this string pin, string accountOrPadding, PinBlockFormat format)
+        {
+            switch (format)
+            {
+                case PinBlockFormat.AnsiX98:
+                    if (accountOrPadding.Length < 12)
+                    {
+                        throw new InvalidOperationException("Account length must be equal or greater than 12 to use ANSIX9.8");
+                    }
+
+                    var s1 = (pin.Length.ToString().PadLeft(2, '0') + pin).PadRight(16, 'F');
+                    var s2 = accountOrPadding.PadLeft(16, '0');
+
+                    return s1.XorHex(s2);
+                case PinBlockFormat.Diebold:
+                    return pin.PadRight(16, 'F');
+                case PinBlockFormat.Docutel:
+                    if (pin.Length > 6)
+                    {
+                        throw new InvalidOperationException("PIN length must be less or equal to 6 to use Docutel");
+                    }
+
+                    var s3 = pin.Length.ToString() + pin.PadLeft(6, '0');
+                    return s3 + accountOrPadding.Substring(0, 16 - s3.Length);
+                case PinBlockFormat.Iso94564_1:
+                    var s4 = ("0" + pin.Length.ToString() + pin).PadLeft(16, 'F');
+                    var s5 = "0000" + accountOrPadding.Substring(0, 12);
+                    return s4.XorHex(s5);
+                case PinBlockFormat.Plus:
+                    throw new NotSupportedException("Unsupported PIN block format PLUS");
+                default:
+                    throw new NotSupportedException(string.Format("Unsupported PIN block format {0}", format));
+            }
+        }
+
+        public static string GetPin (this string clearPinBlock, string accountOrPadding, PinBlockFormat format)
+        {
+            switch (format)
+            {
+                case PinBlockFormat.AnsiX98:
+                    var s1 = accountOrPadding.PadLeft(16, '0').XorHex(clearPinBlock);
+                    return s1.Substring(2, Convert.ToInt32(s1.Substring(0, 2)));
+                case PinBlockFormat.Diebold:
+                    return clearPinBlock.Replace("F", "");
+                case PinBlockFormat.Docutel:
+                    return clearPinBlock.Substring(1, Convert.ToInt32(clearPinBlock.Substring(0, 1)));
+                case PinBlockFormat.Iso94564_1:
+                    var s2 = "0000" + accountOrPadding.PadLeft(16, 'F').XorHex(clearPinBlock);
+                    var pl = Convert.ToInt32(s2.Substring(11, 1));
+                    return s2.Substring(12, pl);
+                case PinBlockFormat.Plus:
+                    throw new NotSupportedException("Unsupported PIN block format PLUS");
+                default:
+                    throw new NotSupportedException(string.Format("Unsupported PIN block format {0}", format));
             }
         }
 

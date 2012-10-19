@@ -50,14 +50,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cryptography\AuthStateRequirement.cs" />
     <Compile Include="Cryptography\DES\TripleDes.cs" />
     <Compile Include="Cryptography\HexKey.cs" />
+    <Compile Include="Cryptography\HexKeyThales.cs" />
+    <Compile Include="Cryptography\KeyFunction.cs" />
     <Compile Include="Cryptography\KeyLength.cs" />
     <Compile Include="Cryptography\KeyScheme.cs" />
+    <Compile Include="Cryptography\KeyTypeCode.cs" />
     <Compile Include="Cryptography\LMK\LmkPair.cs" />
     <Compile Include="Cryptography\LMK\LmkStorage.cs" />
     <Compile Include="Cryptography\LMK\Variants.cs" />
     <Compile Include="Cryptography\Parity.cs" />
+    <Compile Include="Cryptography\PIN\PinBlock.cs" />
+    <Compile Include="Cryptography\PIN\PinBlockFormat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\Extensions.cs" />
   </ItemGroup>
