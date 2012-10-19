@@ -50,7 +50,9 @@
   <ItemGroup>
     <Compile Include="Cryptography\DES\TripleDesTests.cs" />
     <Compile Include="Cryptography\KeyTests.cs" />
+    <Compile Include="Cryptography\KeyTypeCodeTests.cs" />
     <Compile Include="Cryptography\LMK\LmkTests.cs" />
+    <Compile Include="Cryptography\PIN\PinBlockTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ExtensionTests.cs" />
   </ItemGroup>
@@ -63,6 +65,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
