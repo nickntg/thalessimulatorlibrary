@@ -50,5 +50,26 @@ namespace ThalesSim.Tests.Unit.Cryptography.PIN
                                    new HexKey("0123456789ABCDEFABCDEF0123456789"));
             Assert.AreEqual("1234", pb2.Pin);            
         }
+
+        [Test]
+        [TestCase("1234", "550000025321", PinBlockFormat.AnsiX98, PinBlockFormat.Diebold, "1234FFFFFFFFFFFF")]
+        [TestCase("1234", "550000025321", PinBlockFormat.Diebold, PinBlockFormat.AnsiX98, "041261FFFFFDACDE")]
+        public void TranslateClearPinBlock (string pin, string accountOrPadding, PinBlockFormat sourceFormat, PinBlockFormat targetFormat, string expected)
+        {
+            var pb = new PinBlock(pin, accountOrPadding, sourceFormat);
+            Assert.AreEqual(expected, pb.Translate(targetFormat));
+        }
+
+        [Test]
+        [TestCase("CAE9C83F58DDC12D", "550000025321", PinBlockFormat.AnsiX98, PinBlockFormat.AnsiX98, "0123456789ABCDEFABCDEF0123456789", "ABCDEF09876543210123456789ABCDEF", "5BFC613E71F15274")]
+        [TestCase("CAE9C83F58DDC12D", "550000025321", PinBlockFormat.AnsiX98, PinBlockFormat.Diebold, "0123456789ABCDEFABCDEF0123456789", "ABCDEF09876543210123456789ABCDEF", "309E6BC5657F19EE")]
+        public void TranslateEncryptedPinBlock (string pinBlock, string accountOrPadding, 
+            PinBlockFormat sourceFormat, PinBlockFormat targetFormat, 
+            string sourceClearKey, string targetClearKey, string expected)
+        {
+            var pb = new PinBlock(pinBlock, accountOrPadding, sourceFormat, new HexKey(sourceClearKey));
+            var key = new HexKey(targetClearKey);
+            Assert.AreEqual(expected, pb.Translate(key, targetFormat));
+        }
     }
 }

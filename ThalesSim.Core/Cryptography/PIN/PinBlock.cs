@@ -43,5 +43,17 @@ namespace ThalesSim.Core.Cryptography.PIN
             ClearPinBlock = clearKey.Decrypt(encryptedPinBlock);
             Pin = ClearPinBlock.GetPin(accountOrPadding, format);
         }
+
+        public string Translate (PinBlockFormat format)
+        {
+            var newBlock = new PinBlock(Pin, AccountOrPadding, format);
+            return newBlock.ClearPinBlock;
+        }
+
+        public string Translate (HexKey key, PinBlockFormat format)
+        {
+            var newBlock = new PinBlock(Pin, AccountOrPadding, format);
+            return key.Encrypt(newBlock.ClearPinBlock);
+        }
     }
 }
