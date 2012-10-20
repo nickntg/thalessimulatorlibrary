@@ -53,6 +53,8 @@
     <Compile Include="Cryptography\KeyTypeCodeTests.cs" />
     <Compile Include="Cryptography\LMK\LmkTests.cs" />
     <Compile Include="Cryptography\PIN\PinBlockTests.cs" />
+    <Compile Include="Message\StreamMessageTests.cs" />
+    <Compile Include="Message\StreamResponseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ExtensionTests.cs" />
   </ItemGroup>
