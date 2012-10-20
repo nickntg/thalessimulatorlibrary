@@ -97,7 +97,7 @@ namespace ThalesSim.Core.Cryptography
 
         public override string ToString()
         {
-            return Scheme.GetKeySchemeChar() + Key;
+            return Scheme.GetKeySchemeChar().Replace("Z","") + Key;
         }
 
         public string Encrypt (string data)

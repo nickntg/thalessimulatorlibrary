@@ -17,6 +17,7 @@
 using NUnit.Framework;
 using ThalesSim.Core.Cryptography;
 using ThalesSim.Core.Cryptography.LMK;
+using ThalesSim.Core.Utility;
 
 namespace ThalesSim.Tests.Unit.Cryptography
 {
@@ -45,6 +46,7 @@ namespace ThalesSim.Tests.Unit.Cryptography
             Assert.AreEqual(expectedKey, key.Key);
             Assert.AreEqual(expectedLength, key.Length);
             Assert.AreEqual(expectedScheme, key.Scheme);
+            Assert.AreEqual(key.ToString().StripKeyScheme(), hexKey.ToUpper().StripKeyScheme());
         }
 
         [Test]
@@ -57,7 +59,20 @@ namespace ThalesSim.Tests.Unit.Cryptography
         [TestCase("TA5E7D4FE829B0D83C5E7352636C16C7827E197349E34A5CD", "001", "T0DF8F7E6D373863729E6451FA8D0981FCE79EA200829E09B")]
         public void VerifyThalesKey (string thalesKey, string keyTypeCode, string expectedKey)
         {
-            Assert.AreEqual(expectedKey, new HexKeyThales(keyTypeCode, thalesKey).ClearKey);
+            var key = new HexKeyThales(keyTypeCode, false, thalesKey);
+
+            var otherKey = new HexKeyThales(keyTypeCode, true, key.ClearKey);
+
+            Assert.AreEqual(expectedKey, key.ClearKey);
+            Assert.AreEqual(key.ClearKey, key.ClearHexKey.ToString());
+            Assert.AreEqual(otherKey.Key, thalesKey);
+            Assert.AreEqual(otherKey.ClearKey, otherKey.ClearHexKey.ToString());
+
+            if (thalesKey.Length != 16)
+            {
+                Assert.AreEqual(key.ClearKey.GetKeyScheme(), key.ClearHexKey.Scheme);
+                Assert.AreEqual(otherKey.ClearKey.GetKeyScheme(), otherKey.ClearHexKey.Scheme);
+            }
         }
     }
 }

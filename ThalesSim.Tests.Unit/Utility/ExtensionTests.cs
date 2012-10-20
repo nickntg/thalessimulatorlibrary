@@ -137,6 +137,17 @@ namespace ThalesSim.Tests.Unit.Utility
         }
 
         [Test]
+        [TestCase(KeyScheme.DoubleLengthKeyAnsi, 32)]
+        [TestCase(KeyScheme.DoubleLengthKeyVariant, 32)]
+        [TestCase(KeyScheme.SingleLengthKey, 16)]
+        [TestCase(KeyScheme.TripleLengthKeyAnsi, 48)]
+        [TestCase(KeyScheme.TripleLengthKeyVariant, 48)]
+        public void TestSchemeLength (KeyScheme scheme, int expected)
+        {
+            Assert.AreEqual(expected, scheme.GetKeyLength());
+        }
+
+        [Test]
         [TestCase("01", new byte[] { 48, 49})]
         [TestCase("", new byte[] { })]
         public void TestStringToBytes(string text, byte[] expected)

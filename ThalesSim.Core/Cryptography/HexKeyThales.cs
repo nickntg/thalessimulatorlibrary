@@ -26,22 +26,45 @@ namespace ThalesSim.Core.Cryptography
 
         public string ClearKey { get; private set; }
 
-        public HexKeyThales (string keyTypeCode, string key)
+        public HexKey ClearHexKey { get { return new HexKey(ClearKey); } }
+
+        public HexKeyThales (KeyTypeCode keyCode, int variant, bool clearKey, string key) : this(variant.ToString() + keyCode, clearKey, key) { }
+
+        public HexKeyThales (string keyTypeCode, bool clearKey, string key)
         {
             Code = new KeyTypeCode(keyTypeCode);
 
-            Key = key;
+            if (!clearKey)
+            {
+                Key = key;
 
-            DecryptKey();
+                DecryptKey();
+            }
+            else
+            {
+                ClearKey = key;
+
+                EncryptKey();
+            }
+        }
+
+        private void EncryptKey()
+        {
+            Key = KeyOperation(false, ClearKey);
         }
 
         private void DecryptKey()
         {
+            ClearKey = KeyOperation(true, Key);
+        }
+
+        private string KeyOperation (bool decrypt, string key)
+        {
             var scheme = KeyScheme.Unspecified;
 
-            if (Key.StartsWithKeyScheme())
+            if (key.StartsWithKeyScheme())
             {
-                scheme = Key.GetKeyScheme();
+                scheme = key.GetKeyScheme();
             }
 
             string result;
@@ -53,16 +76,18 @@ namespace ThalesSim.Core.Cryptography
                 case KeyScheme.SingleLengthKey:
                 case KeyScheme.DoubleLengthKeyAnsi:
                 case KeyScheme.TripleLengthKeyAnsi:
-                    result = lmk.Decrypt(Key.StripKeyScheme());
+                    result = decrypt ? lmk.Decrypt(key.StripKeyScheme()) : lmk.Encrypt(key.StripKeyScheme());
                     break;
                 default:
-                    result = lmk.DecryptVariant(Key.StripKeyScheme());
+                    result = decrypt
+                                 ? lmk.DecryptVariant(key.StripKeyScheme())
+                                 : lmk.EncryptVariant(key.StripKeyScheme());
                     break;
             }
 
-            ClearKey = scheme != KeyScheme.Unspecified && scheme != KeyScheme.SingleLengthKey
-                           ? scheme.GetKeySchemeChar() + result
-                           : result;
+            return scheme != KeyScheme.Unspecified && scheme != KeyScheme.SingleLengthKey
+                          ? scheme.GetKeySchemeChar() + result
+                          : result;
         }
     }
 }

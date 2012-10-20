@@ -25,6 +25,8 @@ namespace ThalesSim.Core.Utility
 {
     public static class Extensions
     {
+        private static readonly Random RndMachine = new Random();
+
         #region Hex/binary/byte
 
         public static bool IsHex(this string text)
@@ -221,6 +223,20 @@ namespace ThalesSim.Core.Utility
             return StartsWithKeyScheme(text) ? text.Substring(1) : text;
         }
 
+        public static int GetKeyLength (this KeyScheme scheme)
+        {
+            switch (scheme)
+            {
+                case KeyScheme.SingleLengthKey:
+                    return 16;
+                case KeyScheme.DoubleLengthKeyAnsi:
+                case KeyScheme.DoubleLengthKeyVariant:
+                    return 32;
+                default:
+                    return 48;
+            }
+        }
+
         #endregion
 
         #region Parity
@@ -283,6 +299,40 @@ namespace ThalesSim.Core.Utility
             }
 
             return schemeChar + bytes.GetHexString();
+        }
+
+        public static string RandomKey (this string text, KeyScheme scheme, Parity parity)
+        {
+            switch (scheme.GetKeyLength())
+            {
+                case 16:
+                    return RandomKey(text, parity);
+                case 32:
+                    return (RandomKey(text, parity) + RandomKey(text, parity)).MakeParity(parity);
+                default:
+                    return (RandomKey(text, parity) + RandomKey(text, parity) + RandomKey(text, parity)).MakeParity(parity);
+            }
+        }
+
+        public static string RandomKey (this string text, KeyScheme scheme)
+        {
+            return RandomKey(text, scheme, Parity.Odd);
+        }
+
+        public static string RandomKey (this string text)
+        {
+            return RandomKey(text, Parity.Odd);
+        }
+
+        public static string RandomKey (this string text, Parity parity)
+        {
+            var sb = new StringBuilder();
+            for (var i = 1; i <= 16; i++)
+            {
+                sb.AppendFormat("{0:X1}", RndMachine.Next(0, 16));
+            }
+
+            return sb.ToString().MakeParity(parity);
         }
 
         #endregion

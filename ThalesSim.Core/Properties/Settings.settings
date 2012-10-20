@@ -1,0 +1,57 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ThalesSim.Core.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FirmwareNumber" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0007-E000</Value>
+    </Setting>
+    <Setting Name="DSPFirmwareNumber" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0001</Value>
+    </Setting>
+    <Setting Name="MaxConnections" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="StartInAuthorizedState" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="LMKCheckValue" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ClearPINLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="HostCommandPort" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9998</Value>
+    </Setting>
+    <Setting Name="ConsoleCommandPort" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9997</Value>
+    </Setting>
+    <Setting Name="HostCommandDefinitions" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DoubleLengthZMKs" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="LegacyMode" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ExpectTrailers" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="HeaderLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="EBCDIC" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CheckLMKParity" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LMKStorageFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">LMKSTORAGE.TXT</Value>
+    </Setting>
+    <Setting Name="LogLevel" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
