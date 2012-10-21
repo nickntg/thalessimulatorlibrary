@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Generate and print a key as split components.</CommandName>
+  <Request>NE</Request>
+  <Response>NF</Response>
+
+  <Field>
+    <Name>Key Type</Name>
+    <Length>3</Length>
+    <Type>Character</Type>
+  </Field>
+
+  <Field>
+    <Name>Key Scheme LMK</Name>
+    <IncludeFile>KeyScheme.xml</IncludeFile>
+  </Field>
+
+</CommandConfiguration>

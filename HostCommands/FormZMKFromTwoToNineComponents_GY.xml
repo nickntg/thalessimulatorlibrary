@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Forms a ZMK from 2 to 9 components</CommandName>
+  <Request>GY</Request>
+  <Response>GZ</Response>
+
+  <Field>
+    <Name>Number of Components</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+    <ValidValue>2</ValidValue>
+    <ValidValue>3</ValidValue>
+    <ValidValue>4</ValidValue>
+    <ValidValue>5</ValidValue>
+    <ValidValue>6</ValidValue>
+    <ValidValue>7</ValidValue>
+    <ValidValue>8</ValidValue>
+    <ValidValue>9</ValidValue>
+    <RejectionCodeIfInvalid>03</RejectionCodeIfInvalid>
+  </Field>
+
+<!--
+
+We'll be parsing ZMK components like 16H/32H or 1A+16H/1A+32H,
+depending on the value of the LegacyMode flag.
+
+<Field>
+    <Name>ZMK Component</Name>
+    <Length>DOUBLE_LENGTH_ZMKS</Length>
+    <Type>Hexadecimal</Type>
+    <Repetitions>Number of Components</Repetitions>
+  </Field>
+-->
+
+  <Field>
+    <Name>ZMK Component</Name>
+    <IncludeFile>MultiFormatZMK.xml</IncludeFile>
+    <Repetitions>Number of Components</Repetitions>
+    <StaticRepetitions>true</StaticRepetitions>
+  </Field>
+
+  <Field>
+    <Name>Delimiter</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <ValidValue>;</ValidValue>
+  </Field>
+
+  <Field>
+    <Name>Reserved</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+    <DependentField>Delimiter</DependentField>
+    <DependentValue>;</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
+    <ValidValue>0</ValidValue>
+    <RejectionCodeIfInvalid>15</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>Key Scheme LMK</Name>
+    <IncludeFile>KeyScheme.xml</IncludeFile>
+    <DependentField>Delimiter</DependentField>
+    <DependentValue>;</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
+  </Field>
+
+  <Field>
+    <Name>Key Check Value Type</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+    <DependentField>Delimiter</DependentField>
+    <DependentValue>;</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
+    <ValidValue>0</ValidValue>
+    <ValidValue>1</ValidValue>
+    <RejectionCodeIfInvalid>15</RejectionCodeIfInvalid>
+  </Field>
+
+</CommandConfiguration>

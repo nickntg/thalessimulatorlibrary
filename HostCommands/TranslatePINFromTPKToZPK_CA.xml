@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Translate PIN From TPK to ZPK</CommandName>
+  <Request>CA</Request>
+  <Response>CB</Response>
+  
+  <Field>
+      <Name>Source TPK</Name>
+      <IncludeFile>MultiFormatKey.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Destination ZPK</Name>
+    <IncludeFile>MultiFormatKey.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>PIN Length</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+    <ValidValue>12</ValidValue>
+    <RejectionCodeIfInvalid>15</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>Source PIN Block</Name>
+    <Length>16</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+  <Field>
+    <Name>Source PIN Block Format</Name>
+    <IncludeFile>PINBlockFormat.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Target PIN Block Format</Name>
+    <IncludeFile>PINBlockFormat.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Account Number</Name>
+    <Length>12</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+</CommandConfiguration>

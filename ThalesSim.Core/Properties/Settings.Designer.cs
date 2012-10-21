@@ -97,7 +97,7 @@ namespace ThalesSim.Core.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("..\\..\\..\\HostCommands")]
         public string HostCommandDefinitions {
             get {
                 return ((string)(this["HostCommandDefinitions"]));

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Returns HSM status information.</CommandName>
+  <Request>NO</Request>
+  <Response>NO</Response>
+
+  <Field>
+    <Name>Mode Flag</Name>
+    <Length>2</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+</CommandConfiguration>

@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Definitions"
+    targetNamespace="http://tempuri.org/HostCommandDefinitions.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/HostCommandDefinitions.xsd"
+    xmlns:mstns="http://tempuri.org/HostCommandDefinitions.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:element name="CommandConfiguration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="CommandName" type="xs:string" minOccurs="1" maxOccurs="1" />
+        <xs:element name="Request" type="xs:string" minOccurs="1" maxOccurs="1" />
+        <xs:element name="Response" type="xs:string" minOccurs="1" maxOccurs="1" />
+        <xs:element name="Field" type="MessageField" minOccurs="1" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:complexType name="MessageField">
+    <xs:sequence>
+      <!-- The name describes the field. -->
+      <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1" />
+      
+      <!-- If another XML file should be included, the IncludeField element is given a value. -->
+      <xs:element name="IncludeFile" type="xs:string" minOccurs="0" maxOccurs="1" />
+      
+      <!-- Notes for this field. -->
+      <xs:element name="Notes" type="xs:string" minOccurs="0" maxOccurs="1" />
+      
+      <!-- Field length. If set to 0, the remaining message is parsed in this field. -->
+      <xs:element name="Length" type="xs:string" minOccurs="0" maxOccurs="1" />
+
+      <!-- If we want to get the length of this field from another field, this is the element for it. -->
+      <xs:element name="DynamicFieldLength" type="xs:string" default="" minOccurs="0" maxOccurs="1" />
+      
+      <!-- Parsing continues until this value is encountered. Field length is disregarded
+           if this element has a non-empty value. -->
+      <xs:element name="ParseUntilValue" type="xs:string" default="" minOccurs="0" maxOccurs="1" />
+      
+      <!-- Field type. -->
+      <xs:element name="Type" type="FieldType" minOccurs="0" maxOccurs="1"/>
+      
+      <!-- The dependent field defines whether the value of this field depends
+           upon the value of another field as well as the other field's name. -->
+      <xs:element name="DependentField" type="xs:string" minOccurs="0" maxOccurs="1" />
+      
+      <!-- If this field should be parsed depending on a specific value of the
+           dependent field, this value is defined here.
+           
+           If the field should be parsed for more than one specific value of the
+           dependent field, a comma-separated list of values should be defined
+           here. -->
+      <xs:element name="DependentValue" type="xs:string" minOccurs="0" maxOccurs="1" />
+
+      <!-- If a field dependency is set, this element determines whether other fields
+           that have the same dependency will be excluded from parsing if this field
+           is parsed.-->
+      <xs:element name="ExclusiveDependency" type="xs:boolean" default="true" minOccurs="0" maxOccurs="1" />
+      
+      <!-- If this field has specific valid values, these are defined here. -->
+      <xs:element name="ValidValue" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+      
+      <!-- If the field's value is invalid, this element defines what Thales error
+           code to return. If this element is empty, an exception is raised and the
+           simulator drops the connection to the client. -->
+      <xs:element name="RejectionCodeIfInvalid" type="xs:string" minOccurs="0" maxOccurs="1" />
+      
+      <!-- Several OptionValue elements define what message values will cause the field
+           to be parsed. -->
+      <xs:element name="OptionValue" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+
+      <!-- If set to a number, this field is repeatedly parsed the number of times specified.
+           If set to a field name, this field is repeatedly parsed the number of times 
+           specified by that field's value. -->
+      <xs:element name="Repetitions" type="xs:string" minOccurs="0" maxOccurs="1" />
+
+      <!-- If repetitions are required, there are two different ways to do it:
+           
+           1. Parse the same field a number of times, then move on to the next field.
+           2. Parse a group of fields a number of times, then move on to the next field.
+           
+           For example, a command that passes a double-length hexadecimal key three times will use 
+           mode 1. On the other hand, a command that passes a variable key three times will use
+           mode 2.
+      -->
+      <xs:element name="StaticRepetitions" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1" />
+
+      <!-- If set to true, parsing for this field continues until a valid character, as defined
+           by the list of ValidValues, is detected. -->
+      <xs:element name="SkipUntilValid" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1" />
+
+      <!-- When SkipUntilValid is set to True, the parser may not find the value being searched for. When
+           that happens, this field determines what to do next. If set to False, an exception is being thrown.
+           Otherwise, the field's value is set to an empty string and processing continues. When set to true,
+           an empty valid value should also be added to the field being parsed. -->
+      <xs:element name="AllowNotFoundValidValue" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1" />
+      
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Possible values for the field type. -->
+  <xs:simpleType name="FieldType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Character" />
+      <xs:enumeration value="Numeric" />
+      <xs:enumeration value="Hexadecimal" />
+      <xs:enumeration value="Binary" />
+    </xs:restriction>
+  </xs:simpleType>
+  
+</xs:schema>

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Hashes a block of data.</CommandName>
+  <Request>GM</Request>
+  <Response>GN</Response>
+
+  <Field>
+    <Name>Hash Identifier</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+    <ValidValue>01</ValidValue>
+    <ValidValue>02</ValidValue>
+    <ValidValue>03</ValidValue>
+    <ValidValue>05</ValidValue>
+    <ValidValue>06</ValidValue>
+    <ValidValue>07</ValidValue>
+    <ValidValue>08</ValidValue>
+    <RejectionCodeIfInvalid>05</RejectionCodeIfInvalid>
+  </Field>
+
+  <Field>
+    <Name>Data Length</Name>
+    <Length>5</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Message Data</Name>
+    <Length>0</Length>
+    <Type>Binary</Type>
+  </Field>
+
+</CommandConfiguration>

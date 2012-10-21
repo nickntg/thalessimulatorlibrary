@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Translates a BDK from ZMK to encryption under LMK.</CommandName>
+  <Request>DW</Request>
+  <Response>DX</Response>
+
+  <Field>
+    <Name>ZMK</Name>
+    <IncludeFile>MultiFormatZMK.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>BDK</Name>
+    <IncludeFile>MultiFormatCVK.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Delimiter</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <ValidValue>;</ValidValue>
+  </Field>
+
+  <Field>
+    <Name>Reserved</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <DependentField>Delimiter</DependentField>
+    <DependentValue>;</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
+  </Field>
+
+  <Field>
+    <Name>Key Scheme LMK</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <DependentField>Delimiter</DependentField>
+    <DependentValue>;</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
+  </Field>
+
+  <Field>
+    <Name>Key Check Value Type</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <DependentField>Delimiter</DependentField>
+    <DependentValue>;</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
+    <ValidValue>0</ValidValue>
+    <ValidValue>1</ValidValue>
+    <ValidValue>2</ValidValue>
+    <RejectionCodeIfInvalid>15</RejectionCodeIfInvalid>
+  </Field>
+
+</CommandConfiguration>
