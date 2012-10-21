@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Verifies a VISA CVV.</CommandName>
+  <Request>CY</Request>
+  <Response>CZ</Response>
+
+  <Field>
+    <Name>CVK</Name>
+    <IncludeFile>MultiFormatCVK.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>CVV</Name>
+    <Length>3</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Account Number</Name>
+    <Length>1</Length>
+    <ParseUntilValue>;</ParseUntilValue>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Delimiter</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+  </Field>
+
+  <Field>
+    <Name>Expiration Date</Name>
+    <Length>4</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Service Code</Name>
+    <Length>3</Length>
+    <Type>Numeric</Type>
+  </Field>
+  
+</CommandConfiguration>

@@ -36,6 +36,26 @@ namespace ThalesSim.Tests.Unit.Utility
         [TestCase("7", true)]
         [TestCase("8", true)]
         [TestCase("9", true)]
+        [TestCase("A", false)]
+        [TestCase(" ", false)]
+        [TestCase("01234ABC", false)]
+        [TestCase("", false)]
+        public void TestIsNumeric (string text, bool expected)
+        {
+            Assert.AreEqual(expected, text.IsNumeric());
+        }
+
+        [Test]
+        [TestCase("0", true)]
+        [TestCase("1", true)]
+        [TestCase("2", true)]
+        [TestCase("3", true)]
+        [TestCase("4", true)]
+        [TestCase("5", true)]
+        [TestCase("6", true)]
+        [TestCase("7", true)]
+        [TestCase("8", true)]
+        [TestCase("9", true)]
         [TestCase("A", true)]
         [TestCase("a", true)]
         [TestCase("B", true)]

@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Data;
 using System.Linq;
 using System.Text;
 using ThalesSim.Core.Cryptography;
@@ -28,6 +29,18 @@ namespace ThalesSim.Core.Utility
         private static readonly Random RndMachine = new Random();
 
         #region Hex/binary/byte
+
+        public static bool IsNumeric (this string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return false;
+            }
+
+            var chars = text.ToUpper().StripKeyScheme().ToCharArray();
+
+            return !text.Where((t, i) => !char.IsDigit(chars[i])).Any();
+        }
 
         public static bool IsHex(this string text)
         {
@@ -544,6 +557,22 @@ namespace ThalesSim.Core.Utility
             }
 
             return !text.EndsWith(sep) ? text + sep : text;
+        }
+
+        #endregion
+
+        #region Data
+
+        public static bool IsNotNull(this DataRow dr, string column)
+        {
+            try
+            {
+                return dr[column] != DBNull.Value;
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
         }
 
         #endregion

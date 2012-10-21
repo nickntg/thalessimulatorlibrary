@@ -27,7 +27,7 @@
       <Value Profile="(Default)">9997</Value>
     </Setting>
     <Setting Name="HostCommandDefinitions" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">..\..\..\HostCommands</Value>
     </Setting>
     <Setting Name="DoubleLengthZMKs" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>

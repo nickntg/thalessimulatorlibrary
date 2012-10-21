@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Generates a MAC for a large message.</CommandName>
+  <Request>MQ</Request>
+  <Response>MR</Response>
+
+  <Field>
+    <Name>Message Block Number</Name>
+    <Length>1</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>ZAK</Name>
+    <IncludeFile>MultiFormatKey.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>IV</Name>
+    <Length>16</Length>
+    <Type>Hexadecimal</Type>
+    <DependentField>Message Block Number</DependentField>
+    <DependentValue>2,3</DependentValue>
+  </Field>
+ 
+  <Field>
+    <Name>Message Length</Name>
+    <Length>3</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+
+  <Field>
+    <Name>Message Block</Name>
+    <Length>0</Length>
+    <Type>Binary</Type>
+  </Field>
+
+</CommandConfiguration>

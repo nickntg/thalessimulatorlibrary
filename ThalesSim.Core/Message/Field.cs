@@ -14,8 +14,11 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using ThalesSim.Core.Utility;
 
 namespace ThalesSim.Core.Message
 {
@@ -25,7 +28,7 @@ namespace ThalesSim.Core.Message
 
         public int Length { get; set; }
 
-        public int DynamicLength { get; set; }
+        public string DynamicLength { get; set; }
 
         public string ParseUntil { get; set; }
 
@@ -55,8 +58,77 @@ namespace ThalesSim.Core.Message
 
         public Field()
         {
+            SkipUntil = false;
+            StaticRepetitions = false;
+            ExclusiveDependency = true;
+            ParseUntil = string.Empty;
+            DependentValues = new List<string>();
             ValidValues = new List<string>();
             OptionValues = new List<string>();
+        }
+
+        public Field (DataRow dr) : this()
+        {
+            Name = Convert.ToString(dr["Name"]);
+            if (dr.IsNotNull("DynamicFieldLength"))
+            {
+                DynamicLength = Convert.ToString(dr["DynamicFieldLength"]);
+            }
+
+            if (dr.IsNotNull("ParseUntilValue"))
+            {
+                ParseUntil = Convert.ToString(dr["ParseUntilValue"]);
+            }
+
+            if (dr.IsNotNull("DependentField"))
+            {
+                DependentField = Convert.ToString(dr["DependentField"]);
+            }
+
+            if (dr.IsNotNull("DependentValue"))
+            {
+                SetDependentValues(Convert.ToString(dr["DependentValue"]));
+            }
+
+            if (dr.IsNotNull("ExclusiveDependency"))
+            {
+                ExclusiveDependency = Convert.ToBoolean(dr["ExclusiveDependency"]);
+            }
+
+            if (dr.IsNotNull("RejectionCodeIfInvalid"))
+            {
+                RejectionCode = Convert.ToString(dr["RejectionCodeIfInvalid"]);
+            }
+
+            if (dr.IsNotNull("Repetitions"))
+            {
+                Repetitions = Convert.ToString(dr["Repetitions"]);
+            }
+
+            if (dr.IsNotNull("StaticRepetitions"))
+            {
+                StaticRepetitions = Convert.ToBoolean(dr["StaticRepetitions"]);
+            }
+
+            if (dr.IsNotNull("SkipUntilValid"))
+            {
+                SkipUntil = Convert.ToBoolean(dr["SkipUntilValid"]);
+            }
+
+            if (dr.IsNotNull("AllowNotFoundValidValue"))
+            {
+                AllowNotFoundValid = Convert.ToBoolean(dr["AllowNotFoundValidValue"]);
+            }
+
+            if (dr.IsNotNull("OptionValue"))
+            {
+                OptionValues.Add(Convert.ToString(dr["OptionValue"]));
+            }
+
+            if (dr.IsNotNull("ValidValue"))
+            {
+                ValidValues.Add(Convert.ToString(dr["ValidValue"]));
+            }
         }
 
         public void SetDependentValues (string text)

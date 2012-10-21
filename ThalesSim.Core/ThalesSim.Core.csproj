@@ -65,7 +65,11 @@
     <Compile Include="Cryptography\PIN\PinBlock.cs" />
     <Compile Include="Cryptography\PIN\PinBlockFormat.cs" />
     <Compile Include="Message\Field.cs" />
+    <Compile Include="Message\Fields.cs" />
+    <Compile Include="Message\FieldsStore.cs" />
     <Compile Include="Message\FieldType.cs" />
+    <Compile Include="Message\MessageKeyValuePairs.cs" />
+    <Compile Include="Message\Parser.cs" />
     <Compile Include="Message\StreamMessage.cs" />
     <Compile Include="Message\StreamResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,6 +78,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Resources\ErrorCodes.cs" />
+    <Compile Include="Resources\Static.cs" />
     <Compile Include="Utility\Extensions.cs" />
   </ItemGroup>
   <ItemGroup>

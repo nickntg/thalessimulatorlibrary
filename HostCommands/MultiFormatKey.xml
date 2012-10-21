@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- This file includes the necessary definitions that parse a key of the form:
+     16H or 1A+32H or 1A+48H. -->
+<MultiFormatKey>
+  
+<Field>
+  <Name>#replace# Scheme</Name>
+  <Length>1</Length>
+  <Type>Character</Type>
+  <OptionValue>U</OptionValue>
+  <OptionValue>T</OptionValue>
+  <OptionValue>X</OptionValue>
+  <OptionValue>Y</OptionValue>
+</Field>
+
+<Field>
+  <Name>#replace#</Name>
+  <Notes>Double-Length Variant</Notes>
+  <Length>32</Length>
+  <Type>Hexadecimal</Type>
+  <DependentField>#replace# Scheme</DependentField>
+  <DependentValue>U</DependentValue>
+</Field>
+
+<Field>
+  <Name>#replace#</Name>
+  <Notes>Double-Length ANSI</Notes>
+  <Length>32</Length>
+  <Type>Hexadecimal</Type>
+  <DependentField>#replace# Scheme</DependentField>
+  <DependentValue>X</DependentValue>
+</Field>
+
+<Field>
+  <Name>#replace#</Name>
+  <Notes>Triple-Length Variant</Notes>
+  <Length>48</Length>
+  <Type>Hexadecimal</Type>
+  <DependentField>#replace# Scheme</DependentField>
+  <DependentValue>Y</DependentValue>
+</Field>
+
+<Field>
+  <Name>#replace#</Name>
+  <Notes>Triple-Length ANSI</Notes>
+  <Length>48</Length>
+  <Type>Hexadecimal</Type>
+  <DependentField>#replace# Scheme</DependentField>
+  <DependentValue>T</DependentValue>
+</Field>
+
+<Field>
+  <Name>#replace#</Name>
+  <Notes>Single-Length</Notes>
+  <Length>16</Length>
+  <Type>Hexadecimal</Type>
+  <DependentField>#replace# Scheme</DependentField>
+</Field>
+
+</MultiFormatKey>

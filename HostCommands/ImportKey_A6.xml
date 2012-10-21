@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Imports a key encrypted under a ZMK.</CommandName>
+  <Request>A6</Request>
+  <Response>A7</Response>
+
+  <Field>
+    <Name>Key Type</Name>
+    <Length>3</Length>
+    <Type>Hexadecimal</Type>
+  </Field>
+  
+  <Field>
+    <Name>ZMK</Name>
+    <IncludeFile>MultiFormatZMK.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Key</Name>
+    <IncludeFile>MultiFormatKey.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Key Scheme LMK</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+  </Field>
+
+  <Field>
+    <Name>Atalla Variant</Name>
+    <Length>0</Length>
+    <Type>Numeric</Type>
+  </Field>
+  
+</CommandConfiguration>

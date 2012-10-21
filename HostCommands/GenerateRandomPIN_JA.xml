@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Generates a random PIN of 4 to 12 digits.</CommandName>
+  <Request>JA</Request>
+  <Response>JB</Response>
+
+  <Field>
+    <Name>Account Number</Name>
+    <Length>12</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>PIN Length</Name>
+    <Length>2</Length>
+    <Type>Numeric</Type>
+    <ValidValue>04</ValidValue>
+    <ValidValue>05</ValidValue>
+    <ValidValue>06</ValidValue>
+    <ValidValue>07</ValidValue>
+    <ValidValue>08</ValidValue>
+    <ValidValue>09</ValidValue>
+    <ValidValue>10</ValidValue>
+    <ValidValue>11</ValidValue>
+    <ValidValue>12</ValidValue>
+    <RejectionCodeIfInvalid>15</RejectionCodeIfInvalid>
+    <OptionValue>04</OptionValue>
+    <OptionValue>05</OptionValue>
+    <OptionValue>06</OptionValue>
+    <OptionValue>07</OptionValue>
+    <OptionValue>08</OptionValue>
+    <OptionValue>09</OptionValue>
+    <OptionValue>10</OptionValue>
+    <OptionValue>11</OptionValue>
+    <OptionValue>12</OptionValue>
+  </Field>
+
+</CommandConfiguration>

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Translates an existing key to a new key scheme</CommandName>
+  <Request>B0</Request>
+  <Response>B1</Response>
+
+  <Field>
+    <Name>Key Type</Name>
+    <Length>3</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>Key</Name>
+    <IncludeFile>LargeMultiFormatKey.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Key Scheme (LMK)</Name>
+    <IncludeFile>KeyScheme.xml</IncludeFile>
+  </Field>
+  
+</CommandConfiguration>

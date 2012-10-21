@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Translates a CVK pair from encryption under the LMK to encryption under a ZMK.</CommandName>
+  <Request>AU</Request>
+  <Response>AV</Response>
+
+  <Field>
+    <Name>Source Key</Name>
+    <IncludeFile>MultiFormatZMK.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Target Key</Name>
+    <IncludeFile>MultiFormatCVK.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Delimiter</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <ValidValue>;</ValidValue>
+  </Field>
+
+  <Field>
+    <Name>Key Scheme ZMK</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <DependentField>Delimiter</DependentField>
+    <DependentValue>;</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
+  </Field>
+
+  <Field>
+    <Name>Reserved</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <DependentField>Delimiter</DependentField>
+    <DependentValue>;</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
+  </Field>
+
+  <Field>
+    <Name>Key Check Value Type</Name>
+    <Length>1</Length>
+    <Type>Character</Type>
+    <DependentField>Delimiter</DependentField>
+    <DependentValue>;</DependentValue>
+    <ExclusiveDependency>false</ExclusiveDependency>
+  </Field>
+
+</CommandConfiguration>

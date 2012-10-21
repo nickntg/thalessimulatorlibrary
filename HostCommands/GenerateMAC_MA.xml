@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Generates a MAC.</CommandName>
+  <Request>MA</Request>
+  <Response>MB</Response>
+
+  <Field>
+    <Name>TAC</Name>
+    <IncludeFile>MultiFormatKey.xml</IncludeFile>
+  </Field>
+
+  <Field>
+    <Name>Data</Name>
+    <Length>0</Length>
+    <Type>Binary</Type>
+  </Field>
+
+</CommandConfiguration>

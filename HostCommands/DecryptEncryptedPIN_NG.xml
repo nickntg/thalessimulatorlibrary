@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Decrypt an encrypted PIN.</CommandName>
+  <Request>NG</Request>
+  <Response>NH</Response>
+
+  <Field>
+    <Name>Account Number</Name>
+    <Length>12</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+  <Field>
+    <Name>PIN</Name>
+    <Length>CLEAR_PIN_LENGTH</Length>
+    <Type>Numeric</Type>
+  </Field>
+
+</CommandConfiguration>
