@@ -50,6 +50,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\CommandExplorer.cs" />
+    <Compile Include="Commands\CommandType.cs" />
+    <Compile Include="Commands\Console\ThalesConsoleCommandAttribute.cs" />
+    <Compile Include="Commands\Host\HostCommand.cs" />
+    <Compile Include="Commands\Host\ThalesHostCommandAttribute.cs" />
     <Compile Include="Cryptography\AuthStateRequirement.cs" />
     <Compile Include="Cryptography\DES\TripleDes.cs" />
     <Compile Include="Cryptography\HexKey.cs" />
