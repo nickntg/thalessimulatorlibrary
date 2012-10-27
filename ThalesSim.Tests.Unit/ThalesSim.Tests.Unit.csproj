@@ -51,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\GenericCommandTests.cs" />
+    <Compile Include="Commands\HostCommandTests.cs" />
     <Compile Include="Cryptography\DES\TripleDesTests.cs" />
     <Compile Include="Cryptography\KeyTests.cs" />
     <Compile Include="Cryptography\KeyTypeCodeTests.cs" />
