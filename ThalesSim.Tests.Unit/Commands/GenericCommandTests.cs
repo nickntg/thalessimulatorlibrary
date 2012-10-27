@@ -14,29 +14,18 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-namespace ThalesSim.Core.Resources
+using NUnit.Framework;
+using ThalesSim.Core.Commands;
+
+namespace ThalesSim.Tests.Unit.Commands
 {
-    public class Static
+    [TestFixture]
+    public class GenericCommandTests
     {
-        public const string DOUBLE_LENGTH_ZMKS = "DOUBLE_LENGTH_ZMKS";
-
-        public const string CLEAR_PIN_LENGTH = "CLEAR_PIN_LENGTH";
-
-        private static bool _authorizedState;
-
-        public static bool IsInLegacyMode()
+        [Test]
+        public void TestCommandExplorer()
         {
-            return Properties.Settings.Default.LegacyMode;
-        }
-
-        public static bool IsInAuthorizedState()
-        {
-            return _authorizedState;
-        }
-
-        public static void SetAuthorizedState (bool flag)
-        {
-            _authorizedState = flag;
+            CommandExplorer.Discover();
         }
     }
 }

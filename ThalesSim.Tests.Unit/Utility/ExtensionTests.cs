@@ -330,5 +330,24 @@ namespace ThalesSim.Tests.Unit.Utility
             Assert.AreEqual(expected, text.GetPinBlockFormat());
             Assert.AreEqual(text, expected.GetPinBlockFormat());
         }
+
+        [Test]
+        public void TestDump()
+        {
+            var bytes1 = new byte[] {0x00, 35, 0x20, 0x02};
+            var dump1 = bytes1.GetDump();
+
+            Assert.AreEqual("00 23 20 02             | .# .\r\n", dump1);
+
+            var bytes2 = new byte[] { 0x00, 35, 0x20, 0x02, 0x00, 35, 0x20, 0x02 };
+            var dump2 = bytes2.GetDump();
+
+            Assert.AreEqual("00 23 20 02 00 23 20 02 | .# ..# .\r\n", dump2);
+
+            var bytes3 = new byte[] { 0x00, 35, 0x20, 0x02, 0x00, 35, 0x20, 0x02, 0x01};
+            var dump3 = bytes3.GetDump();
+
+            Assert.AreEqual("00 23 20 02 00 23 20 02 | .# ..# .\r\n01                      | .\r\n", dump3);
+        }
     }
 }

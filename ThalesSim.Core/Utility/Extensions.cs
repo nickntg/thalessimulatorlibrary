@@ -152,6 +152,41 @@ namespace ThalesSim.Core.Utility
             return bytes;
         }
 
+        public static string GetDump (this byte[] bytes)
+        {
+            var sb = new StringBuilder();
+            var hex = bytes.GetHexString();
+            var chars = bytes.GetString();
+
+            var str = string.Empty;
+            for (var i = 0; i < bytes.Length; i++)
+            {
+                sb.Append(hex.Substring(i*2, 2) + " ");
+                if (bytes[i] >= 30)
+                {
+                    str += chars[i];
+                }
+                else
+                {
+                    str += ".";
+                }
+
+                if ((i+1) % 8 == 0)
+                {
+                    sb.Append("| " + str);
+                    sb.AppendLine();
+                    str = string.Empty;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(str))
+            {
+                sb.Append(new string(' ', (8 - (bytes.Length % 8))*3) + "| " + str + "\r\n");
+            }
+
+            return sb.ToString();
+        }
+
         public static string XorHex(this string text, string other)
         {
             text = text.StripKeyScheme();
