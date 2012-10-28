@@ -20,17 +20,15 @@ using ThalesSim.Core.Resources;
 namespace ThalesSim.Core.Commands.Host.Implementations
 {
     /// <summary>
-    /// Thales LG command implementation.
+    /// Thales RA implementation.
     /// </summary>
-    [ThalesHostCommand("LG", "LH", "Sets an HSM response delay")]
-    public class SetHsmDelay_LG : AHostCommand
+    [ThalesHostCommand("RA", "RB", "Cancel the authorized state")]
+    public class CancelAuthState_RA : AHostCommand
     {
-        private string _delay;
-
         /// <summary>
         /// Read XML definitions on instantiation.
         /// </summary>
-        public SetHsmDelay_LG()
+        public CancelAuthState_RA()
         {
             ReadXmlDefinitions();
         }
@@ -38,27 +36,16 @@ namespace ThalesSim.Core.Commands.Host.Implementations
         /// <summary>
         /// Accept message from client.
         /// </summary>
-        /// <param name="message">Request message.</param>
-        public override void AcceptMessage(StreamMessage message)
+        /// <returns>Message response.</returns>
+        public override Message.StreamResponse ConstructResponse()
         {
-            base.AcceptMessage(message);
+            Log.Info(ConfigHelpers.IsInAuthorizedState()
+                         ? "Exiting the authorized state"
+                         : "Already out of the authorized state");
 
-            if (XmlParseResult == ErrorCodes.ER_00_NO_ERROR)
-            {
-                _delay = KeyValues.Item("Delay");
-            }
-        }
+            ConfigHelpers.SetAuthorizedState(false);
 
-        /// <summary>
-        /// Dummy implementation that does nothing.
-        /// </summary>
-        /// <returns>Response message.</returns>
-        public override StreamResponse ConstructResponse()
-        {
             var mr = new StreamResponse();
-
-            Log.InfoFormat("HSM delay {0} set and ignored", _delay);
-
             mr.Append(ErrorCodes.ER_00_NO_ERROR);
             return mr;
         }

@@ -87,6 +87,12 @@ namespace ThalesSim.Core.Message
             {
                 ds.ReadXml(xmlFile);
 
+                // Check for empty definition.
+                if (!ds.Tables.Contains("Field"))
+                {
+                    return fields;
+                }
+
                 foreach (DataRow dr in ds.Tables["Field"].Rows)
                 {
                     // New field.

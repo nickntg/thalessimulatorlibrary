@@ -42,6 +42,14 @@ namespace ThalesSim.Tests.Unit.Commands
             Assert.AreEqual("00", TestMessage("000", new SetHsmDelay_LG()));
         }
 
+        [Test]
+        public void CancelAuthStateTest()
+        {
+            ConfigHelpers.SetAuthorizedState(true);
+            Assert.AreEqual("00", TestMessage("", new CancelAuthState_RA()));
+            Assert.IsFalse(ConfigHelpers.IsInAuthorizedState());
+        }
+
         private string TestMessage (string message, AHostCommand command)
         {
             var msg = new StreamMessage(message);
