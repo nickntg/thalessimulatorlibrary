@@ -56,6 +56,7 @@
     <Compile Include="Commands\Console\ThalesConsoleCommandAttribute.cs" />
     <Compile Include="Commands\Host\AHostCommand.cs" />
     <Compile Include="Commands\Host\HostCommand.cs" />
+    <Compile Include="Commands\Host\Implementations\CancelAuthState_RA.cs" />
     <Compile Include="Commands\Host\Implementations\SetHsmDelay_LG.cs" />
     <Compile Include="Commands\Host\ThalesHostCommandAttribute.cs" />
     <Compile Include="Cryptography\AuthStateRequirement.cs" />

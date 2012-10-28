@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandConfiguration xmlns="http://tempuri.org/HostCommandDefinitions.xsd">
+  <CommandName>Cancel the authorized state.</CommandName>
+  <Request>RA</Request>
+  <Response>RB</Response>
+
+</CommandConfiguration>
