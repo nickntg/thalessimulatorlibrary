@@ -16,12 +16,24 @@
 
 namespace ThalesSim.Core.Cryptography
 {
+    /// <summary>
+    /// Enumeration for bit parity.
+    /// </summary>
     public enum Parity
     {
+        /// <summary>
+        /// Odd parity.
+        /// </summary>
         Odd = 0,
 
+        /// <summary>
+        /// Even parity.
+        /// </summary>
         Even = 1,
 
+        /// <summary>
+        /// No parity.
+        /// </summary>
         None = 2
     }
 }

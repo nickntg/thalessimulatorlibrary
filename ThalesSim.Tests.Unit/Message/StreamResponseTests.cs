@@ -29,15 +29,15 @@ namespace ThalesSim.Tests.Unit.Message
 
             Assert.IsNullOrEmpty(str.Message);
 
-            str.Add("1");
+            str.Append("1");
 
             Assert.AreEqual("1", str.Message);
 
-            str.Add("2");
+            str.Append("2");
 
             Assert.AreEqual("12", str.Message);
 
-            str.AddStart("0");
+            str.AppendFront("0");
 
             Assert.AreEqual("012", str.Message);
         }

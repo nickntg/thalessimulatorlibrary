@@ -19,59 +19,117 @@ using log4net;
 
 namespace ThalesSim.Core.Commands.Host
 {
+    /// <summary>
+    /// Blueprint for all host command implementations.
+    /// </summary>
     public class AHostCommand
     {
+        /// <summary>
+        /// Get/set the data sent to the printer by this command.
+        /// </summary>
         public string PrinterData { get; set; }
 
+        /// <summary>
+        /// Get/set the message field definitions of this command.
+        /// </summary>
         public Fields MessageFields { get; set; }
 
+        /// <summary>
+        /// Get/set the result of parsing the XML definitions
+        /// of this command.
+        /// </summary>
         public string XmlParseResult { get; set; }
 
+        /// <summary>
+        /// Get/set the key/value pairs parsed from the message.
+        /// </summary>
         public MessageKeyValuePairs KeyValues { get; set; }
 
-        public virtual void AcceptMessage (StreamMessage message)
-        {
-            XmlParseResult = Parser.Parse(message, MessageFields, KeyValues);
-        }
-
+        /// <summary>
+        /// Logger.
+        /// </summary>
         protected ILog Log;
 
+        /// <summary>
+        /// Default class constructor that initializes this instance.
+        /// </summary>
         public AHostCommand()
         {
             Log = LogManager.GetLogger(GetType());
             KeyValues = new MessageKeyValuePairs();
         }
 
+        /// <summary>
+        /// Called to parse the message received by the client.
+        /// </summary>
+        /// <param name="message">Request message.</param>
+        public virtual void AcceptMessage (StreamMessage message)
+        {
+            XmlParseResult = Parser.Parse(message, MessageFields, KeyValues);
+        }
+
+        /// <summary>
+        /// Called to process the received request message.
+        /// </summary>
+        /// <returns>Response.</returns>
         public virtual StreamResponse ConstructResponse()
         {
             return null;
         }
 
+        /// <summary>
+        /// Called to process the received request message 
+        /// after printer I/O is done.
+        /// </summary>
+        /// <returns>Response after printer I/O.</returns>
         public virtual StreamResponse ConstructResponseAfterIo()
         {
             return null;
         }
 
+        /// <summary>
+        /// Returns a string representation of the
+        /// parsed key/value pairs.
+        /// </summary>
+        /// <returns>String representation of the 
+        /// parsed message.</returns>
         public string DumpFields()
         {
             return KeyValues.ToString();
         }
 
+        /// <summary>
+        /// Read the XML definitions.
+        /// </summary>
         protected void ReadXmlDefinitions()
         {
             ReadXmlDefinitions(false, GetType().Name + ".xml");
         }
 
+        /// <summary>
+        /// Read the XML definitions.
+        /// </summary>
+        /// <param name="forceRead">Flag to force read again from disk.</param>
         protected void ReadXmlDefinitions (bool forceRead)
         {
             ReadXmlDefinitions(forceRead, GetType().Name + ".xml");
         }
 
+        /// <summary>
+        /// Read the XML definitions using a specific
+        /// XML file definition.
+        /// </summary>
+        /// <param name="fileName">File with XML definitions.</param>
         protected void ReadXmlDefinitions (string fileName)
         {
             ReadXmlDefinitions(false, GetType().Name + ".xml");
         }
 
+        /// <summary>
+        /// Read the XML definitions.
+        /// </summary>
+        /// <param name="forecRead">Flag to force read again from disk.</param>
+        /// <param name="fileName">File with XML definitions.</param>
         protected void ReadXmlDefinitions (bool forecRead, string fileName)
         {
             if (forecRead)

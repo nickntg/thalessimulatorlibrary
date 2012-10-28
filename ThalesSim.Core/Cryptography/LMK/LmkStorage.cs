@@ -18,13 +18,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using ThalesSim.Core.Properties;
 using ThalesSim.Core.Utility;
 
 namespace ThalesSim.Core.Cryptography.LMK
 {
+    /// <summary>
+    /// This class loads and maintains the LMKs used by the simulator.
+    /// </summary>
     public class LmkStorage
     {
         private static string _lmkStorageFile;
+
+        /// <summary>
+        /// Get/set the LMK file.
+        /// </summary>
         public static string LmkStorageFile
         {
             get { return _lmkStorageFile; }
@@ -36,29 +44,57 @@ namespace ThalesSim.Core.Cryptography.LMK
         }
 
         private static string _lmkOldStorageFile;
+
+        /// <summary>
+        /// Get/set the old LMK file.
+        /// </summary>
         public static string LmkOldStorageFile
         {
             get { return _lmkOldStorageFile; }
             set { _lmkOldStorageFile = value; }
         }
 
-        public static bool UseOldLmkStorage { get; set; }
+        private static bool _useOldLmkStorage = false;
+
+        /// <summary>
+        /// Get/set whether to use the old LMKs.
+        /// </summary>
+        public static bool UseOldLmkStorage
+        {
+            get { return _useOldLmkStorage; }
+            set { _useOldLmkStorage = value; }
+        }
 
         private static SortedList<LmkPair, string> _lmKs = new SortedList<LmkPair, string>();
 
         private static SortedList<LmkPair, string> _oldLmKs = new SortedList<LmkPair, string>();
 
+        /// <summary>
+        /// Returns the clear value of an LMK.
+        /// </summary>
+        /// <param name="pair">LMK pair.</param>
+        /// <returns>LMK for pair.</returns>
         public static string Lmk (LmkPair pair)
         {
             return !UseOldLmkStorage ? _lmKs[pair] : _oldLmKs[pair];
         }
 
+        /// <summary>
+        /// Returns the clear value of an LMK variant.
+        /// </summary>
+        /// <param name="pair">LMK pair.</param>
+        /// <param name="variant">LMK variant.</param>
+        /// <returns>LMK for pair and variant.</returns>
         public static string LmkVariant (LmkPair pair, int variant)
         {
             var lmk = Lmk(pair);
             return variant == 0 ? lmk : lmk.XorHex(Variants.GetDoubleLengthVariant(variant).PadRight(32, '0'));
         }
 
+        /// <summary>
+        /// Reads the LMKs from a file.
+        /// </summary>
+        /// <param name="storageFile">LMK storage file.</param>
         public static void ReadLmk (string storageFile)
         {
             LmkStorageFile = storageFile;
@@ -66,6 +102,10 @@ namespace ThalesSim.Core.Cryptography.LMK
             _oldLmKs = ReadLmkFile(LmkOldStorageFile);
         }
 
+        /// <summary>
+        /// Generates test LMKs.
+        /// </summary>
+        /// <param name="writeLmks">True to write the LMKs to file.</param>
         public static void GenerateTestLmks(bool writeLmks = true)
         {
             if (string.IsNullOrEmpty(LmkStorageFile))
@@ -134,12 +174,19 @@ namespace ThalesSim.Core.Cryptography.LMK
             }
         }
 
+        /// <summary>
+        /// Writes the LMKs to file.
+        /// </summary>
         public static void WriteLmks()
         {
             WriteLmks(LmkStorageFile, _lmKs);
             WriteLmks(LmkOldStorageFile, _oldLmKs);
         }
 
+        /// <summary>
+        /// Returns a string with the LMK values.
+        /// </summary>
+        /// <returns>String with LMK values.</returns>
         public static string DumpLmks()
         {
             var sb = new StringBuilder();
@@ -151,6 +198,10 @@ namespace ThalesSim.Core.Cryptography.LMK
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Returns the LMK check value.
+        /// </summary>
+        /// <returns>LMK check value.</returns>
         public static string GenerateLmkCheckValue()
         {
             var text = Lmk(LmkPair.Pair00_01).XorHex(Lmk(LmkPair.Pair02_03));
@@ -162,6 +213,10 @@ namespace ThalesSim.Core.Cryptography.LMK
             return text.Substring(0, 16).XorHex(text.Substring(16));
         }
 
+        /// <summary>
+        /// Determines if the LMK storage has odd parity.
+        /// </summary>
+        /// <returns>True if all keys have odd parity.</returns>
         public static bool CheckLmkStorage()
         {
             for (var pair = LmkPair.Pair00_01; pair <= LmkPair.Pair34_35; pair++)

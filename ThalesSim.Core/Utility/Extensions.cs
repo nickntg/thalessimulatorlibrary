@@ -24,12 +24,20 @@ using ThalesSim.Core.Cryptography.PIN;
 
 namespace ThalesSim.Core.Utility
 {
+    /// <summary>
+    /// This extension class contains several helper methods.
+    /// </summary>
     public static class Extensions
     {
         private static readonly Random RndMachine = new Random();
 
         #region Hex/binary/byte
 
+        /// <summary>
+        /// Determine if a string is numeric.
+        /// </summary>
+        /// <param name="text">String to check.</param>
+        /// <returns>True if string is numeric.</returns>
         public static bool IsNumeric (this string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -42,6 +50,11 @@ namespace ThalesSim.Core.Utility
             return !text.Where((t, i) => !char.IsDigit(chars[i])).Any();
         }
 
+        /// <summary>
+        /// Determine if a string is hexadecimal.
+        /// </summary>
+        /// <param name="text">String to check.</param>
+        /// <returns>True if string is hexadecimal.</returns>
         public static bool IsHex(this string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -54,6 +67,11 @@ namespace ThalesSim.Core.Utility
             return !text.Where((t, i) => !char.IsDigit(chars[i]) && (chars[i] < 'A' || chars[i] > 'F')).Any();
         }
 
+        /// <summary>
+        /// Determines if a string contains binary digits only.
+        /// </summary>
+        /// <param name="text">String to check.</param>
+        /// <returns>True if string contains binary digits only.</returns>
         public static bool IsBinary(this string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -65,6 +83,11 @@ namespace ThalesSim.Core.Utility
             return (text.Length == 0);
         }
 
+        /// <summary>
+        /// Converts a byte array to a hex string.
+        /// </summary>
+        /// <param name="bytes">Byte array to convert.</param>
+        /// <returns>String with hex characters.</returns>
         public static string GetHexString(this byte[] bytes)
         {
             var sb = new StringBuilder();
@@ -76,6 +99,11 @@ namespace ThalesSim.Core.Utility
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Converts a hexadecimal string to a binary string.
+        /// </summary>
+        /// <param name="text">Hexadecimal string.</param>
+        /// <returns>String with binary characters.</returns>
         public static string GetBinary(this string text)
         {
             if (!text.IsHex())
@@ -91,6 +119,11 @@ namespace ThalesSim.Core.Utility
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Converts a binary string to a hexadecimal string.
+        /// </summary>
+        /// <param name="text">Binary string.</param>
+        /// <returns>Hexadecimal string.</returns>
         public static string FromBinary(this string text)
         {
             if (text.Length % 4 != 0)
@@ -111,17 +144,35 @@ namespace ThalesSim.Core.Utility
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Converts a string to an array of bytes.
+        /// </summary>
+        /// <param name="text">String to convert.</param>
+        /// <param name="encoding">Encoding to use.</param>
+        /// <returns>Converted byte array.</returns>
         public static byte[] GetBytes(this string text, Encoding encoding)
         {
             return encoding.GetBytes(text);
         }
 
+        /// <summary>
+        /// Converts a string to an array of bytes using
+        /// the ANSI code page.
+        /// </summary>
+        /// <param name="text">String to convert.</param>
+        /// <returns>Converted byte array.</returns>
         public static byte[] GetBytes(this string text)
         {
             return GetBytes(text,
                             Encoding.GetEncoding(System.Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage));
         }
 
+        /// <summary>
+        /// Converts a byte array to a string using
+        /// the ANSI code page.
+        /// </summary>
+        /// <param name="bytes">Byte array to convert.</param>
+        /// <returns>Converted string.</returns>
         public static string GetString(this byte[] bytes)
         {
             return
@@ -129,6 +180,11 @@ namespace ThalesSim.Core.Utility
                     bytes);
         }
 
+        /// <summary>
+        /// Converts a hexadecimal string to a byte array.
+        /// </summary>
+        /// <param name="text">Hexadecimal string.</param>
+        /// <returns>Converted byte array.</returns>
         public static byte[] GetHexBytes(this string text)
         {
             if (text.Length % 2 != 0)
@@ -152,6 +208,11 @@ namespace ThalesSim.Core.Utility
             return bytes;
         }
 
+        /// <summary>
+        /// Gets a hex/char dump for a byte array.
+        /// </summary>
+        /// <param name="bytes">Byte array to get dump for.</param>
+        /// <returns>Hex/char dump.</returns>
         public static string GetDump (this byte[] bytes)
         {
             var sb = new StringBuilder();
@@ -187,6 +248,13 @@ namespace ThalesSim.Core.Utility
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Performs an XOR operation on two hex strings
+        /// after stripping them of their key scheme character.
+        /// </summary>
+        /// <param name="text">First string.</param>
+        /// <param name="other">Second string.</param>
+        /// <returns>XOR result.</returns>
         public static string XorHex(this string text, string other)
         {
             text = text.StripKeyScheme();
@@ -212,6 +280,11 @@ namespace ThalesSim.Core.Utility
 
         #region Key scheme
 
+        /// <summary>
+        /// Gets the character corresponding to a key scheme.
+        /// </summary>
+        /// <param name="scheme">Key scheme to get char for.</param>
+        /// <returns>Corresponding key scheme character.</returns>
         public static string GetKeySchemeChar (this KeyScheme scheme)
         {
             switch (scheme)
@@ -231,6 +304,11 @@ namespace ThalesSim.Core.Utility
             }
         }
 
+        /// <summary>
+        /// Gets a key scheme corresponding to a character.
+        /// </summary>
+        /// <param name="text">Key scheme character.</param>
+        /// <returns>Corresponding key scheme.</returns>
         public static KeyScheme GetKeyScheme (this string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -256,6 +334,11 @@ namespace ThalesSim.Core.Utility
             }
         }
 
+        /// <summary>
+        /// Determines if a string starts with a key scheme character.
+        /// </summary>
+        /// <param name="text">String to check.</param>
+        /// <returns>True if string starts with a key scheme character.</returns>
         public static bool StartsWithKeyScheme (this string text)
         {
             text = text.ToUpper();
@@ -266,11 +349,22 @@ namespace ThalesSim.Core.Utility
                    text.StartsWith(GetKeySchemeChar(KeyScheme.TripleLengthKeyVariant));
         }
 
+        /// <summary>
+        /// Removes the starting key scheme character from a string.
+        /// </summary>
+        /// <param name="text">String to remove key scheme from.</param>
+        /// <returns>String without key scheme character.</returns>
         public static string StripKeyScheme (this string text)
         {
             return StartsWithKeyScheme(text) ? text.Substring(1) : text;
         }
 
+        /// <summary>
+        /// Determines the length of a key corresponding to 
+        /// a key scheme.
+        /// </summary>
+        /// <param name="scheme">Key scheme.</param>
+        /// <returns>Key length.</returns>
         public static int GetKeyLength (this KeyScheme scheme)
         {
             switch (scheme)
@@ -289,6 +383,12 @@ namespace ThalesSim.Core.Utility
 
         #region Parity
 
+        /// <summary>
+        /// Checks the parity of a hexadecimal string.
+        /// </summary>
+        /// <param name="text">String to check.</param>
+        /// <param name="parity">Parity to check for.</param>
+        /// <returns>True of parity is ok.</returns>
         public static bool IsParityOk (this string text, Parity parity)
         {
             if (parity == Parity.None)
@@ -312,6 +412,12 @@ namespace ThalesSim.Core.Utility
             return true;
         }
 
+        /// <summary>
+        /// Determines if the parity of a byte is ok.
+        /// </summary>
+        /// <param name="b">Byte to check.</param>
+        /// <param name="parity">Parity to check for.</param>
+        /// <returns>True if parity is ok.</returns>
         public static bool IsParityOk(this byte b, Parity parity)
         {
             if (parity == Parity.None)
@@ -323,6 +429,12 @@ namespace ThalesSim.Core.Utility
             return (ones.Length % 2 != 0 || parity != Parity.Odd) && (ones.Length % 2 != 1 || parity != Parity.Even);
         }
 
+        /// <summary>
+        /// Enforces a parity setting on a hexadecimal string.
+        /// </summary>
+        /// <param name="text">String to use.</param>
+        /// <param name="parity">Parity to enforce.</param>
+        /// <returns>String with parity.</returns>
         public static string MakeParity (this string text, Parity parity)
         {
             if (parity == Parity.None)
@@ -349,6 +461,13 @@ namespace ThalesSim.Core.Utility
             return schemeChar + bytes.GetHexString();
         }
 
+        /// <summary>
+        /// Generates a random hexadecimal string.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="scheme">Scheme to use.</param>
+        /// <param name="parity">Parity to use.</param>
+        /// <returns>Generated random key.</returns>
         public static string RandomKey (this string text, KeyScheme scheme, Parity parity)
         {
             switch (scheme.GetKeyLength())
@@ -362,16 +481,34 @@ namespace ThalesSim.Core.Utility
             }
         }
 
+        /// <summary>
+        /// Generates a random key with odd parity.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="scheme">Scheme to use.</param>
+        /// <returns>Generated key.</returns>
         public static string RandomKey (this string text, KeyScheme scheme)
         {
             return RandomKey(text, scheme, Parity.Odd);
         }
 
+        /// <summary>
+        /// Generates a random single-length key
+        /// with odd parity.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns>Generated key.</returns>
         public static string RandomKey (this string text)
         {
             return RandomKey(text, Parity.Odd);
         }
 
+        /// <summary>
+        /// Generates a random single-length key.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="parity">Parity to use.</param>
+        /// <returns>Generated key.</returns>
         public static string RandomKey (this string text, Parity parity)
         {
             var sb = new StringBuilder();
@@ -387,6 +524,13 @@ namespace ThalesSim.Core.Utility
 
         #region LMK
 
+        /// <summary>
+        /// Determines the LMK pair and variant from
+        /// a two-digit code.
+        /// </summary>
+        /// <param name="text">Two-digit LMK code.</param>
+        /// <param name="variant">LMK variant.</param>
+        /// <returns>LMK pair.</returns>
         public static LmkPair GetLmkPairFromTwoDigits (this string text, out int variant)
         {
             variant = 0;
@@ -428,6 +572,11 @@ namespace ThalesSim.Core.Utility
             }
         }
 
+        /// <summary>
+        /// Determines the LMK pair from an LMK code.
+        /// </summary>
+        /// <param name="text">LMK key code.</param>
+        /// <returns>LMK pair.</returns>
         public static LmkPair GetLmkPair (this string text)
         {
             switch (text.ToUpper())
@@ -471,6 +620,11 @@ namespace ThalesSim.Core.Utility
 
         #region PIN
 
+        /// <summary>
+        /// Determines if a PIN block format is supported.
+        /// </summary>
+        /// <param name="text">PIN block format.</param>
+        /// <returns>True if PIN block format is supported.</returns>
         public static bool IsPinBlockFormatSupported (this string text)
         {
             try
@@ -484,6 +638,11 @@ namespace ThalesSim.Core.Utility
             }
         }
 
+        /// <summary>
+        /// Determines the PIN block format from a string.
+        /// </summary>
+        /// <param name="text">String with PIN block format code.</param>
+        /// <returns>PIN block format.</returns>
         public static PinBlockFormat GetPinBlockFormat (this string text)
         {
             switch (text)
@@ -503,6 +662,12 @@ namespace ThalesSim.Core.Utility
             }
         }
 
+        /// <summary>
+        /// Returns a PIN block format code corresponding
+        /// to a PIN block format.
+        /// </summary>
+        /// <param name="format">PIN block format.</param>
+        /// <returns>PIN block format code.</returns>
         public static string GetPinBlockFormat (this PinBlockFormat format)
         {
             switch (format)
@@ -522,6 +687,14 @@ namespace ThalesSim.Core.Utility
             }
         }
 
+        /// <summary>
+        /// Creates a clear PIN block for a PIN.
+        /// </summary>
+        /// <param name="pin">PIN to create PIN block for.</param>
+        /// <param name="accountOrPadding">Account or padding string, depending
+        /// on the PIN block format.</param>
+        /// <param name="format">PIN block format to use.</param>
+        /// <returns>Clear PIN block.</returns>
         public static string GetPinBlock (this string pin, string accountOrPadding, PinBlockFormat format)
         {
             switch (format)
@@ -557,6 +730,13 @@ namespace ThalesSim.Core.Utility
             }
         }
 
+        /// <summary>
+        /// Gets the PIN from a clear PIN block.
+        /// </summary>
+        /// <param name="clearPinBlock">Clear PIN block.</param>
+        /// <param name="accountOrPadding">Account or padding string.</param>
+        /// <param name="format">PIN block format.</param>
+        /// <returns>PIN of the PIN block.</returns>
         public static string GetPin (this string clearPinBlock, string accountOrPadding, PinBlockFormat format)
         {
             switch (format)
@@ -583,6 +763,11 @@ namespace ThalesSim.Core.Utility
 
         #region File/directory
 
+        /// <summary>
+        /// Appends a trailing slash to a directory if needed.
+        /// </summary>
+        /// <param name="text">Directory path.</param>
+        /// <returns>Directory path with trailing slash.</returns>
         public static string AppendTrailingSeparator (this string text)
         {
             var sep = "\\";
@@ -598,6 +783,12 @@ namespace ThalesSim.Core.Utility
 
         #region Data
 
+        /// <summary>
+        /// Determines if a column of a data row is null.
+        /// </summary>
+        /// <param name="dr">Data row.</param>
+        /// <param name="column">Column to use.</param>
+        /// <returns>True if the column is null.</returns>
         public static bool IsNotNull(this DataRow dr, string column)
         {
             try

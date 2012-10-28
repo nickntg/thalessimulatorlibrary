@@ -16,14 +16,29 @@
 
 namespace ThalesSim.Core.Message
 {
+    /// <summary>
+    /// Enumeration of field types.
+    /// </summary>
     public enum FieldType
     {
+        /// <summary>
+        /// Character field.
+        /// </summary>
         Character = 0,
 
+        /// <summary>
+        /// Numeric field.
+        /// </summary>
         Numeric = 1,
 
+        /// <summary>
+        /// Hexadecimal field.
+        /// </summary>
         Hexadecimal = 2,
 
+        /// <summary>
+        /// Binary field.
+        /// </summary>
         Binary = 3
     }
 }

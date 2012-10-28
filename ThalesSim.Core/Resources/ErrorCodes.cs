@@ -16,6 +16,9 @@
 
 namespace ThalesSim.Core.Resources
 {
+    /// <summary>
+    /// Constants with the Thales error codes.
+    /// </summary>
     public class ErrorCodes
     {
         /// <summary>

@@ -16,22 +16,40 @@
 
 namespace ThalesSim.Core.Cryptography.LMK
 {
+    /// <summary>
+    /// This class is used to keep track of Thales variants.
+    /// </summary>
     public class Variants
     {
         private static readonly string[] SingleLengthVariants = new[] { "A6", "5A", "6A", "DE", "2B", "50", "74", "9C", "FA" };
         private static readonly string[] DoubleLengthVariants = new[] { "A6", "5A" };
         private static readonly string[] TripleLengthVariants = new[] { "6A", "DE", "2B" };
 
+        /// <summary>
+        /// Get a single length key variant.
+        /// </summary>
+        /// <param name="index">Index of variant.</param>
+        /// <returns>Single length key variant.</returns>
         public static string GetVariant(int index)
         {
             return SingleLengthVariants[index - 1];
         }
 
+        /// <summary>
+        /// Get a double length key variant.
+        /// </summary>
+        /// <param name="index">Index of variant.</param>
+        /// <returns>Double length key variant.</returns>
         public static string GetDoubleLengthVariant (int index)
         {
             return DoubleLengthVariants[index - 1];
         }
 
+        /// <summary>
+        /// Get a triple length key variant.
+        /// </summary>
+        /// <param name="index">Index of variant.</param>
+        /// <returns>Triple length key variant.</returns>
         public static string GetTripleLengthVariant (int index)
         {
             return TripleLengthVariants[index - 1];

@@ -16,27 +16,19 @@
 
 namespace ThalesSim.Core.Resources
 {
+    /// <summary>
+    /// This class contains static data.
+    /// </summary>
     public class Static
     {
+        /// <summary>
+        /// Double length Zone Master Keys setting.
+        /// </summary>
         public const string DOUBLE_LENGTH_ZMKS = "DOUBLE_LENGTH_ZMKS";
 
+        /// <summary>
+        /// Clear PIN length setting.
+        /// </summary>
         public const string CLEAR_PIN_LENGTH = "CLEAR_PIN_LENGTH";
-
-        private static bool _authorizedState;
-
-        public static bool IsInLegacyMode()
-        {
-            return Properties.Settings.Default.LegacyMode;
-        }
-
-        public static bool IsInAuthorizedState()
-        {
-            return _authorizedState;
-        }
-
-        public static void SetAuthorizedState (bool flag)
-        {
-            _authorizedState = flag;
-        }
     }
 }

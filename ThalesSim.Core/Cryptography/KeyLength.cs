@@ -16,12 +16,24 @@
 
 namespace ThalesSim.Core.Cryptography
 {
+    /// <summary>
+    /// Enumeration of the key length.
+    /// </summary>
     public enum KeyLength
     {
+        /// <summary>
+        /// Single length key.
+        /// </summary>
         SingleLength = 0,
 
+        /// <summary>
+        /// Double length key.
+        /// </summary>
         DoubleLength = 1,
 
+        /// <summary>
+        /// Triple length key.
+        /// </summary>
         TripleLength = 2
     }
 }

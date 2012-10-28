@@ -14,35 +14,42 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-using System;
+using ThalesSim.Core.Properties;
 
-namespace ThalesSim.Core.Commands.Console
+namespace ThalesSim.Core.Resources
 {
     /// <summary>
-    /// Attribute used to decorate console commands.
+    /// Helper class to be used with configuration members.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
-    public class ThalesConsoleCommandAttribute : Attribute
+    public class ConfigHelpers
     {
-        /// <summary>
-        /// Get/set the command code.
-        /// </summary>
-        public string CommandCode { get; set; }
+        private static bool _authorizedState = Settings.Default.StartInAuthorizedState;
 
         /// <summary>
-        /// Get/set the command description.
+        /// Check if Legacy Mode is enabled.
         /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// Creates a new instance of this class.
-        /// </summary>
-        /// <param name="commandCode">Console command code.</param>
-        /// <param name="description">Console command description.</param>
-        public ThalesConsoleCommandAttribute (string commandCode, string description)
+        /// <returns></returns>
+        public static bool IsInLegacyMode()
         {
-            CommandCode = commandCode;
-            Description = description;
+            return Settings.Default.LegacyMode;
+        }
+
+        /// <summary>
+        /// Check if we're in the authorized state.
+        /// </summary>
+        /// <returns>True if we're in the authorized state.</returns>
+        public static bool IsInAuthorizedState()
+        {
+            return _authorizedState;
+        }
+
+        /// <summary>
+        /// Set the authorized state mode.
+        /// </summary>
+        /// <param name="flag">True to go into the authorized state.</param>
+        public static void SetAuthorizedState(bool flag)
+        {
+            _authorizedState = flag;
         }
     }
 }

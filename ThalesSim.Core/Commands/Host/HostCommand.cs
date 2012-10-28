@@ -16,12 +16,26 @@
 
 namespace ThalesSim.Core.Commands.Host
 {
+    /// <summary>
+    /// Extended command for host commands.
+    /// </summary>
     public class HostCommand : Command
     {
+        /// <summary>
+        /// Get/set the response code of the command.
+        /// </summary>
         public string ResponseCode { get; set; }
 
+        /// <summary>
+        /// Get/set the response code of the command
+        /// after printer I/O is performed.
+        /// </summary>
         public string ResponseCodeAfterIo { get; set; }
 
+        /// <summary>
+        /// Returns a string representation of this instance.
+        /// </summary>
+        /// <returns>String representation of this instance.</returns>
         public override string ToString()
         {
             return

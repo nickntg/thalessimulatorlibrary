@@ -16,16 +16,34 @@
 
 namespace ThalesSim.Core.Cryptography.PIN
 {
+    /// <summary>
+    /// Enumerations representing the PIN block formats.
+    /// </summary>
     public enum PinBlockFormat
     {
+        /// <summary>
+        /// ANSI X9.8 format.
+        /// </summary>
         AnsiX98 = 1,
 
+        /// <summary>
+        /// Docutel format.
+        /// </summary>
         Docutel = 2,
 
+        /// <summary>
+        /// Diebold format.
+        /// </summary>
         Diebold = 3,
 
+        /// <summary>
+        /// Plus format.
+        /// </summary>
         Plus = 4,
 
+        /// <summary>
+        /// ISO 94564/1 format.
+        /// </summary>
         Iso94564_1 = 5
     }
 }

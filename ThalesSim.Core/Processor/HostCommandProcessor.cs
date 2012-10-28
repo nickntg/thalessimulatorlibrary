@@ -25,10 +25,22 @@ using log4net;
 
 namespace ThalesSim.Core.Processor
 {
+    /// <summary>
+    /// The host command processor coordinates execution of Thales
+    /// host commands. It accepts a byte array with the client request,
+    /// finds the appropriate host command to execute and returns the
+    /// results.
+    /// </summary>
     public class HostCommandProcessor
     {
         private readonly ILog _log = LogManager.GetLogger(typeof (HostCommandProcessor));
 
+        /// <summary>
+        /// Process a message.
+        /// </summary>
+        /// <param name="message">Byte array with request message.</param>
+        /// <param name="resp">Host command response.</param>
+        /// <param name="respAfterIo">Host command response after doing printer I/O.</param>
         public void ProcessMessage (byte[] message, out StreamResponse resp, out StreamResponse respAfterIo)
         {
             DumpMessage(message, "Incoming message");
@@ -64,10 +76,10 @@ namespace ThalesSim.Core.Processor
                 {
                     _log.Error("LMK storage check failed");
                     resp = new StreamResponse();
-                    resp.Add(ErrorCodes.ER_13_MASTER_KEY_PARITY_ERROR);
-                    resp.AddStart(command.ResponseCode);
-                    resp.AddStart(msgHeader);
-                    resp.Add(msgTrailer);
+                    resp.Append(ErrorCodes.ER_13_MASTER_KEY_PARITY_ERROR);
+                    resp.AppendFront(command.ResponseCode);
+                    resp.AppendFront(msgHeader);
+                    resp.Append(msgTrailer);
                     return;
                 }
 
@@ -83,7 +95,7 @@ namespace ThalesSim.Core.Processor
                 {
                     _log.DebugFormat("Error code {0} return while parsing message", o.XmlParseResult);
                     resp = new StreamResponse();
-                    resp.Add(o.XmlParseResult);
+                    resp.Append(o.XmlParseResult);
                 }
                 else
                 {
@@ -94,15 +106,18 @@ namespace ThalesSim.Core.Processor
                     respAfterIo = o.ConstructResponseAfterIo();
                 }
 
-                resp.AddStart(command.ResponseCode);
-                resp.AddStart(msgHeader);
-                resp.Add(msgTrailer);
+                resp.AppendFront(command.ResponseCode);
+                resp.AppendFront(msgHeader);
+                resp.Append(msgTrailer);
+
+                DumpMessage(resp.GetBytes(), "Response message");
 
                 if (respAfterIo != null && !string.IsNullOrEmpty(command.ResponseCodeAfterIo))
                 {
-                    respAfterIo.AddStart(command.ResponseCodeAfterIo);
-                    respAfterIo.AddStart(msgHeader);
-                    respAfterIo.Add(msgTrailer);
+                    respAfterIo.AppendFront(command.ResponseCodeAfterIo);
+                    respAfterIo.AppendFront(msgHeader);
+                    respAfterIo.Append(msgTrailer);
+                    DumpMessage(respAfterIo.GetBytes(), "Response message after I/O");
                 }
 
                 if (!string.IsNullOrEmpty(o.PrinterData))
@@ -118,6 +133,11 @@ namespace ThalesSim.Core.Processor
             }
         }
 
+        /// <summary>
+        /// Dump a message to the logger.
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <param name="text"></param>
         private void DumpMessage (byte[] bytes, string text)
         {
             _log.DebugFormat(text + "\r\n" + bytes.GetDump());

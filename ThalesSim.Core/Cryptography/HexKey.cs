@@ -20,30 +20,55 @@ using ThalesSim.Core.Utility;
 
 namespace ThalesSim.Core.Cryptography
 {
+    /// <summary>
+    /// This class represents a hexadecimal key used to encrypt/decrypt data.
+    /// </summary>
     public class HexKey
     {
+        /// <summary>
+        /// Get/set the key scheme.
+        /// </summary>
         public KeyScheme Scheme { get; private set; }
 
+        /// <summary>
+        /// Get/set the key length.
+        /// </summary>
         public KeyLength Length { get; private set; }
 
+        /// <summary>
+        /// Get the represented by this instance.
+        /// </summary>
         public string Key { get; private set; }
 
+        /// <summary>
+        /// Get the first key part.
+        /// </summary>
         public string PartA
         {
             get { return Key.Substring(0, 16); }
         }
 
+        /// <summary>
+        /// Get the second key part.
+        /// </summary>
         public string PartB
         {
             get { return Length != KeyLength.SingleLength ? Key.Substring(16, 16) : Key; }
             private set { Key = Length == KeyLength.DoubleLength ? PartA + value : PartA + value + PartC; }
         }
 
+        /// <summary>
+        /// Get the third key part.
+        /// </summary>
         public string PartC
         {
             get { return Length == KeyLength.TripleLength ? Key.Substring(32, 16) : Key.Substring(0, 16); }
         }
 
+        /// <summary>
+        /// Creates a new instance of this class from a hexadecimal value.
+        /// </summary>
+        /// <param name="text"></param>
         public HexKey(string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -95,11 +120,20 @@ namespace ThalesSim.Core.Cryptography
             Key = text;
         }
 
+        /// <summary>
+        /// Returns a string representation of this instance.
+        /// </summary>
+        /// <returns>String representing this instance.</returns>
         public override string ToString()
         {
             return Scheme.GetKeySchemeChar().Replace("Z","") + Key;
         }
 
+        /// <summary>
+        /// Encrypt data under this key.
+        /// </summary>
+        /// <param name="data">16, 32 or 48 hex data to encrypt.</param>
+        /// <returns>Encrypted data.</returns>
         public string Encrypt (string data)
         {
             ValidateEncryptDecryptData(data);
@@ -120,6 +154,11 @@ namespace ThalesSim.Core.Cryptography
                    TripleDes.TripleDesEncrypt(PartA, PartB, PartC, data.Substring(32, 16));
         }
 
+        /// <summary>
+        /// Decrypt data using this key.
+        /// </summary>
+        /// <param name="data">16, 32 or 48 hex data to decrypt.</param>
+        /// <returns>Decrypted data.</returns>
         public string Decrypt(string data)
         {
             ValidateEncryptDecryptData(data);
@@ -140,6 +179,11 @@ namespace ThalesSim.Core.Cryptography
                    TripleDes.TripleDesDecrypt(PartA, PartB, PartC, data.Substring(32, 16));
         }
 
+        /// <summary>
+        /// Encrypt data under this key using CBC mode.
+        /// </summary>
+        /// <param name="data">16, 32 or 48 hex data to encrypt.</param>
+        /// <returns>Encrypted data.</returns>
         public string EncryptCbc (string data)
         {
             ValidateEncryptDecryptData(data);
@@ -160,6 +204,11 @@ namespace ThalesSim.Core.Cryptography
             return resulta2 + resultb + TripleDes.TripleDesEncrypt(PartA, PartB, PartC, data.Substring(32, 16).XorHex(resulta2));
         }
 
+        /// <summary>
+        /// Decrypt data using CBC mode.
+        /// </summary>
+        /// <param name="data">16, 32 or 48 hex data to decrypt.</param>
+        /// <returns>Decrypted data.</returns>
         public string DecryptCbc(string data)
         {
             ValidateEncryptDecryptData(data);
@@ -180,6 +229,11 @@ namespace ThalesSim.Core.Cryptography
             return resulta2 + resultb + TripleDes.TripleDesDecrypt(PartA, PartB, PartC, data.Substring(32, 16).XorHex(data.Substring(16, 16)));
         }
 
+        /// <summary>
+        /// Encrypt data under this key using the variant mode.
+        /// </summary>
+        /// <param name="data">16, 32 or 48 hex data to encrypt.</param>
+        /// <returns>Encrypted data.</returns>
         public string EncryptVariant (string data)
         {
             ValidateEncryptDecryptData(data);
@@ -213,6 +267,11 @@ namespace ThalesSim.Core.Cryptography
             }
         }
 
+        /// <summary>
+        /// Decrypt data using the variant mode.
+        /// </summary>
+        /// <param name="data">16, 32 or 48 hex data to decrypt.</param>
+        /// <returns>Decrypted data.</returns>
         public string DecryptVariant (string data)
         {
             ValidateEncryptDecryptData(data);

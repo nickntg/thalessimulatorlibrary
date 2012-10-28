@@ -16,6 +16,9 @@
 
 namespace ThalesSim.Core.Cryptography.LMK
 {
+    /// <summary>
+    /// Enumeration of the LMK pairs.
+    /// </summary>
     public enum LmkPair
     {
         /// <summary>
