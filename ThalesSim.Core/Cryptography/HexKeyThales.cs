@@ -18,18 +18,46 @@ using ThalesSim.Core.Utility;
 
 namespace ThalesSim.Core.Cryptography
 {
+    /// <summary>
+    /// This class is used to represent a Thales key of any type.
+    /// </summary>
     public class HexKeyThales
     {
+        /// <summary>
+        /// Get/set the key type code of this instance.
+        /// </summary>
         public KeyTypeCode Code { get; private set; }
 
+        /// <summary>
+        /// Get/set the encrypted value of the key.
+        /// </summary>
         public string Key { get; private set; }
 
+        /// <summary>
+        /// Get/set the clear value of the key.
+        /// </summary>
         public string ClearKey { get; private set; }
 
+        /// <summary>
+        /// Get/set a HexKey using the clear value of the key.
+        /// </summary>
         public HexKey ClearHexKey { get { return new HexKey(ClearKey); } }
 
+        /// <summary>
+        /// Creates a new instance of this class.
+        /// </summary>
+        /// <param name="keyCode">Key type code.</param>
+        /// <param name="variant">Variant.</param>
+        /// <param name="clearKey">True if created using a clear key.</param>
+        /// <param name="key">Key value.</param>
         public HexKeyThales (KeyTypeCode keyCode, int variant, bool clearKey, string key) : this(variant.ToString() + keyCode, clearKey, key) { }
 
+        /// <summary>
+        /// Creates a new instance of this class.
+        /// </summary>
+        /// <param name="keyTypeCode">Key type code.</param>
+        /// <param name="clearKey">True if created using a clear key.</param>
+        /// <param name="key">Key value.</param>
         public HexKeyThales (string keyTypeCode, bool clearKey, string key)
         {
             Code = new KeyTypeCode(keyTypeCode);
@@ -48,11 +76,17 @@ namespace ThalesSim.Core.Cryptography
             }
         }
 
+        /// <summary>
+        /// Encrypt the clear key.
+        /// </summary>
         private void EncryptKey()
         {
             Key = KeyOperation(false, ClearKey);
         }
 
+        /// <summary>
+        /// Decrypt the encrypted key.
+        /// </summary>
         private void DecryptKey()
         {
             ClearKey = KeyOperation(true, Key);

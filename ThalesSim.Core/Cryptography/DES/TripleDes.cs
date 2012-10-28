@@ -23,8 +23,17 @@ using log4net;
 
 namespace ThalesSim.Core.Cryptography.DES
 {
+    /// <summary>
+    /// This class performs DES operations.
+    /// </summary>
     public class TripleDes
     {
+        /// <summary>
+        /// Single DES decrypt.
+        /// </summary>
+        /// <param name="key">Key to use.</param>
+        /// <param name="data">Data to decrypt.</param>
+        /// <returns>Decrypted data.</returns>
         public static byte[] DesEncrypt (byte[] key, byte[] data)
         {
             var log = LogManager.GetLogger("DesEncrypt");
@@ -40,6 +49,12 @@ namespace ThalesSim.Core.Cryptography.DES
             }
         }
 
+        /// <summary>
+        /// Single DES encrypt.
+        /// </summary>
+        /// <param name="key">Key to use.</param>
+        /// <param name="data">Data to encrypt.</param>
+        /// <returns>Encrypted data.</returns>
         public static byte[] DesDecrypt(byte[] key, byte[] data)
         {
             var log = LogManager.GetLogger("DesDecrypt");
@@ -55,16 +70,36 @@ namespace ThalesSim.Core.Cryptography.DES
             }
         }
 
+        /// <summary>
+        /// Single DES encrypt.
+        /// </summary>
+        /// <param name="key">Hexadecimal key to use.</param>
+        /// <param name="data">Data to encrypt.</param>
+        /// <returns>Encrypted data.</returns>
         public static string DesEncrypt (string key, string data)
         {
             return DesEncrypt(key.GetHexBytes(), data.GetHexBytes()).GetHexString();
         }
 
+        /// <summary>
+        /// Single DES decrypt.
+        /// </summary>
+        /// <param name="key">Hexadecimal key to use.</param>
+        /// <param name="data">Data to decrypt.</param>
+        /// <returns>Decrypted data.</returns>
         public static string DesDecrypt (string key, string data)
         {
             return DesDecrypt(key.GetHexBytes(), data.GetHexBytes()).GetHexString();
         }
 
+        /// <summary>
+        /// Triple DES encrypt.
+        /// </summary>
+        /// <param name="key1">First key part.</param>
+        /// <param name="key2">Second key part.</param>
+        /// <param name="key3">Third key part.</param>
+        /// <param name="data">Data to encrypt.</param>
+        /// <returns>Encrypted data.</returns>
         public static byte[] TripleDesEncrypt (byte[] key1, byte[] key2, byte[] key3, byte[] data)
         {
             var result = DesEncrypt(key1, data);
@@ -72,6 +107,14 @@ namespace ThalesSim.Core.Cryptography.DES
             return DesEncrypt(key3, result2);
         }
 
+        /// <summary>
+        /// Triple DES decrypt.
+        /// </summary>
+        /// <param name="key1">First key part.</param>
+        /// <param name="key2">Second key part.</param>
+        /// <param name="key3">Third key part.</param>
+        /// <param name="data">Data to decrypt.</param>
+        /// <returns>Decrypted data.</returns>
         public static byte[] TripleDesDecrypt(byte[] key1, byte[] key2, byte[] key3, byte[] data)
         {
             var result = DesDecrypt(key3, data);
@@ -79,11 +122,27 @@ namespace ThalesSim.Core.Cryptography.DES
             return DesDecrypt(key1, result);
         }
 
+        /// <summary>
+        /// Triple DES encrypt.
+        /// </summary>
+        /// <param name="key1">First key part.</param>
+        /// <param name="key2">Second key part.</param>
+        /// <param name="key3">Third key part.</param>
+        /// <param name="data">Data to encrypt.</param>
+        /// <returns>Encrypted data.</returns>
         public static string TripleDesEncrypt (string key1, string key2, string key3, string data)
         {
             return TripleDesEncrypt(key1.GetHexBytes(), key2.GetHexBytes(), key3.GetHexBytes(), data.GetHexBytes()).GetHexString();
         }
 
+        /// <summary>
+        /// Triple DES decrypt.
+        /// </summary>
+        /// <param name="key1">First key part.</param>
+        /// <param name="key2">Second key part.</param>
+        /// <param name="key3">Third key part.</param>
+        /// <param name="data">Data to decrypt.</param>
+        /// <returns>Decrypted data.</returns>
         public static string TripleDesDecrypt(string key1, string key2, string key3, string data)
         {
             return TripleDesDecrypt(key1.GetHexBytes(), key2.GetHexBytes(), key3.GetHexBytes(), data.GetHexBytes()).GetHexString();

@@ -20,12 +20,25 @@ using ThalesSim.Core.Utility;
 
 namespace ThalesSim.Core.Cryptography
 {
+    /// <summary>
+    /// This class is used to parse and hold a key type code.
+    /// </summary>
     public class KeyTypeCode
     {
+        /// <summary>
+        /// Get/set the LMK pair of this instance.
+        /// </summary>
         public LmkPair Pair { get; set; }
 
+        /// <summary>
+        /// Get/set the variant of this instance.
+        /// </summary>
         public int Variant { get; set; }
 
+        /// <summary>
+        /// Creates a new instance of this class from a key type code.
+        /// </summary>
+        /// <param name="keyTypeCode">Key type code string.</param>
         public KeyTypeCode (string keyTypeCode)
         {
             if (string.IsNullOrEmpty(keyTypeCode) || keyTypeCode.Length != 3 || !keyTypeCode.IsHex())

@@ -18,20 +18,38 @@ using ThalesSim.Core.Utility;
 
 namespace ThalesSim.Core.Message
 {
+    /// <summary>
+    /// Holds a response message.
+    /// </summary>
     public class StreamResponse
     {
+        /// <summary>
+        /// Response message.
+        /// </summary>
         public string Message { get; private set; }
 
-        public void Add (string str)
+        /// <summary>
+        /// Appends a string at the end of the message.
+        /// </summary>
+        /// <param name="str">String to append.</param>
+        public void Append (string str)
         {
             Message += str;
         }
 
-        public void AddStart (string str)
+        /// <summary>
+        /// Appends a string at the front of the message.
+        /// </summary>
+        /// <param name="str">String to append.</param>
+        public void AppendFront (string str)
         {
             Message = str + Message;
         }
 
+        /// <summary>
+        /// Get bytes corresponding to the message.
+        /// </summary>
+        /// <returns></returns>
         public byte[] GetBytes()
         {
             return Message.GetBytes();

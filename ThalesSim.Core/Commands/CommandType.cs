@@ -16,10 +16,19 @@
 
 namespace ThalesSim.Core.Commands
 {
+    /// <summary>
+    /// Command types.
+    /// </summary>
     public enum CommandType
     {
+        /// <summary>
+        /// Host command.
+        /// </summary>
         Host = 0,
 
+        /// <summary>
+        /// Console command.
+        /// </summary>
         Console = 1
     }
 }

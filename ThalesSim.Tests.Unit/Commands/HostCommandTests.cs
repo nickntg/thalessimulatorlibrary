@@ -33,7 +33,7 @@ namespace ThalesSim.Tests.Unit.Commands
         {
             CommandExplorer.Discover();
             LmkStorage.LmkStorageFile = "nofile.txt";
-            LmkStorage.GenerateTestLmks();
+            LmkStorage.GenerateTestLmks(false);
         }
 
         [Test]

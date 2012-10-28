@@ -16,12 +16,24 @@
 
 namespace ThalesSim.Core.Cryptography
 {
+    /// <summary>
+    /// Enumeration of key functions.
+    /// </summary>
     public enum KeyFunction
     {
+        /// <summary>
+        /// Key generation.
+        /// </summary>
         Generate = 0,
 
+        /// <summary>
+        /// Key import.
+        /// </summary>
         Import = 1,
 
+        /// <summary>
+        /// Key export.
+        /// </summary>
         Export = 2
     }
 }

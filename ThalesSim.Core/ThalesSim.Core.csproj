@@ -87,6 +87,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Resources\ConfigHelpers.cs" />
     <Compile Include="Resources\ErrorCodes.cs" />
     <Compile Include="Resources\Static.cs" />
     <Compile Include="Utility\Extensions.cs" />

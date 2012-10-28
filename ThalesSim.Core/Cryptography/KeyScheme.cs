@@ -16,18 +16,39 @@
 
 namespace ThalesSim.Core.Cryptography
 {
+    /// <summary>
+    /// Enumeration of the key schemes.
+    /// </summary>
     public enum KeyScheme
     {
+        /// <summary>
+        /// Single length key.
+        /// </summary>
         SingleLengthKey = 0,
 
+        /// <summary>
+        /// Double length variant key.
+        /// </summary>
         DoubleLengthKeyVariant = 1,
 
+        /// <summary>
+        /// Double length ANSI key.
+        /// </summary>
         DoubleLengthKeyAnsi = 2,
 
+        /// <summary>
+        /// Triple length variant key.
+        /// </summary>
         TripleLengthKeyVariant = 3,
 
+        /// <summary>
+        /// Triple length ANSI key.
+        /// </summary>
         TripleLengthKeyAnsi = 4,
 
+        /// <summary>
+        /// Unspecified format.
+        /// </summary>
         Unspecified = 5
     }
 }

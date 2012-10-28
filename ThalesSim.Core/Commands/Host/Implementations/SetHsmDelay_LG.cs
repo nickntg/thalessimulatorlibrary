@@ -19,16 +19,26 @@ using ThalesSim.Core.Resources;
 
 namespace ThalesSim.Core.Commands.Host.Implementations
 {
+    /// <summary>
+    /// Thales LG command implementation.
+    /// </summary>
     [ThalesHostCommand("LG", "LH", "Sets an HSM response delay")]
     public class SetHsmDelay_LG : AHostCommand
     {
         private string _delay;
 
+        /// <summary>
+        /// Read XML definitions.
+        /// </summary>
         public SetHsmDelay_LG()
         {
             ReadXmlDefinitions();
         }
 
+        /// <summary>
+        /// Accept message from client.
+        /// </summary>
+        /// <param name="message">Request message.</param>
         public override void AcceptMessage(StreamMessage message)
         {
             base.AcceptMessage(message);
@@ -39,13 +49,17 @@ namespace ThalesSim.Core.Commands.Host.Implementations
             }
         }
 
+        /// <summary>
+        /// Dummy implementation that does nothing.
+        /// </summary>
+        /// <returns>Response message.</returns>
         public override StreamResponse ConstructResponse()
         {
             var mr = new StreamResponse();
 
             Log.InfoFormat("HSM delay {0} set and ignored", _delay);
 
-            mr.Add(ErrorCodes.ER_00_NO_ERROR);
+            mr.Append(ErrorCodes.ER_00_NO_ERROR);
             return mr;
         }
     }

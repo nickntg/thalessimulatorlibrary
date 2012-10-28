@@ -22,11 +22,18 @@ using ThalesSim.Core.Commands.Host;
 
 namespace ThalesSim.Core.Commands
 {
+    /// <summary>
+    /// The command explorer is used to keep track of loaded
+    /// types that implement host or console commands.
+    /// </summary>
     public class CommandExplorer
     {
         private static readonly SortedList<CommandType, SortedList<string, Command>> Commands =
             new SortedList<CommandType, SortedList<string, Command>>();
 
+        /// <summary>
+        /// Discover host and console commands.
+        /// </summary>
         public static void Discover()
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -96,6 +103,11 @@ namespace ThalesSim.Core.Commands
             }
         }
 
+        /// <summary>
+        /// Get descriptions of discovered commands.
+        /// </summary>
+        /// <param name="commandType">Type of commands to look for.</param>
+        /// <returns>String with discovered commands.</returns>
         public static string GetLoadedCommandDescriptions (CommandType commandType)
         {
             var sb = new StringBuilder();
@@ -108,6 +120,12 @@ namespace ThalesSim.Core.Commands
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Get a command.
+        /// </summary>
+        /// <param name="commandType">Type of command to search for.</param>
+        /// <param name="code">Command code.</param>
+        /// <returns>Found command or null.</returns>
         public static Command GetCommand (CommandType commandType, string code)
         {
             try
