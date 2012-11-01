@@ -55,5 +55,28 @@ namespace ThalesSim.Core.Cryptography
 
             Pair = keyTypeCode.Substring(1).GetLmkPair();
         }
+
+        /// <summary>
+        /// Creates a new instance of this class
+        /// from a variant and an LMK pair.
+        /// </summary>
+        /// <param name="variant">Variant.</param>
+        /// <param name="pair">LMK pair.</param>
+        public KeyTypeCode (int variant, LmkPair pair)
+        {
+            Variant = variant;
+
+            Pair = pair;
+        }
+
+        /// <summary>
+        /// Returns a string representation of this instance
+        /// equivalent to the key type code.
+        /// </summary>
+        /// <returns>Key type code representing this instance.</returns>
+        public override string ToString()
+        {
+            return Variant.ToString() +  Pair.GetLmkPairCode();
+        }
     }
 }

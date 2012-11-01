@@ -14,7 +14,12 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+using System;
+using ThalesSim.Core.Cryptography;
+using ThalesSim.Core.Cryptography.LMK;
 using ThalesSim.Core.Message;
+using ThalesSim.Core.Resources;
+using ThalesSim.Core.Utility;
 using log4net;
 
 namespace ThalesSim.Core.Commands.Host
@@ -143,6 +148,74 @@ namespace ThalesSim.Core.Commands.Host
                 MessageFields = Fields.ReadXmlDefinition(fileName);
                 FieldsStore.Add(GetType().Name, MessageFields);
             }
+        }
+
+        /// <summary>
+        /// Parses and validates a key type code.
+        /// </summary>
+        /// <param name="keyTypeCode">Key type code to parse.</param>
+        /// <param name="mr">Message response to add error code to, if parsing fails.</param>
+        /// <param name="code">Parsed key type code.</param>
+        /// <returns>True if parsing is successful.</returns>
+        protected bool ValidateKeyTypeCode(string keyTypeCode, StreamResponse mr, ref KeyTypeCode code)
+        {
+            try
+            {
+                code = new KeyTypeCode(keyTypeCode);
+                return true;
+            }
+            catch (InvalidCastException)
+            {
+                mr.Append(ErrorCodes.ER_04_INVALID_KEY_TYPE_CODE);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Parses and validates a key scheme code.
+        /// </summary>
+        /// <param name="keySchemeCode">Key scheme code.</param>
+        /// <param name="mr">Message response to add error code to, if parsing fails.</param>
+        /// <param name="scheme">Parsed key scheme.</param>
+        /// <returns>True if parsing is successful.</returns>
+        protected bool ValidateKeySchemeCode (string keySchemeCode, StreamResponse mr, ref KeyScheme scheme)
+        {
+            try
+            {
+                scheme = keySchemeCode.GetKeyScheme();
+                return true;
+            }
+            catch (Exception)
+            {
+                mr.Append(ErrorCodes.ER_26_INVALID_KEY_SCHEME);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Validates an authorized state requirement.
+        /// </summary>
+        /// <param name="func">Function to perform.</param>
+        /// <param name="pair">LMK pair.</param>
+        /// <param name="variant">Variant.</param>
+        /// <param name="mr">Message response to add error code to, if parsing fails.</param>
+        /// <returns>True if the operation is allowed.</returns>
+        protected bool ValidateAuthStateRequirement (KeyFunction func, LmkPair pair, int variant, StreamResponse mr)
+        {
+            var req = AuthStateRequirements.GetRequirement(func, pair, variant);
+            if (req == StateRequirementType.NotAllowed)
+            {
+                mr.Append(ErrorCodes.ER_29_FUNCTION_NOT_PERMITTED);
+                return false;
+            }
+
+            if (req == StateRequirementType.NeedsAuthorizedState && !ConfigHelpers.IsInAuthorizedState())
+            {
+                mr.Append(ErrorCodes.ER_17_HSM_IS_NOT_IN_THE_AUTHORIZED_STATE);
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -51,5 +51,30 @@ namespace ThalesSim.Core.Resources
         {
             _authorizedState = flag;
         }
+
+        /// <summary>
+        /// Determines if the simulator currently uses single-length ZMKs.
+        /// </summary>
+        /// <returns>True if single-length ZMKs are used.</returns>
+        public static bool IsSingleLengthZmk()
+        {
+            return !Settings.Default.DoubleLengthZMKs;
+        }
+
+        /// <summary>
+        /// Sets single-length ZMKs.
+        /// </summary>
+        public static void SetSingleLengthZmk()
+        {
+            Settings.Default.DoubleLengthZMKs = false;
+        }
+
+        /// <summary>
+        /// Sets double-length ZMKs.
+        /// </summary>
+        public static void SetDoubleLengthZmk()
+        {
+            Settings.Default.DoubleLengthZMKs = true;            
+        }
     }
 }

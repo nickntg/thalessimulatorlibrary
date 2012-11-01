@@ -381,6 +381,30 @@ namespace ThalesSim.Core.Utility
 
         #endregion
 
+        #region Key length
+        
+        /// <summary>
+        /// Determines a key's length.
+        /// </summary>
+        /// <param name="key">Key.</param>
+        /// <returns>Length of key.</returns>
+        public static KeyLength GetKeyLength(this string key)
+        {
+            switch (key.Length)
+            {
+                case 16:
+                    return KeyLength.SingleLength;
+                case 32:
+                    return KeyLength.DoubleLength;
+                case 48:
+                    return KeyLength.TripleLength;
+                default:
+                    throw new InvalidOperationException(string.Format("{0} has an invalid length", key));
+            }
+        }
+
+        #endregion
+
         #region Parity
 
         /// <summary>
@@ -613,6 +637,50 @@ namespace ThalesSim.Core.Utility
                     return LmkPair.Pair38_39;
                 default:
                     throw new InvalidCastException(string.Format("Cannot parse {0} as an LMK pair", text));
+            }
+        }
+
+        /// <summary>
+        /// Returns a string representing an LMK pair.
+        /// </summary>
+        /// <param name="pair">LMK pair.</param>
+        /// <returns>LMK pair code.</returns>
+        public static string GetLmkPairCode (this LmkPair pair)
+        {
+            switch (pair)
+            {
+                case LmkPair.Pair04_05:
+                    return "00";
+                case LmkPair.Pair06_07:
+                    return "01";
+                case LmkPair.Pair14_15:
+                    return "02";
+                case LmkPair.Pair16_17:
+                    return "03";
+                case LmkPair.Pair18_19:
+                    return "04";
+                case LmkPair.Pair20_21:
+                    return "05";
+                case LmkPair.Pair22_23:
+                    return "06";
+                case LmkPair.Pair24_25:
+                    return "07";
+                case LmkPair.Pair26_27:
+                    return "08";
+                case LmkPair.Pair28_29:
+                    return "09";
+                case LmkPair.Pair30_31:
+                    return "0A";
+                case LmkPair.Pair32_33:
+                    return "0B";
+                case LmkPair.Pair34_35:
+                    return "0C";
+                case LmkPair.Pair36_37:
+                    return "0D";
+                case LmkPair.Pair38_39:
+                    return "0E";
+                default:
+                    throw new InvalidCastException(string.Format("Cannot generate LMK pair code for {0}", pair));
             }
         }
 

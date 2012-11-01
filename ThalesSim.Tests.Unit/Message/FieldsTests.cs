@@ -14,11 +14,13 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using ServiceStack.Text;
 using ThalesSim.Core.Message;
+using ThalesSim.Core.Resources;
 using ThalesSim.Core.Utility;
 using XmlSerializer = System.Xml.Serialization.XmlSerializer;
 
@@ -30,6 +32,9 @@ namespace ThalesSim.Tests.Unit.Message
         [Test]
         public void TestAllConstructions()
         {
+            ConfigHelpers.SetAuthorizedState(true);
+            ConfigHelpers.SetDoubleLengthZmk();
+
             string str;
             using (var sr = new StreamReader("..\\..\\data\\tests1.json"))
             {

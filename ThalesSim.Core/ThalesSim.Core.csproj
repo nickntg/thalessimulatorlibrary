@@ -55,11 +55,16 @@
     <Compile Include="Commands\CommandType.cs" />
     <Compile Include="Commands\Console\ThalesConsoleCommandAttribute.cs" />
     <Compile Include="Commands\Host\AHostCommand.cs" />
+    <Compile Include="Commands\Host\AuthorizedStateAttribute.cs" />
     <Compile Include="Commands\Host\HostCommand.cs" />
     <Compile Include="Commands\Host\Implementations\CancelAuthState_RA.cs" />
+    <Compile Include="Commands\Host\Implementations\EchoTest_B2.cs" />
+    <Compile Include="Commands\Host\Implementations\ImportKey_A6.cs" />
     <Compile Include="Commands\Host\Implementations\SetHsmDelay_LG.cs" />
     <Compile Include="Commands\Host\ThalesHostCommandAttribute.cs" />
     <Compile Include="Cryptography\AuthStateRequirement.cs" />
+    <Compile Include="Cryptography\AuthStateRequirements.cs" />
+    <Compile Include="Cryptography\StateRequirementType.cs" />
     <Compile Include="Cryptography\DES\TripleDes.cs" />
     <Compile Include="Cryptography\HexKey.cs" />
     <Compile Include="Cryptography\HexKeyThales.cs" />
@@ -102,7 +107,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="ThalesSim.snk" />
