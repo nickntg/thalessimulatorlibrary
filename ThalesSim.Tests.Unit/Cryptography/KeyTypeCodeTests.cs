@@ -61,6 +61,7 @@ namespace ThalesSim.Tests.Unit.Cryptography
             var ktc = new KeyTypeCode(keyTypeCode);
             Assert.AreEqual(expectedPair, ktc.Pair);
             Assert.AreEqual(expectedVariant, ktc.Variant);
+            Assert.AreEqual(ktc.ToString(), keyTypeCode);
         }
     }
 }

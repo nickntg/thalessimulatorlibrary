@@ -168,6 +168,15 @@ namespace ThalesSim.Tests.Unit.Utility
         }
 
         [Test]
+        [TestCase("0123456789ABCDEF", KeyLength.SingleLength)]
+        [TestCase("0123456789ABCDEF0123456789ABCDEF", KeyLength.DoubleLength)]
+        [TestCase("0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF", KeyLength.TripleLength)]
+        public void TestKeyLength(string key, KeyLength expected)
+        {
+            Assert.AreEqual(expected, key.GetKeyLength());
+        }
+
+        [Test]
         [TestCase("01", new byte[] { 48, 49})]
         [TestCase("", new byte[] { })]
         public void TestStringToBytes(string text, byte[] expected)
@@ -266,6 +275,7 @@ namespace ThalesSim.Tests.Unit.Utility
         public void TestLmkPairMapping (string text, LmkPair expected)
         {
             Assert.AreEqual(expected, text.GetLmkPair());
+            Assert.AreEqual(text, expected.GetLmkPairCode());
         }
 
         [Test]

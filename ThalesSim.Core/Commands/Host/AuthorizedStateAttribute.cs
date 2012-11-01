@@ -14,19 +14,16 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-namespace ThalesSim.Core.Cryptography
+using System;
+
+namespace ThalesSim.Core.Commands.Host
 {
     /// <summary>
-    /// Describes an authorized state requirement for import/export functions.
+    /// The authorized attribute is used to decorate host commands
+    /// that need the simulator to be in the authorized state.
     /// </summary>
-    public class AuthStateRequirement
+    [AttributeUsage(AttributeTargets.Class)]
+    public class AuthorizedStateAttribute : Attribute
     {
-        public KeyFunction Function { get; set; }
-
-        public LMK.LmkPair Pair { get; set; }
-
-        public int Variant { get; set; }
-
-        public StateRequirementType Requirement { get; set; }
     }
 }

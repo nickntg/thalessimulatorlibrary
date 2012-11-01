@@ -88,7 +88,7 @@ namespace ThalesSim.Core.Cryptography.LMK
         public static string LmkVariant (LmkPair pair, int variant)
         {
             var lmk = Lmk(pair);
-            return variant == 0 ? lmk : lmk.XorHex(Variants.GetDoubleLengthVariant(variant).PadRight(32, '0'));
+            return variant == 0 ? lmk : lmk.XorHex(Variants.GetVariant(variant).PadRight(32, '0'));
         }
 
         /// <summary>

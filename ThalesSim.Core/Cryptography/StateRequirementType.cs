@@ -17,16 +17,23 @@
 namespace ThalesSim.Core.Cryptography
 {
     /// <summary>
-    /// Describes an authorized state requirement for import/export functions.
+    /// Enumeration of auth state requirements.
     /// </summary>
-    public class AuthStateRequirement
+    public enum StateRequirementType
     {
-        public KeyFunction Function { get; set; }
+        /// <summary>
+        /// Function not allowed.
+        /// </summary>
+        NotAllowed = 0,
 
-        public LMK.LmkPair Pair { get; set; }
+        /// <summary>
+        /// Function needs authorized state.
+        /// </summary>
+        NeedsAuthorizedState = 1,
 
-        public int Variant { get; set; }
-
-        public StateRequirementType Requirement { get; set; }
+        /// <summary>
+        /// Function does not need authorized state.
+        /// </summary>
+        DoesNotNeedAuthorizedState = 2
     }
 }
