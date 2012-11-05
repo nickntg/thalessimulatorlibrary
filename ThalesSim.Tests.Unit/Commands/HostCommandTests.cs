@@ -34,6 +34,7 @@ namespace ThalesSim.Tests.Unit.Commands
             CommandExplorer.Discover();
             LmkStorage.LmkStorageFile = "nofile.txt";
             LmkStorage.GenerateTestLmks(false);
+            ConfigHelpers.SetAuthorizedState(true);
         }
 
         [Test]
@@ -48,6 +49,7 @@ namespace ThalesSim.Tests.Unit.Commands
             ConfigHelpers.SetAuthorizedState(true);
             Assert.AreEqual("00", TestMessage("", new CancelAuthState_RA()));
             Assert.IsFalse(ConfigHelpers.IsInAuthorizedState());
+            ConfigHelpers.SetSingleLengthZmk();
         }
 
         [Test]
@@ -70,6 +72,16 @@ namespace ThalesSim.Tests.Unit.Commands
             Assert.AreEqual("00U1EF828AA8F6B80EB83E19FBC373F3A856F1E3F", TestMessage("001U71979DEB8587E2734F1E99D5DCAEF9ACXC8E3118AFA853807EB7E92294663A5BAU", new ImportKey_A6()));
             Assert.AreEqual("00U1EF828AA8F6B80EB83E19FBC373F3A856F1E3F", TestMessage("001U71979DEB8587E2734F1E99D5DCAEF9ACX8E80C547F2A1324B84763B0EE32B73ADU1", new ImportKey_A6()));
             Assert.AreEqual("00BAB32D775A38E4AB73936E", TestMessage("001U1457FF6ADF6250C66C368416B4C9D3832B930A07119F93A8Z", new ImportKey_A6()));
+        }
+
+        [Test]
+        public void ExportKeyTest()
+        {
+            ConfigHelpers.SetAuthorizedState(true);
+            Assert.AreEqual("0035ED0C0EA7F7D0FA0035BB", TestMessage("0024ED06495741C280C0406FBB23A5214DFZ", new ExportKey_A8()));
+            ConfigHelpers.SetDoubleLengthZmk();
+            Assert.AreEqual("0016224FDAA779AFB31FFD3C", TestMessage("002U1457FF6ADF6250C66C368416B4C9D3837BB126F2BE631486Z", new ExportKey_A8()));
+            Assert.AreEqual("00U2C62A23D001B97412950CD8BE66C7639070753", TestMessage("002U1457FF6ADF6250C66C368416B4C9D383U8463435FC4B4DAA0C49025272C29B12CU", new ExportKey_A8()));
         }
 
         private string TestMessage (string message, AHostCommand command)

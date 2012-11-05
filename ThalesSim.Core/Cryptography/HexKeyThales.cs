@@ -111,9 +111,9 @@ namespace ThalesSim.Core.Cryptography
             {
                 case KeyScheme.DoubleLengthKeyVariant:
                 case KeyScheme.TripleLengthKeyVariant:
-                    return TransformAtalla(atallaVariant).EncryptVariant(data);
+                    return TransformAtalla(atallaVariant).EncryptVariant(data.StripKeyScheme());
                 default:
-                    return TransformAtalla(atallaVariant).Encrypt(data);
+                    return TransformAtalla(atallaVariant).Encrypt(data.StripKeyScheme());
             }
         }
 
