@@ -73,6 +73,13 @@ namespace ThalesSim.Core.Cryptography
                  new AuthStateRequirement{Function = KeyFunction.Export, Pair = LmkPair.Pair28_29, Variant = 4, Requirement = StateRequirementType.NeedsAuthorizedState},
                  new AuthStateRequirement{Function = KeyFunction.Export, Pair = LmkPair.Pair28_29, Variant = 5, Requirement = StateRequirementType.NeedsAuthorizedState}};
 
+        /// <summary>
+        /// Returns an authorized state requirement.
+        /// </summary>
+        /// <param name="function">Function requested.</param>
+        /// <param name="pair">LMK pair for which function is requested.</param>
+        /// <param name="variant">Variant requested.</param>
+        /// <returns>Requirement.</returns>
         public static StateRequirementType GetRequirement (KeyFunction function, LmkPair pair, int variant)
         {
             foreach (var req in Reqs.Where(req => req.Function == function && req.Pair == pair && req.Variant == variant))

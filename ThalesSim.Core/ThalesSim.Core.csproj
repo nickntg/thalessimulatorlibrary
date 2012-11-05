@@ -59,6 +59,7 @@
     <Compile Include="Commands\Host\HostCommand.cs" />
     <Compile Include="Commands\Host\Implementations\CancelAuthState_RA.cs" />
     <Compile Include="Commands\Host\Implementations\EchoTest_B2.cs" />
+    <Compile Include="Commands\Host\Implementations\ExportKey_A8.cs" />
     <Compile Include="Commands\Host\Implementations\ImportKey_A6.cs" />
     <Compile Include="Commands\Host\Implementations\SetHsmDelay_LG.cs" />
     <Compile Include="Commands\Host\ThalesHostCommandAttribute.cs" />
