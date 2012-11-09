@@ -84,6 +84,20 @@ namespace ThalesSim.Tests.Unit.Commands
             Assert.AreEqual("00U2C62A23D001B97412950CD8BE66C7639070753", TestMessage("002U1457FF6ADF6250C66C368416B4C9D383U8463435FC4B4DAA0C49025272C29B12CU", new ExportKey_A8()));
         }
 
+        [Test]
+        public void FormKeyFromEncryptedComponentsTest()
+        {
+            ConfigHelpers.SetAuthorizedState(true);
+            Assert.AreEqual("00FE018240022A76DCA192FE",
+                            TestMessage("3002Z3B723AF4CF00A7A6954111D254A90D17EAAF49979FA95742",
+                                        new FormKeyFromEncryptedComponents_A4()));
+            Assert.AreEqual("00XC0BC1DFFC449A402DAB71250CA5869CC8CE396",
+                            TestMessage("3000XX2EC8A0412B5D0E86E3C1E5ABFA19B3F5XFF43378ED5D85B1BC465BF000335FBF1XA235EDF4C58A2CB0C84641D07319CF21",
+                                        new FormKeyFromEncryptedComponents_A4()));
+            ConfigHelpers.SetAuthorizedState(false);
+            Assert.IsTrue(CommandExplorer.GetCommand(CommandType.Host, "A4").RequiresAuthorizedState);
+        }
+
         private string TestMessage (string message, AHostCommand command)
         {
             var msg = new StreamMessage(message);
