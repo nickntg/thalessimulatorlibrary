@@ -50,6 +50,11 @@ namespace ThalesSim.Core.Commands
         public Assembly Assembly { get; set; }
 
         /// <summary>
+        /// Get/set whether the command requires the authorized state.
+        /// </summary>
+        public bool RequiresAuthorizedState { get; set; }
+
+        /// <summary>
         /// Returns a string representing this instance.
         /// </summary>
         /// <returns>String representation of this instance.</returns>

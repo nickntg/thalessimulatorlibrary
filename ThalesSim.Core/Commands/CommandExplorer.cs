@@ -54,6 +54,10 @@ namespace ThalesSim.Core.Commands
                                                          Description = consoleAttr.Description,
                                                          Type = CommandType.Console
                                                      };
+
+                            var needsAuth = t.GetCustomAttributes(typeof(AuthorizedStateAttribute), false);
+                            consoleCommand.RequiresAuthorizedState = (needsAuth.Length != 0);
+
                             if (!Commands.ContainsKey(CommandType.Console))
                             {
                                 Commands.Add(CommandType.Console, new SortedList<string, Command>());
@@ -82,6 +86,9 @@ namespace ThalesSim.Core.Commands
                                                       ResponseCodeAfterIo = hostAttr.ResponseCodeAfterIo,
                                                       Type = CommandType.Host
                                                   };
+
+                            var needsAuth = t.GetCustomAttributes(typeof (AuthorizedStateAttribute), false);
+                            hostCommand.RequiresAuthorizedState = (needsAuth.Length != 0);
 
                             if (!Commands.ContainsKey(CommandType.Host))
                             {
