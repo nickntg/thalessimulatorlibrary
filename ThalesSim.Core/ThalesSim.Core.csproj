@@ -58,6 +58,7 @@
     <Compile Include="Commands\Host\AuthorizedStateAttribute.cs" />
     <Compile Include="Commands\Host\HostCommand.cs" />
     <Compile Include="Commands\Host\Implementations\CancelAuthState_RA.cs" />
+    <Compile Include="Commands\Host\Implementations\DecryptEncryptedPIN_NG.cs" />
     <Compile Include="Commands\Host\Implementations\EchoTest_B2.cs" />
     <Compile Include="Commands\Host\Implementations\ExportKey_A8.cs" />
     <Compile Include="Commands\Host\Implementations\FormKeyFromEncryptedComponents_A4.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Commands\Host\ThalesHostCommandAttribute.cs" />
     <Compile Include="Cryptography\AuthStateRequirement.cs" />
     <Compile Include="Cryptography\AuthStateRequirements.cs" />
+    <Compile Include="Cryptography\PIN\Encrypt.cs" />
     <Compile Include="Cryptography\StateRequirementType.cs" />
     <Compile Include="Cryptography\DES\TripleDes.cs" />
     <Compile Include="Cryptography\HexKey.cs" />
