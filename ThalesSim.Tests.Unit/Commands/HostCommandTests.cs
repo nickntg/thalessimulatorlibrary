@@ -98,6 +98,15 @@ namespace ThalesSim.Tests.Unit.Commands
             Assert.IsTrue(CommandExplorer.GetCommand(CommandType.Host, "A4").RequiresAuthorizedState);
         }
 
+        [Test]
+        public void DecryptEncryptedPinTest()
+        {
+            ConfigHelpers.SetAuthorizedState(true);
+            Assert.AreEqual("001234F", TestMessage("12345678901201234", new DecryptEncryptedPIN_NG()));
+            ConfigHelpers.SetAuthorizedState(false);
+            Assert.IsTrue(CommandExplorer.GetCommand(CommandType.Host, "NG").RequiresAuthorizedState);
+        }
+
         private string TestMessage (string message, AHostCommand command)
         {
             var msg = new StreamMessage(message);
