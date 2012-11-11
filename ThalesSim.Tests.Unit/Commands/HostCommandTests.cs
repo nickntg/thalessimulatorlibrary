@@ -111,7 +111,7 @@ namespace ThalesSim.Tests.Unit.Commands
         public void DerivePinUsingTheIbmMethodTest()
         {
             const string cryptPvk = "UA8B1520E201412938388191885FFA50A";
-            var cryptZpk = "U402F396F7ABEDC14976EB65959AA99B2";
+            const string cryptZpk = "U402F396F7ABEDC14976EB65959AA99B2";
             const string acct = "832937216759";
             const string decTable = "FFFFFFFFFFFFFFFF";
             const string pinValData = "4458329372N3";
@@ -120,7 +120,26 @@ namespace ThalesSim.Tests.Unit.Commands
 
             Assert.AreEqual("0004584", result);
 
-            // TODO: Verify like the original test.
+            result = TestMessage(cryptZpk + "01" + acct + result.Substring(2), new TranslatePinFromLMKToZPK_JG());
+
+            Assert.AreEqual("0028992058275C1FED", result);
+
+            Assert.AreEqual("00",
+                            TestMessage(
+                                cryptZpk + cryptPvk + "12" + result.Substring(2) + "01" + "04" + acct + decTable +
+                                pinValData + offset, new VerifyInterchangePinWithIBMAlgorithm_EA()).Substring(0, 2));
+        }
+
+        [Test]
+        public void TranslatePinFromLmkToZpkTest()
+        {
+            Assert.AreEqual("0098A841D13467F185",
+                            TestMessage("TA5E7D4FE829B0D83C5E7352636C16C7827E197349E34A5CD0112345678901201234",
+                                        new TranslatePinFromLMKToZPK_JG()));
+            Assert.AreEqual("00E98FFDA17099AF55",
+                            TestMessage("BAB32D775A38E4AB0155000002532101234", new TranslatePinFromLMKToZPK_JG()));
+            Assert.AreEqual("00F7808F2CBEC63168",
+                            TestMessage("BAB32D775A38E4AB0355000002532101234", new TranslatePinFromLMKToZPK_JG()));
         }
 
         private string TestMessage (string message, AHostCommand command)
