@@ -698,6 +698,11 @@ namespace ThalesSim.Core.Utility
             try
             {
                 var format = text.GetPinBlockFormat();
+                if (format == PinBlockFormat.Plus)
+                {
+                    return false;
+                }
+
                 return true;
             }
             catch (InvalidCastException)
