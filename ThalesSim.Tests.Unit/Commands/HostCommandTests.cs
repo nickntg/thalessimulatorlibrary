@@ -107,6 +107,22 @@ namespace ThalesSim.Tests.Unit.Commands
             Assert.IsTrue(CommandExplorer.GetCommand(CommandType.Host, "NG").RequiresAuthorizedState);
         }
 
+        [Test]
+        public void DerivePinUsingTheIbmMethodTest()
+        {
+            const string cryptPvk = "UA8B1520E201412938388191885FFA50A";
+            var cryptZpk = "U402F396F7ABEDC14976EB65959AA99B2";
+            const string acct = "832937216759";
+            const string decTable = "FFFFFFFFFFFFFFFF";
+            const string pinValData = "4458329372N3";
+            const string offset = "0000FFFFFFFF";
+            var result = TestMessage(cryptPvk + offset + "04" + acct + decTable + pinValData, new DerivePinUsingTheIBMMethod_EE());
+
+            Assert.AreEqual("0004584", result);
+
+            // TODO: Verify like the original test.
+        }
+
         private string TestMessage (string message, AHostCommand command)
         {
             var msg = new StreamMessage(message);

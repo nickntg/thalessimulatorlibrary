@@ -359,5 +359,23 @@ namespace ThalesSim.Tests.Unit.Utility
 
             Assert.AreEqual("00 23 20 02 00 23 20 02 | .# ..# .\r\n01                      | .\r\n", dump3);
         }
+
+        [Test]
+        [TestCase("123456", "0123456789123456", "123456")]
+        [TestCase("123456ABCDEF", "0123456789123456", "123456123456")]
+        [TestCase("123456ABCDEF", "FFFFFFFFFFFFFFFF", "123456123456")]
+        [TestCase("", "FFFFFFFFFFFFFFFF", "")]
+        public void TestStringDecimalisation (string text, string dtable, string expected)
+        {
+            Assert.AreEqual(expected, text.Decimalise(dtable));
+        }
+
+        [Test]
+        [TestCase("12345", "99999", "01234")]
+        [TestCase("12345", "12345", "24680")]
+        public void TestAddWithoutCarry (string text1, string text2, string expected)
+        {
+            Assert.AreEqual(expected, text1.AddWithoutCarry(text2));
+        }
     }
 }
