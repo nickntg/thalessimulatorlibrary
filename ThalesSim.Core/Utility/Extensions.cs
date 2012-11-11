@@ -870,5 +870,68 @@ namespace ThalesSim.Core.Utility
         }
 
         #endregion
+
+        #region Decimalisation
+
+        /// <summary>
+        /// Decimalises a string using a decimalisation table.
+        /// </summary>
+        /// <param name="text">String to decimalise.</param>
+        /// <param name="decimalisationTable">Decimalisation table.</param>
+        /// <returns>Decimalised string.</returns>
+        public static string Decimalise (this string text, string decimalisationTable)
+        {
+            const string emptyDecTable = "FFFFFFFFFFFFFFFF";
+            const string defaultDecTable = "9876543210123456";
+
+            if (decimalisationTable == emptyDecTable)
+            {
+                decimalisationTable = defaultDecTable;
+            }
+
+            var output = string.Empty;
+            for (var i = 0; i < text.Length; i++)
+            {
+                var ch = text[i];
+                if (ch >= '0' && ch <= '9')
+                {
+                    output = output + ch;
+                }
+                else
+                {
+                    var repIdx = (GetBytes(new string(ch, 1))[0] - 65) + 10;
+                    output = output + decimalisationTable[repIdx];
+                }
+            }
+
+            return output;
+        }
+
+        #endregion
+
+        #region Add/subtract
+
+        public static string AddWithoutCarry (this string text, string toAdd)
+        {
+            if (text.Length != toAdd.Length)
+            {
+                throw new InvalidOperationException("Cannot add without carry two unequal strings");
+            }
+
+            if (!text.IsNumeric() || !toAdd.IsNumeric())
+            {
+                throw new InvalidOperationException("Not numeric string or strings");
+            }
+
+            var output = string.Empty;
+            for (var i = 0; i < text.Length; i++)
+            {
+                output = output + (Convert.ToInt32(text.Substring(i,1)) + Convert.ToInt32(toAdd.Substring(i,1)))%10;
+            }
+
+            return output;
+        }
+
+        #endregion
     }
 }
