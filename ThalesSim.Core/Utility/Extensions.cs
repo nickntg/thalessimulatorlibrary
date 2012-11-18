@@ -29,7 +29,7 @@ namespace ThalesSim.Core.Utility
     /// </summary>
     public static class Extensions
     {
-        private static readonly Random RndMachine = new Random();
+        public static RandomMachine RndMachine = new RandomMachine();
 
         #region Hex/binary/byte
 
@@ -938,5 +938,29 @@ namespace ThalesSim.Core.Utility
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Standard random generator.
+    /// </summary>
+    public class RandomMachine
+    {
+        public static readonly Random RndMachine = new Random();
+
+        public virtual int Next(int min, int max)
+        {
+            return RndMachine.Next(min, max);
+        }
+    }
+
+    /// <summary>
+    /// Rigged random generator for tests.
+    /// </summary>
+    public class NotSoRandom : RandomMachine
+    {
+        public override int Next(int min, int max)
+        {
+            return 12;
+        }
     }
 }
