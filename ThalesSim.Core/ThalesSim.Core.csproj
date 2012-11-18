@@ -67,6 +67,7 @@
     <Compile Include="Commands\Host\Implementations\FormZMKFromThreeComponents_GG.cs" />
     <Compile Include="Commands\Host\Implementations\FormZMKFromTwoToNineComponents_GY.cs" />
     <Compile Include="Commands\Host\Implementations\GenerateKey_A0.cs" />
+    <Compile Include="Commands\Host\Implementations\GenerateMACMABUsingAnsiX919ForLargeMessage_MS.cs" />
     <Compile Include="Commands\Host\Implementations\ImportKey_A6.cs" />
     <Compile Include="Commands\Host\Implementations\SetHsmDelay_LG.cs" />
     <Compile Include="Commands\Host\Implementations\TranslatePinFromLMKToZPK_JG.cs" />
@@ -74,6 +75,10 @@
     <Compile Include="Commands\Host\ThalesHostCommandAttribute.cs" />
     <Compile Include="Cryptography\AuthStateRequirement.cs" />
     <Compile Include="Cryptography\AuthStateRequirements.cs" />
+    <Compile Include="Cryptography\MAC\Iso9797Pad.cs" />
+    <Compile Include="Cryptography\MAC\Iso9797PaddingMethodType.cs" />
+    <Compile Include="Cryptography\MAC\IsoX919BlockType.cs" />
+    <Compile Include="Cryptography\MAC\IsoX919Mac.cs" />
     <Compile Include="Cryptography\PIN\Encrypt.cs" />
     <Compile Include="Cryptography\StateRequirementType.cs" />
     <Compile Include="Cryptography\DES\TripleDes.cs" />
@@ -112,7 +117,6 @@
   <ItemGroup>
     <Folder Include="Cryptography\DUKPT\" />
     <Folder Include="Cryptography\EMV\" />
-    <Folder Include="Cryptography\MAK\" />
     <Folder Include="Cryptography\RSA\" />
   </ItemGroup>
   <ItemGroup>

@@ -57,6 +57,7 @@
     <Compile Include="Cryptography\KeyTests.cs" />
     <Compile Include="Cryptography\KeyTypeCodeTests.cs" />
     <Compile Include="Cryptography\LMK\LmkTests.cs" />
+    <Compile Include="Cryptography\MAC\MacTests.cs" />
     <Compile Include="Cryptography\PIN\EncryptTests.cs" />
     <Compile Include="Cryptography\PIN\PinBlockTests.cs" />
     <Compile Include="Message\FieldsTests.cs" />
