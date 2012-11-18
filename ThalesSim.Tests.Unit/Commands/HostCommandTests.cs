@@ -142,6 +142,40 @@ namespace ThalesSim.Tests.Unit.Commands
                             TestMessage("BAB32D775A38E4AB0355000002532101234", new TranslatePinFromLMKToZPK_JG()));
         }
 
+        [Test]
+        public void GenerateKeyTest()
+        {
+            Extensions.RndMachine = new NotSoRandom();
+            Assert.AreEqual("00U37C214786596A294ED92DBA27208C13B18EC38", TestMessage("0001U", new GenerateKey_A0()));
+            Assert.AreEqual("00U37C214786596A294ED92DBA27208C13BX6A4BF2BD845FCBD66A4BF2BD845FCBD618EC38",
+                            TestMessage("1001UU4C94ED3CBF0597C848000A85A55C2E54X", new GenerateKey_A0()));
+            Extensions.RndMachine = new RandomMachine();
+        }
+
+        [Test]
+        public void EncryptClearPinTest()
+        {
+            ConfigHelpers.SetAuthorizedState(true);
+            Assert.AreEqual("0001234", TestMessage("1234F" + "012345678901", new EncryptClearPIN_BA()));
+            Assert.AreEqual("0001234", TestMessage("01234" + "012345678901", new EncryptClearPIN_BA()));
+
+            ConfigHelpers.SetAuthorizedState(false);
+            Assert.IsTrue(CommandExplorer.GetCommand(CommandType.Host, "BA").RequiresAuthorizedState);
+        }
+
+        [Test]
+        public void FormZmkFromThreeComponentsTest()
+        {
+            ConfigHelpers.SetAuthorizedState(true);
+            Assert.AreEqual("00XC0BC1DFFC449A402DAB71250CA5869CC8CE39643DA9A9B99",
+                            TestMessage(
+                                "A235EDF4C58A2CB0C84641D07319CF21FF43378ED5D85B1BC465BF000335FBF12EC8A0412B5D0E86E3C1E5ABFA19B3F5",
+                                new FormZMKFromThreeComponents_GG()));
+
+            ConfigHelpers.SetAuthorizedState(false);
+            Assert.IsTrue(CommandExplorer.GetCommand(CommandType.Host, "GG").RequiresAuthorizedState);
+        }
+
         private string TestMessage (string message, AHostCommand command)
         {
             var msg = new StreamMessage(message);
