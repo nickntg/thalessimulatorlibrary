@@ -200,23 +200,31 @@ namespace ThalesSim.Tests.Unit.Commands
                                 "3U2EC8A0412B5D0E86E3C1E5ABFA19B3F5FF43378ED5D85B1BC465BF000335FBF1A235EDF4C58A2CB0C84641D07319CF21;0X0",
                                 new FormZMKFromTwoToNineComponents_GY()));
             ConfigHelpers.SetAuthorizedState(false);
+        }
 
-            //AuthorizedStateOn()
-            //Assert.AreEqual("00C0BC1DFFC449A402DAB71250CA5869CC8CE39643DA9A9B99", TestTran("32EC8A0412B5D0E86E3C1E5ABFA19B3F5FF43378ED5D85B1BC465BF000335FBF1A235EDF4C58A2CB0C84641D07319CF21", New FormZMKFromTwoToNineComponents_GY))
-            //Assert.AreEqual("00U369835189A058604EB7F84EAE10C7D048CE396", TestTran("32EC8A0412B5D0E86E3C1E5ABFA19B3F5FF43378ED5D85B1BC465BF000335FBF1A235EDF4C58A2CB0C84641D07319CF21;0U1", New FormZMKFromTwoToNineComponents_GY))
-            //Assert.AreEqual("00XC0BC1DFFC449A402DAB71250CA5869CC8CE39643DA9A9B99", TestTran("32EC8A0412B5D0E86E3C1E5ABFA19B3F5FF43378ED5D85B1BC465BF000335FBF1A235EDF4C58A2CB0C84641D07319CF21;0X0", New FormZMKFromTwoToNineComponents_GY))
+        [Test]
+        public void GenerateMacMabUsingAnsiX919Test()
+        {
+            const string cryptZak = "U4F24FC3AADA72104B6BE1D1E296CA774";
+            var result = TestMessage("1111" + cryptZak + "001030303030303030303131313131313131",
+                                     new GenerateMACMABUsingAnsiX919ForLargeMessage_MS());
+            Assert.AreEqual("00A9D4D96683B51333", result);
 
-            //'Unit test for the legacy mode.
-            //LegacyModeOn()
-            //Dim ZMKComp1 As String = TestTran("Component1|U00", New GenerateAndPrintZMKComponent_OC).Substring(2, 33)
-            //System.Threading.Thread.Sleep(50)
-            //Dim ZMKComp2 As String = TestTran("Component1|U00", New GenerateAndPrintZMKComponent_OC).Substring(2, 33)
-            //Assert.AreEqual("00", TestTran("2" + ZMKComp1 + ZMKComp2, New FormZMKFromTwoToNineComponents_GY).Substring(0, 2))
-            //'Get out of legacy mode and try again to get an invalid input data error.
-            //LegacyModeOff()
-            //Assert.AreEqual("15", TestTran("2" + ZMKComp1 + ZMKComp2, New FormZMKFromTwoToNineComponents_GY).Substring(0, 2))
+            result = TestMessage("2111" + cryptZak + result.Substring(2) + "001030303030303030303131313131313131",
+                         new GenerateMACMABUsingAnsiX919ForLargeMessage_MS());
+            Assert.AreEqual("00DA46CEC9E61AF065", result);
 
-            //AuthorizedStateOff()
+            result = TestMessage("2111" + cryptZak + result.Substring(2) + "001030303030303030303131313131313131",
+                         new GenerateMACMABUsingAnsiX919ForLargeMessage_MS());
+            Assert.AreEqual("0056A27E35442BD07D", result);
+
+            result = TestMessage("2111" + cryptZak + result.Substring(2) + "001030303030303030303131313131313131",
+                         new GenerateMACMABUsingAnsiX919ForLargeMessage_MS());
+            Assert.AreEqual("00B12874BED7137303", result);
+
+            result = TestMessage("3111" + cryptZak + result.Substring(2) + "001030303030303030303131313131313131",
+                         new GenerateMACMABUsingAnsiX919ForLargeMessage_MS());
+            Assert.AreEqual("000D99127F7734AA58", result);
         }
 
         private string TestMessage (string message, AHostCommand command)
