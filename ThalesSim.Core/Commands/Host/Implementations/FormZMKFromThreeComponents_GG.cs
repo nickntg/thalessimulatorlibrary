@@ -108,6 +108,7 @@ namespace ThalesSim.Core.Commands.Host.Implementations
             }
 
             var clearKey = keyA.ClearKey.XorHex(keyB.ClearKey.XorHex(keyC.ClearKey));
+            clearKey = clearKey.MakeParity(Parity.Odd);
             var cryptKey = new HexKeyThales(new KeyTypeCode(0, LmkPair.Pair04_05), true, clearKey);
 
             Log.InfoFormat("Component A (clear): {0}", keyA.ClearKey);

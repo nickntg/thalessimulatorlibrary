@@ -25,6 +25,8 @@ namespace ThalesSim.Core.Resources
     {
         private static bool _authorizedState = Settings.Default.StartInAuthorizedState;
 
+        private static bool _legagyMode = Settings.Default.LegacyMode;
+
         /// <summary>
         /// Check if Legacy Mode is enabled.
         /// </summary>
@@ -75,6 +77,24 @@ namespace ThalesSim.Core.Resources
         public static void SetDoubleLengthZmk()
         {
             Settings.Default.DoubleLengthZMKs = true;            
+        }
+
+        /// <summary>
+        /// Returns the legacy mode flag.
+        /// </summary>
+        /// <returns></returns>
+        public static bool InLegacyMode()
+        {
+            return _legagyMode;
+        }
+
+        /// <summary>
+        /// Sets the legagy mode flag.
+        /// </summary>
+        /// <param name="flag">Flag to set to.</param>
+        public static void SetLegacyMode (bool flag)
+        {
+            _legagyMode = flag;
         }
     }
 }
