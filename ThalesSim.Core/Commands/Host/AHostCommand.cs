@@ -217,5 +217,14 @@ namespace ThalesSim.Core.Commands.Host
 
             return true;
         }
+
+        /// <summary>
+        /// Appends to the printer data.
+        /// </summary>
+        /// <param name="data">String to append.</param>
+        protected void AddPrinterData (string data)
+        {
+            PrinterData += data + "\r\n";
+        }
     }
 }

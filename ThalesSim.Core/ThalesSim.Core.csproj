@@ -66,6 +66,7 @@
     <Compile Include="Commands\Host\Implementations\FormKeyFromEncryptedComponents_A4.cs" />
     <Compile Include="Commands\Host\Implementations\FormZMKFromThreeComponents_GG.cs" />
     <Compile Include="Commands\Host\Implementations\FormZMKFromTwoToNineComponents_GY.cs" />
+    <Compile Include="Commands\Host\Implementations\GenerateAndPrintComponent_A2.cs" />
     <Compile Include="Commands\Host\Implementations\GenerateKey_A0.cs" />
     <Compile Include="Commands\Host\Implementations\GenerateMACMABUsingAnsiX919ForLargeMessage_MS.cs" />
     <Compile Include="Commands\Host\Implementations\ImportKey_A6.cs" />

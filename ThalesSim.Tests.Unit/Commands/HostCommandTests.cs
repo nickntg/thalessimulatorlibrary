@@ -200,6 +200,7 @@ namespace ThalesSim.Tests.Unit.Commands
                                 "3U2EC8A0412B5D0E86E3C1E5ABFA19B3F5FF43378ED5D85B1BC465BF000335FBF1A235EDF4C58A2CB0C84641D07319CF21;0X0",
                                 new FormZMKFromTwoToNineComponents_GY()));
             ConfigHelpers.SetAuthorizedState(false);
+            Assert.IsTrue(CommandExplorer.GetCommand(CommandType.Host, "GY").RequiresAuthorizedState);
         }
 
         [Test]
@@ -227,6 +228,36 @@ namespace ThalesSim.Tests.Unit.Commands
             Assert.AreEqual("000D99127F7734AA58", result);
         }
 
+        [Test]
+        public void GenerateAndPrintComponentTest()
+        {
+            ConfigHelpers.SetAuthorizedState(true);
+            Extensions.RndMachine = new NotSoRandom();
+            string rsp;
+            string rspAfterIo;
+
+            TestMessageWithIo("001U", new GenerateAndPrintComponent_A2(), out rsp, out rspAfterIo);
+            Assert.AreEqual("00U37C214786596A294ED92DBA27208C13B", rsp);
+            Assert.IsNotNullOrEmpty(rspAfterIo);
+
+            TestMessageWithIo("001T", new GenerateAndPrintComponent_A2(), out rsp, out rspAfterIo);
+            Assert.AreEqual("00T07481EB9B807DF6E4AAF814F18038290CE01C666B4B2F652", rsp);
+            Assert.IsNotNullOrEmpty(rspAfterIo);
+
+            TestMessageWithIo("002X", new GenerateAndPrintComponent_A2(), out rsp, out rspAfterIo);
+            Assert.AreEqual("00X3A6F3B5520B820EC3A6F3B5520B820EC", rsp);
+            Assert.IsNotNullOrEmpty(rspAfterIo);
+
+            TestMessageWithIo("002Y", new GenerateAndPrintComponent_A2(), out rsp, out rspAfterIo);
+            Assert.AreEqual("00Y3A6F3B5520B820EC3A6F3B5520B820EC3A6F3B5520B820EC", rsp);
+            Assert.IsNotNullOrEmpty(rspAfterIo);
+
+            Extensions.RndMachine = new RandomMachine();
+
+            ConfigHelpers.SetAuthorizedState(false);
+            Assert.IsTrue(CommandExplorer.GetCommand(CommandType.Host, "A2").RequiresAuthorizedState);
+        }
+
         private string TestMessage (string message, AHostCommand command)
         {
             var msg = new StreamMessage(message);
@@ -237,7 +268,24 @@ namespace ThalesSim.Tests.Unit.Commands
             }
 
             var rsp = command.ConstructResponse();
+
             return rsp.GetBytes().GetString();
+        }
+
+        private void TestMessageWithIo(string message, AHostCommand command, out string rsp, out string rspAfterIo)
+        {
+            var msg = new StreamMessage(message);
+            command.AcceptMessage(msg);
+            if (command.XmlParseResult != ErrorCodes.ER_00_NO_ERROR)
+            {
+                rsp = command.XmlParseResult;
+                rspAfterIo = string.Empty;
+                return;
+            }
+
+            rsp = command.ConstructResponse().Message;
+
+            rspAfterIo = command.ConstructResponseAfterIo().Message;
         }
     }
 }
