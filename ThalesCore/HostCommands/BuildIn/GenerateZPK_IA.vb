@@ -80,11 +80,13 @@ Namespace HostCommands.BuildIn
                 If ValidateKeySchemeCode(_keySchemeLMK, ks, mr) = False Then Return mr
                 If ValidateKeySchemeCode(_keySchemeZMK, zmkKs, mr) = False Then Return mr
 
-                If ks = KeySchemeTable.KeyScheme.TripleLengthKeyAnsi OrElse _
-                   ks = KeySchemeTable.KeyScheme.TripleLengthKeyVariant Then
-                    mr.AddElement(ErrorCodes.ER_26_INVALID_KEY_SCHEME)
-                    Return mr
-                End If
+                '' Per http://thalessim.codeplex.com/discussions/407151, we also process
+                '' triple-length keys.
+                'If ks = KeySchemeTable.KeyScheme.TripleLengthKeyAnsi OrElse _
+                '   ks = KeySchemeTable.KeyScheme.TripleLengthKeyVariant Then
+                '    mr.AddElement(ErrorCodes.ER_26_INVALID_KEY_SCHEME)
+                '    Return mr
+                'End If
             Else
                 ks = KeySchemeTable.KeyScheme.SingleDESKey
                 zmkKs = KeySchemeTable.KeyScheme.SingleDESKey
