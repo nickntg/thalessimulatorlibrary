@@ -103,7 +103,7 @@ Namespace HostCommands.BuildIn
 
             'Decrypt's pin under host storage
             'Current implementation just trims the leading zero, added here again.
-            Dim clearDBPIN As String = "0" + DecryptPINUnderHostStorage(_pinDatabase)
+            Dim clearDBPIN As String = DecryptPINUnderHostStorage(_pinDatabase)
 
             If clearDBPIN = clearPIN Then
                 mr.AddElement(ErrorCodes.ER_00_NO_ERROR)
