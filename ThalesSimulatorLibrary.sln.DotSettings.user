@@ -1,0 +1,7 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d33fc16d_002Dea7f_002D4432_002D81af_002Df81642eddcf9/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ExtensionsTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.LMK.ExtensionsTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.LMK.KeyTypeCodeTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
