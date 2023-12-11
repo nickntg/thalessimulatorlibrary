@@ -3,5 +3,6 @@
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.LMK.ExtensionsTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.LMK.KeyTypeCodeTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.Authorized.ExtensionsTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
