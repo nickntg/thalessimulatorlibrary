@@ -4,5 +4,16 @@
     &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.LMK.ExtensionsTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.LMK.KeyTypeCodeTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.Authorized.ExtensionsTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.Key.ExtensionsTests.VerifySchemeTag&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.Key.ExtensionsTests.InvalidSchemeForTag&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.Key.ExtensionsTests.VerifyScheme&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.Key.ExtensionsTests.VerifyStripKeySchemeTag&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Utility.ExtensionsTests.VerifyIsHex&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Utility.ExtensionsTests.VerifyGetBytesOfHexString&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Utility.ExtensionsTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.LMK.LmkHexVariantTests.VerifyVariant&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.LMK.StorageTests.VerifyDefaults&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.LMK.StorageTests.CheckLmkStorage&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.LMK.StorageTests.AutomaticallyCreateNewLmkSet&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
