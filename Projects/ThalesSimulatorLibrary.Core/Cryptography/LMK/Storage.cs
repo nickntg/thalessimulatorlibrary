@@ -18,7 +18,7 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.LMK
 
         public static string Lmk(LmkPair lmkPair, string variant)
         {
-            return variant == "0" 
+            return variant == "0"
                 ? _lmks[0][lmkPair]
                 : _lmks[0][lmkPair].Xor(LmkHexVariants.GetVariant(Convert.ToInt32(variant)).PadRight(32, '0'));
         }
@@ -74,13 +74,13 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.LMK
 
             _lmkFile = lmkFile;
             _lmks = new Dictionary<LmkPair, string>[100];
-            
+
             for (var i = 0; i < 100; i++)
             {
                 ReadLmks(lmkFile, i);
             }
         }
-        
+
         private static void AutomaticallyCreateLmks(int lmkIdentifier)
         {
             if (_lmks[lmkIdentifier] != null)

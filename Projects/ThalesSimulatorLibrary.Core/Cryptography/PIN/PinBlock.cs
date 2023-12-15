@@ -3,8 +3,8 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
 {
     public class PinBlock
     {
-        public PinBlockFormat Format { get; set;  }
-        public string AccountOrPadding { get; set;  }
+        public PinBlockFormat Format { get; set; }
+        public string AccountOrPadding { get; set; }
         public string Pin { get; set; }
 
         public static PinBlock FromClearText(string pin, string accountOrPadding)

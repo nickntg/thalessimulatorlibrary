@@ -9,7 +9,7 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.LMK
 
         public KeyTypeCode(string keyTypeCode)
         {
-            if (keyTypeCode is not { Length : 3 })
+            if (keyTypeCode is not { Length: 3 })
             {
                 throw new InvalidKeyTypeCodeException($"Invalid key type code {keyTypeCode}");
             }

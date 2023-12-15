@@ -274,7 +274,7 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.Authorized
                 Requirement = AuthorizedStateRequirement.AuthorizedStateNotRequired
             },
         };
-        public static AuthorizedStateRequirement GetAuthorizedStateRequirementForKeyFunction(this KeyFunction function, 
+        public static AuthorizedStateRequirement GetAuthorizedStateRequirementForKeyFunction(this KeyFunction function,
             string variant, LmkPair lmkPair)
         {
             var requirement =
