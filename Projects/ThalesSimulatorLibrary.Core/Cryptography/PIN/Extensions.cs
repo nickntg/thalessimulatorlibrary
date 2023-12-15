@@ -19,6 +19,8 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
                     return pinBlock.GetPinDocutel();
                 case PinBlockFormat.Diebold:
                     return pinBlock.GetPinDiebold();
+                case PinBlockFormat.Plus:
+                    return pinBlock.GetPinPlus(accountOrPadding);
                 default:
                     throw new ArgumentException($"PIN block format {format} not supported");
             }
@@ -36,6 +38,8 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
                     return pin.GetPinBlockDocutel(accountOrPadding);
                 case PinBlockFormat.Diebold:
                     return pin.GetPinBlockDiebold();
+                case PinBlockFormat.Plus:
+                    return pin.GetPinBlockPlus(accountOrPadding);
                 default:
                     throw new ArgumentException($"PIN block format {format} not supported");
             }
@@ -81,6 +85,26 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
             GuardAgainstEmptyAndExpression(accountOrPadding, nameof(accountOrPadding), "Account/padding must be at least 9 digits long", s => s.Length >= 9);
 
             return $"{pin.Length}{pin.PadRight(6, '0')}{accountOrPadding[..9]}";
+        }
+
+        private static string GetPinPlus(this string pinBlock, string accountOrPadding)
+        {
+            GuardAgainstEmptyAndExpression(accountOrPadding, nameof(accountOrPadding), "Account/padding must be at least 12 digits long", s => s.Length >= 12);
+
+            var s1 = accountOrPadding[..12].PadLeft(16, '0');
+            var s2 = pinBlock.Xor(s1);
+
+            return s2.Substring(2, Convert.ToInt32(s2.Substring(1, 1)));
+        }
+
+        private static string GetPinBlockPlus(this string pin, string accountOrPadding)
+        {
+            GuardAgainstEmptyAndExpression(accountOrPadding, nameof(accountOrPadding), "Account/padding must be at least 12 digits long", s => s.Length >= 12);
+
+            var s1 = $"0{pin.Length}{pin}".PadRight(16, 'F');
+            var s2 = accountOrPadding[..12].PadLeft(16, '0');
+
+            return s1.Xor(s2);
         }
 
         private static void GuardAgainstEmptyAndExpression(string input, string name, string message,

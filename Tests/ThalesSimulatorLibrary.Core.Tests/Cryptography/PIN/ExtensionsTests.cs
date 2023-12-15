@@ -71,5 +71,33 @@ namespace ThalesSimulatorLibrary.Core.Tests.Cryptography.PIN
         {
             Assert.Equal("92389", "5923890987654321".GetPin(PinBlockFormat.Docutel));
         }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("12345678901")]
+        public void GetPlusPinBlockInvalidData(string accountOrPadding)
+        {
+            Assert.Throws<ArgumentException>(() => "12345".GetPinBlock(PinBlockFormat.Plus, accountOrPadding));
+        }
+
+        [Fact]
+        public void GetPlusPinBlock()
+        {
+            Assert.Equal("05921A1CBFFFFFED", "92389".GetPinBlock(PinBlockFormat.Plus, "2283400000123456"));
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("12345678901")]
+        public void GetPinPlusInvalidData(string accountOrPadding)
+        {
+            Assert.Throws<ArgumentException>(() => "0123456789ABCDEF".GetPin(PinBlockFormat.Plus, accountOrPadding));
+        }
+
+        [Fact]
+        public void GetPinPlus()
+        {
+            Assert.Equal("92389", "05921A1CBFFFFFED".GetPin(PinBlockFormat.Plus, "2283400000123456"));
+        }
     }
 }
