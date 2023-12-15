@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using Ardalis.GuardClauses;
 using ThalesSimulatorLibrary.Core.Utility;
@@ -21,6 +22,8 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
                     return pinBlock.GetPinDiebold();
                 case PinBlockFormat.Plus:
                     return pinBlock.GetPinPlus(accountOrPadding);
+                case PinBlockFormat.Iso95641Format1:
+                    return pinBlock.GetPinIso95641();
                 default:
                     throw new ArgumentException($"PIN block format {format} not supported");
             }
@@ -40,6 +43,8 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
                     return pin.GetPinBlockDiebold();
                 case PinBlockFormat.Plus:
                     return pin.GetPinBlockPlus(accountOrPadding);
+                case PinBlockFormat.Iso95641Format1:
+                    return pin.GetPinBlockIso95641();
                 default:
                     throw new ArgumentException($"PIN block format {format} not supported");
             }
@@ -105,6 +110,16 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
             var s2 = accountOrPadding[..12].PadLeft(16, '0');
 
             return s1.Xor(s2);
+        }
+
+        private static string GetPinIso95641(this string pinBlock)
+        {
+            return pinBlock.Substring(2, "0123456789ABCDEF".IndexOf(pinBlock.Substring(1, 1), StringComparison.Ordinal));
+        }
+
+        private static string GetPinBlockIso95641(this string pin)
+        {
+            return $"1{pin.Length:X}{pin}".PadRight(16, '0');
         }
 
         private static void GuardAgainstEmptyAndExpression(string input, string name, string message,
