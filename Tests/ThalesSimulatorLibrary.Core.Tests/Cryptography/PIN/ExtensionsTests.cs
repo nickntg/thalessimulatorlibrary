@@ -131,5 +131,37 @@ namespace ThalesSimulatorLibrary.Core.Tests.Cryptography.PIN
         {
             Assert.Equal(expected, pinBlock.GetPin(PinBlockFormat.Emv));
         }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("12345678901")]
+        public void GetPayNowPayLaterPinBlockInvalidData(string accountOrPadding)
+        {
+            Assert.Throws<ArgumentException>(() => "1234".GetPinBlock(PinBlockFormat.PayNowPayLater, accountOrPadding));
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("12345678901")]
+        public void GetPinPayNowPayLaterInvalidData(string accountOrPadding)
+        {
+            Assert.Throws<ArgumentException>(() => "0123456789ABCDEF".GetPin(PinBlockFormat.PayNowPayLater, accountOrPadding));
+        }
+
+        [Theory]
+        [InlineData("34567", "123400000123456", "2534167FFFEDCBA9")]
+        [InlineData("3456789012", "123400000123456", "2A3416789000CBA9")]
+        public void GetPayNowPayLaterPinBlock(string pin, string accountOrPadding, string expected)
+        {
+            Assert.Equal(expected, pin.GetPinBlock(PinBlockFormat.PayNowPayLater, accountOrPadding));
+        }
+
+        [Theory]
+        [InlineData("2534167FFFEDCBA9", "123400000123456", "34567")]
+        [InlineData("2A3416789000CBA9", "123400000123456", "3456789012")]
+        public void GetPinPayNowPayLater(string pinBlock, string accountOrPadding, string expected)
+        {
+            Assert.Equal(expected, pinBlock.GetPin(PinBlockFormat.PayNowPayLater, accountOrPadding));
+        }
     }
 }

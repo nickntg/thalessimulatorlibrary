@@ -10,46 +10,34 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
         {
             GuardAgainstEmptyAndExpression(pinBlock, nameof(pinBlock), "Invalid PIN block length", s => s.Length == 16);
 
-            switch (format)
+            return format switch
             {
-                case PinBlockFormat.AnsiX98:
-                    return pinBlock.GetPinAnsiX98(accountOrPadding);
-                case PinBlockFormat.Docutel:
-                    return pinBlock.GetPinDocutel();
-                case PinBlockFormat.Diebold:
-                    return pinBlock.GetPinDiebold();
-                case PinBlockFormat.Plus:
-                    return pinBlock.GetPinPlus(accountOrPadding);
-                case PinBlockFormat.Iso95641Format1:
-                    return pinBlock.GetPinIso95641();
-                case PinBlockFormat.Emv:
-                    return pinBlock.GetPinEmv();
-                default:
-                    throw new ArgumentException($"PIN block format {format} not supported");
-            }
+                PinBlockFormat.AnsiX98 => pinBlock.GetPinAnsiX98(accountOrPadding),
+                PinBlockFormat.Docutel => pinBlock.GetPinDocutel(),
+                PinBlockFormat.Diebold => pinBlock.GetPinDiebold(),
+                PinBlockFormat.Plus => pinBlock.GetPinPlus(accountOrPadding),
+                PinBlockFormat.Iso95641Format1 => pinBlock.GetPinIso95641(),
+                PinBlockFormat.Emv => pinBlock.GetPinEmv(),
+                PinBlockFormat.PayNowPayLater => pinBlock.GetPinPayNowPayLater(accountOrPadding),
+                _ => throw new ArgumentException($"PIN block format {format} not supported")
+            };
         }
 
         public static string GetPinBlock(this string pin, PinBlockFormat format, string accountOrPadding = null)
         {
             Guard.Against.NullOrEmpty(pin, nameof(pin), "PIN must have a value");
 
-            switch (format)
+            return format switch
             {
-                case PinBlockFormat.AnsiX98:
-                    return pin.GetPinBlockAnsiX98(accountOrPadding);
-                case PinBlockFormat.Docutel:
-                    return pin.GetPinBlockDocutel(accountOrPadding);
-                case PinBlockFormat.Diebold:
-                    return pin.GetPinBlockDiebold();
-                case PinBlockFormat.Plus:
-                    return pin.GetPinBlockPlus(accountOrPadding);
-                case PinBlockFormat.Iso95641Format1:
-                    return pin.GetPinBlockIso95641();
-                case PinBlockFormat.Emv:
-                    return pin.GetPinBlockEmv();
-                default:
-                    throw new ArgumentException($"PIN block format {format} not supported");
-            }
+                PinBlockFormat.AnsiX98 => pin.GetPinBlockAnsiX98(accountOrPadding),
+                PinBlockFormat.Docutel => pin.GetPinBlockDocutel(accountOrPadding),
+                PinBlockFormat.Diebold => pin.GetPinBlockDiebold(),
+                PinBlockFormat.Plus => pin.GetPinBlockPlus(accountOrPadding),
+                PinBlockFormat.Iso95641Format1 => pin.GetPinBlockIso95641(),
+                PinBlockFormat.Emv => pin.GetPinBlockEmv(),
+                PinBlockFormat.PayNowPayLater => pin.GetPinBlockPayNowPayLater(accountOrPadding),
+                _ => throw new ArgumentException($"PIN block format {format} not supported")
+            };
         }
 
         private static string GetPinAnsiX98(this string pinBlock, string accountOrPadding)
@@ -132,6 +120,26 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
         private static string GetPinBlockEmv(this string pin)
         {
             return $"2{pin.Length:X}{pin}".PadRight(16, 'F');
+        }
+
+        private static string GetPinPayNowPayLater(this string pinBlock, string accountOrPadding)
+        {
+            GuardAgainstEmptyAndExpression(accountOrPadding, nameof(accountOrPadding), "Account/padding must be at least 12 digits long", s => s.Length >= 12);
+
+            var s2 = $"0000{accountOrPadding.Substring(accountOrPadding.Length - 12)}";
+            var s1 = s2.Xor(pinBlock);
+
+            return GetPinEmv(s1);
+        }
+
+        private static string GetPinBlockPayNowPayLater(this string pin, string accountOrPadding)
+        {
+            GuardAgainstEmptyAndExpression(accountOrPadding, nameof(accountOrPadding), "Account/padding must be at least 12 digits long", s => s.Length >= 12);
+
+            var s1 = GetPinBlockEmv(pin);
+            var s2 = $"0000{accountOrPadding.Substring(accountOrPadding.Length - 12)}";
+
+            return s1.Xor(s2);
         }
 
         private static void GuardAgainstEmptyAndExpression(string input, string name, string message,
