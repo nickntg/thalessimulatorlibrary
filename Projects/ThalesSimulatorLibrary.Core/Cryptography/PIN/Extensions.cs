@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using Ardalis.GuardClauses;
 using ThalesSimulatorLibrary.Core.Utility;
 
@@ -24,6 +22,8 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
                     return pinBlock.GetPinPlus(accountOrPadding);
                 case PinBlockFormat.Iso95641Format1:
                     return pinBlock.GetPinIso95641();
+                case PinBlockFormat.Emv:
+                    return pinBlock.GetPinEmv();
                 default:
                     throw new ArgumentException($"PIN block format {format} not supported");
             }
@@ -45,6 +45,8 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
                     return pin.GetPinBlockPlus(accountOrPadding);
                 case PinBlockFormat.Iso95641Format1:
                     return pin.GetPinBlockIso95641();
+                case PinBlockFormat.Emv:
+                    return pin.GetPinBlockEmv();
                 default:
                     throw new ArgumentException($"PIN block format {format} not supported");
             }
@@ -114,7 +116,7 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
 
         private static string GetPinIso95641(this string pinBlock)
         {
-            return pinBlock.Substring(2, "0123456789ABCDEF".IndexOf(pinBlock.Substring(1, 1), StringComparison.Ordinal));
+            return pinBlock.Substring(2, HexLength(pinBlock.Substring(1, 1)));
         }
 
         private static string GetPinBlockIso95641(this string pin)
@@ -122,11 +124,26 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
             return $"1{pin.Length:X}{pin}".PadRight(16, '0');
         }
 
+        private static string GetPinEmv(this string pinBlock)
+        {
+            return pinBlock.Substring(2, HexLength(pinBlock[1..2]));
+        }
+
+        private static string GetPinBlockEmv(this string pin)
+        {
+            return $"2{pin.Length:X}{pin}".PadRight(16, 'F');
+        }
+
         private static void GuardAgainstEmptyAndExpression(string input, string name, string message,
             Func<string, bool> predicate)
         {
             Guard.Against.NullOrEmpty(input, name, message);
             Guard.Against.InvalidInput(input, name, predicate, message);
+        }
+
+        private static int HexLength(string hexChar)
+        {
+            return "0123456789ABCDEF".IndexOf(hexChar, StringComparison.Ordinal);
         }
     }
 }

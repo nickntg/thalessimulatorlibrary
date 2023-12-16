@@ -105,7 +105,7 @@ namespace ThalesSimulatorLibrary.Core.Tests.Cryptography.PIN
         [InlineData("1234567890", "1A12345678900000")]
         public void GetIso95641PinBlock(string pin, string expected)
         {
-            Assert.Equal(expected,pin.GetPinBlock(PinBlockFormat.Iso95641Format1));
+            Assert.Equal(expected, pin.GetPinBlock(PinBlockFormat.Iso95641Format1));
         }
 
         [Theory]
@@ -114,6 +114,22 @@ namespace ThalesSimulatorLibrary.Core.Tests.Cryptography.PIN
         public void GetPinIso95641(string pinBlock, string expected)
         {
             Assert.Equal(expected, pinBlock.GetPin(PinBlockFormat.Iso95641Format1));
+        }
+
+        [Theory]
+        [InlineData("34567", "2534567FFFFFFFFF")]
+        [InlineData("3456789012", "2A3456789012FFFF")]
+        public void GetEmvPinBlock(string pin, string expected)
+        {
+            Assert.Equal(expected, pin.GetPinBlock(PinBlockFormat.Emv));
+        }
+
+        [Theory]
+        [InlineData("2534567FFFFFFFFF", "34567")]
+        [InlineData("2A3456789012FFFF", "3456789012")]
+        public void GetPinEmv(string pinBlock, string expected)
+        {
+            Assert.Equal(expected, pinBlock.GetPin(PinBlockFormat.Emv));
         }
     }
 }
