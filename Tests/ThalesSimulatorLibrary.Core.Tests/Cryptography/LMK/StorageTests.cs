@@ -1,48 +1,226 @@
 ﻿using ThalesSimulatorLibrary.Core.Cryptography.LMK;
-using ThalesSimulatorLibrary.Core.Utility;
 using Xunit;
 
 namespace ThalesSimulatorLibrary.Core.Tests.Cryptography.LMK
 {
     public class StorageTests
     {
-        [Fact]
-        public void VerifyDefaults()
+        [Theory]
+        [InlineData(LmkPair.Pair0001, "01010101010101017902CD1FD36EF8BA")]
+        [InlineData(LmkPair.Pair0203, "20202020202020203131313131313131")]
+        [InlineData(LmkPair.Pair0405, "40404040404040405151515151515151")]
+        [InlineData(LmkPair.Pair0607, "61616161616161617070707070707070")]
+        [InlineData(LmkPair.Pair0809, "80808080808080809191919191919191")]
+        [InlineData(LmkPair.Pair1011, "A1A1A1A1A1A1A1A1B0B0B0B0B0B0B0B0")]
+        [InlineData(LmkPair.Pair1213, "C1C1010101010101D0D0010101010101")]
+        [InlineData(LmkPair.Pair1415, "E0E0010101010101F1F1010101010101")]
+        [InlineData(LmkPair.Pair1617, "1C587F1C13924FEF0101010101010101")]
+        [InlineData(LmkPair.Pair1819, "01010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair2021, "02020202020202020404040404040404")]
+        [InlineData(LmkPair.Pair2223, "07070707070707071010101010101010")]
+        [InlineData(LmkPair.Pair2425, "13131313131313131515151515151515")]
+        [InlineData(LmkPair.Pair2627, "16161616161616161919191919191919")]
+        [InlineData(LmkPair.Pair2829, "1A1A1A1A1A1A1A1A1C1C1C1C1C1C1C1C")]
+        [InlineData(LmkPair.Pair3031, "23232323232323232525252525252525")]
+        [InlineData(LmkPair.Pair3233, "26262626262626262929292929292929")]
+        [InlineData(LmkPair.Pair3435, "2A2A2A2A2A2A2A2A2C2C2C2C2C2C2C2C")]
+        [InlineData(LmkPair.Pair3637, "2F2F2F2F2F2F2F2F3131313131313131")]
+        [InlineData(LmkPair.Pair3839, "01010101010101010101010101010101")]
+        public void VerifyDefaults(LmkPair pair, string expected)
         {
             File.Delete("lmk.txt");
             Storage.ReadLmks("lmk.txt");
 
-            Assert.Equal("01010101010101017902CD1FD36EF8BA", Storage.Lmk(LmkPair.Pair0001));
-            Assert.Equal("20202020202020203131313131313131", Storage.Lmk(LmkPair.Pair0203));
-            Assert.Equal("40404040404040405151515151515151", Storage.Lmk(LmkPair.Pair0405));
-            Assert.Equal("61616161616161617070707070707070", Storage.Lmk(LmkPair.Pair0607));
-            Assert.Equal("80808080808080809191919191919191", Storage.Lmk(LmkPair.Pair0809));
-            Assert.Equal("A1A1A1A1A1A1A1A1B0B0B0B0B0B0B0B0", Storage.Lmk(LmkPair.Pair1011));
-            Assert.Equal("C1C1010101010101D0D0010101010101", Storage.Lmk(LmkPair.Pair1213));
-            Assert.Equal("E0E0010101010101F1F1010101010101", Storage.Lmk(LmkPair.Pair1415));
-            Assert.Equal("1C587F1C13924FEF0101010101010101", Storage.Lmk(LmkPair.Pair1617));
-            Assert.Equal("01010101010101010101010101010101", Storage.Lmk(LmkPair.Pair1819));
-            Assert.Equal("02020202020202020404040404040404", Storage.Lmk(LmkPair.Pair2021));
-            Assert.Equal("07070707070707071010101010101010", Storage.Lmk(LmkPair.Pair2223));
-            Assert.Equal("13131313131313131515151515151515", Storage.Lmk(LmkPair.Pair2425));
-            Assert.Equal("16161616161616161919191919191919", Storage.Lmk(LmkPair.Pair2627));
-            Assert.Equal("1A1A1A1A1A1A1A1A1C1C1C1C1C1C1C1C", Storage.Lmk(LmkPair.Pair2829));
-            Assert.Equal("23232323232323232525252525252525", Storage.Lmk(LmkPair.Pair3031));
-            Assert.Equal("26262626262626262929292929292929", Storage.Lmk(LmkPair.Pair3233));
-            Assert.Equal("2A2A2A2A2A2A2A2A2C2C2C2C2C2C2C2C", Storage.Lmk(LmkPair.Pair3435));
-            Assert.Equal("2F2F2F2F2F2F2F2F3131313131313131", Storage.Lmk(LmkPair.Pair3637));
-            Assert.Equal("01010101010101010101010101010101", Storage.Lmk(LmkPair.Pair3839));
+            Assert.Equal(expected, Storage.Lmk(pair));
+        }
 
-            for (var i = 1; i <= 9; i++)
-            {
-                var hexVariant = LmkHexVariants.GetVariant(i);
-                var hexVariantKey = hexVariant.PadRight(32, '0');
+        [Theory]
+        [InlineData(LmkPair.Pair0001, "1", "A7010101010101017902CD1FD36EF8BA")]
+        [InlineData(LmkPair.Pair0001, "2", "5B010101010101017902CD1FD36EF8BA")]
+        [InlineData(LmkPair.Pair0001, "3", "6B010101010101017902CD1FD36EF8BA")]
+        [InlineData(LmkPair.Pair0001, "4", "DF010101010101017902CD1FD36EF8BA")]
+        [InlineData(LmkPair.Pair0001, "5", "2A010101010101017902CD1FD36EF8BA")]
+        [InlineData(LmkPair.Pair0001, "6", "51010101010101017902CD1FD36EF8BA")]
+        [InlineData(LmkPair.Pair0001, "7", "75010101010101017902CD1FD36EF8BA")]
+        [InlineData(LmkPair.Pair0001, "8", "9D010101010101017902CD1FD36EF8BA")]
+        [InlineData(LmkPair.Pair0001, "9", "FB010101010101017902CD1FD36EF8BA")]
+        [InlineData(LmkPair.Pair0203, "1", "86202020202020203131313131313131")]
+        [InlineData(LmkPair.Pair0203, "2", "7A202020202020203131313131313131")]
+        [InlineData(LmkPair.Pair0203, "3", "4A202020202020203131313131313131")]
+        [InlineData(LmkPair.Pair0203, "4", "FE202020202020203131313131313131")]
+        [InlineData(LmkPair.Pair0203, "5", "0B202020202020203131313131313131")]
+        [InlineData(LmkPair.Pair0203, "6", "70202020202020203131313131313131")]
+        [InlineData(LmkPair.Pair0203, "7", "54202020202020203131313131313131")]
+        [InlineData(LmkPair.Pair0203, "8", "BC202020202020203131313131313131")]
+        [InlineData(LmkPair.Pair0203, "9", "DA202020202020203131313131313131")]
+        [InlineData(LmkPair.Pair0405, "1", "E6404040404040405151515151515151")]
+        [InlineData(LmkPair.Pair0405, "2", "1A404040404040405151515151515151")]
+        [InlineData(LmkPair.Pair0405, "3", "2A404040404040405151515151515151")]
+        [InlineData(LmkPair.Pair0405, "4", "9E404040404040405151515151515151")]
+        [InlineData(LmkPair.Pair0405, "5", "6B404040404040405151515151515151")]
+        [InlineData(LmkPair.Pair0405, "6", "10404040404040405151515151515151")]
+        [InlineData(LmkPair.Pair0405, "7", "34404040404040405151515151515151")]
+        [InlineData(LmkPair.Pair0405, "8", "DC404040404040405151515151515151")]
+        [InlineData(LmkPair.Pair0405, "9", "BA404040404040405151515151515151")]
+        [InlineData(LmkPair.Pair0607, "1", "C7616161616161617070707070707070")]
+        [InlineData(LmkPair.Pair0607, "2", "3B616161616161617070707070707070")]
+        [InlineData(LmkPair.Pair0607, "3", "0B616161616161617070707070707070")]
+        [InlineData(LmkPair.Pair0607, "4", "BF616161616161617070707070707070")]
+        [InlineData(LmkPair.Pair0607, "5", "4A616161616161617070707070707070")]
+        [InlineData(LmkPair.Pair0607, "6", "31616161616161617070707070707070")]
+        [InlineData(LmkPair.Pair0607, "7", "15616161616161617070707070707070")]
+        [InlineData(LmkPair.Pair0607, "8", "FD616161616161617070707070707070")]
+        [InlineData(LmkPair.Pair0607, "9", "9B616161616161617070707070707070")]
+        [InlineData(LmkPair.Pair0809, "1", "26808080808080809191919191919191")]
+        [InlineData(LmkPair.Pair0809, "2", "DA808080808080809191919191919191")]
+        [InlineData(LmkPair.Pair0809, "3", "EA808080808080809191919191919191")]
+        [InlineData(LmkPair.Pair0809, "4", "5E808080808080809191919191919191")]
+        [InlineData(LmkPair.Pair0809, "5", "AB808080808080809191919191919191")]
+        [InlineData(LmkPair.Pair0809, "6", "D0808080808080809191919191919191")]
+        [InlineData(LmkPair.Pair0809, "7", "F4808080808080809191919191919191")]
+        [InlineData(LmkPair.Pair0809, "8", "1C808080808080809191919191919191")]
+        [InlineData(LmkPair.Pair0809, "9", "7A808080808080809191919191919191")]
+        [InlineData(LmkPair.Pair1011, "1", "07A1A1A1A1A1A1A1B0B0B0B0B0B0B0B0")]
+        [InlineData(LmkPair.Pair1011, "2", "FBA1A1A1A1A1A1A1B0B0B0B0B0B0B0B0")]
+        [InlineData(LmkPair.Pair1011, "3", "CBA1A1A1A1A1A1A1B0B0B0B0B0B0B0B0")]
+        [InlineData(LmkPair.Pair1011, "4", "7FA1A1A1A1A1A1A1B0B0B0B0B0B0B0B0")]
+        [InlineData(LmkPair.Pair1011, "5", "8AA1A1A1A1A1A1A1B0B0B0B0B0B0B0B0")]
+        [InlineData(LmkPair.Pair1011, "6", "F1A1A1A1A1A1A1A1B0B0B0B0B0B0B0B0")]
+        [InlineData(LmkPair.Pair1011, "7", "D5A1A1A1A1A1A1A1B0B0B0B0B0B0B0B0")]
+        [InlineData(LmkPair.Pair1011, "8", "3DA1A1A1A1A1A1A1B0B0B0B0B0B0B0B0")]
+        [InlineData(LmkPair.Pair1011, "9", "5BA1A1A1A1A1A1A1B0B0B0B0B0B0B0B0")]
+        [InlineData(LmkPair.Pair1213, "1", "67C1010101010101D0D0010101010101")]
+        [InlineData(LmkPair.Pair1213, "2", "9BC1010101010101D0D0010101010101")]
+        [InlineData(LmkPair.Pair1213, "3", "ABC1010101010101D0D0010101010101")]
+        [InlineData(LmkPair.Pair1213, "4", "1FC1010101010101D0D0010101010101")]
+        [InlineData(LmkPair.Pair1213, "5", "EAC1010101010101D0D0010101010101")]
+        [InlineData(LmkPair.Pair1213, "6", "91C1010101010101D0D0010101010101")]
+        [InlineData(LmkPair.Pair1213, "7", "B5C1010101010101D0D0010101010101")]
+        [InlineData(LmkPair.Pair1213, "8", "5DC1010101010101D0D0010101010101")]
+        [InlineData(LmkPair.Pair1213, "9", "3BC1010101010101D0D0010101010101")]
+        [InlineData(LmkPair.Pair1415, "1", "46E0010101010101F1F1010101010101")]
+        [InlineData(LmkPair.Pair1415, "2", "BAE0010101010101F1F1010101010101")]
+        [InlineData(LmkPair.Pair1415, "3", "8AE0010101010101F1F1010101010101")]
+        [InlineData(LmkPair.Pair1415, "4", "3EE0010101010101F1F1010101010101")]
+        [InlineData(LmkPair.Pair1415, "5", "CBE0010101010101F1F1010101010101")]
+        [InlineData(LmkPair.Pair1415, "6", "B0E0010101010101F1F1010101010101")]
+        [InlineData(LmkPair.Pair1415, "7", "94E0010101010101F1F1010101010101")]
+        [InlineData(LmkPair.Pair1415, "8", "7CE0010101010101F1F1010101010101")]
+        [InlineData(LmkPair.Pair1415, "9", "1AE0010101010101F1F1010101010101")]
+        [InlineData(LmkPair.Pair1617, "1", "BA587F1C13924FEF0101010101010101")]
+        [InlineData(LmkPair.Pair1617, "2", "46587F1C13924FEF0101010101010101")]
+        [InlineData(LmkPair.Pair1617, "3", "76587F1C13924FEF0101010101010101")]
+        [InlineData(LmkPair.Pair1617, "4", "C2587F1C13924FEF0101010101010101")]
+        [InlineData(LmkPair.Pair1617, "5", "37587F1C13924FEF0101010101010101")]
+        [InlineData(LmkPair.Pair1617, "6", "4C587F1C13924FEF0101010101010101")]
+        [InlineData(LmkPair.Pair1617, "7", "68587F1C13924FEF0101010101010101")]
+        [InlineData(LmkPair.Pair1617, "8", "80587F1C13924FEF0101010101010101")]
+        [InlineData(LmkPair.Pair1617, "9", "E6587F1C13924FEF0101010101010101")]
+        [InlineData(LmkPair.Pair1819, "1", "A7010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair1819, "2", "5B010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair1819, "3", "6B010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair1819, "4", "DF010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair1819, "5", "2A010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair1819, "6", "51010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair1819, "7", "75010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair1819, "8", "9D010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair1819, "9", "FB010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair2021, "1", "A4020202020202020404040404040404")]
+        [InlineData(LmkPair.Pair2021, "2", "58020202020202020404040404040404")]
+        [InlineData(LmkPair.Pair2021, "3", "68020202020202020404040404040404")]
+        [InlineData(LmkPair.Pair2021, "4", "DC020202020202020404040404040404")]
+        [InlineData(LmkPair.Pair2021, "5", "29020202020202020404040404040404")]
+        [InlineData(LmkPair.Pair2021, "6", "52020202020202020404040404040404")]
+        [InlineData(LmkPair.Pair2021, "7", "76020202020202020404040404040404")]
+        [InlineData(LmkPair.Pair2021, "8", "9E020202020202020404040404040404")]
+        [InlineData(LmkPair.Pair2021, "9", "F8020202020202020404040404040404")]
+        [InlineData(LmkPair.Pair2223, "1", "A1070707070707071010101010101010")]
+        [InlineData(LmkPair.Pair2223, "2", "5D070707070707071010101010101010")]
+        [InlineData(LmkPair.Pair2223, "3", "6D070707070707071010101010101010")]
+        [InlineData(LmkPair.Pair2223, "4", "D9070707070707071010101010101010")]
+        [InlineData(LmkPair.Pair2223, "5", "2C070707070707071010101010101010")]
+        [InlineData(LmkPair.Pair2223, "6", "57070707070707071010101010101010")]
+        [InlineData(LmkPair.Pair2223, "7", "73070707070707071010101010101010")]
+        [InlineData(LmkPair.Pair2223, "8", "9B070707070707071010101010101010")]
+        [InlineData(LmkPair.Pair2223, "9", "FD070707070707071010101010101010")]
+        [InlineData(LmkPair.Pair2425, "1", "B5131313131313131515151515151515")]
+        [InlineData(LmkPair.Pair2425, "2", "49131313131313131515151515151515")]
+        [InlineData(LmkPair.Pair2425, "3", "79131313131313131515151515151515")]
+        [InlineData(LmkPair.Pair2425, "4", "CD131313131313131515151515151515")]
+        [InlineData(LmkPair.Pair2425, "5", "38131313131313131515151515151515")]
+        [InlineData(LmkPair.Pair2425, "6", "43131313131313131515151515151515")]
+        [InlineData(LmkPair.Pair2425, "7", "67131313131313131515151515151515")]
+        [InlineData(LmkPair.Pair2425, "8", "8F131313131313131515151515151515")]
+        [InlineData(LmkPair.Pair2425, "9", "E9131313131313131515151515151515")]
+        [InlineData(LmkPair.Pair2627, "1", "B0161616161616161919191919191919")]
+        [InlineData(LmkPair.Pair2627, "2", "4C161616161616161919191919191919")]
+        [InlineData(LmkPair.Pair2627, "3", "7C161616161616161919191919191919")]
+        [InlineData(LmkPair.Pair2627, "4", "C8161616161616161919191919191919")]
+        [InlineData(LmkPair.Pair2627, "5", "3D161616161616161919191919191919")]
+        [InlineData(LmkPair.Pair2627, "6", "46161616161616161919191919191919")]
+        [InlineData(LmkPair.Pair2627, "7", "62161616161616161919191919191919")]
+        [InlineData(LmkPair.Pair2627, "8", "8A161616161616161919191919191919")]
+        [InlineData(LmkPair.Pair2627, "9", "EC161616161616161919191919191919")]
+        [InlineData(LmkPair.Pair2829, "1", "BC1A1A1A1A1A1A1A1C1C1C1C1C1C1C1C")]
+        [InlineData(LmkPair.Pair2829, "2", "401A1A1A1A1A1A1A1C1C1C1C1C1C1C1C")]
+        [InlineData(LmkPair.Pair2829, "3", "701A1A1A1A1A1A1A1C1C1C1C1C1C1C1C")]
+        [InlineData(LmkPair.Pair2829, "4", "C41A1A1A1A1A1A1A1C1C1C1C1C1C1C1C")]
+        [InlineData(LmkPair.Pair2829, "5", "311A1A1A1A1A1A1A1C1C1C1C1C1C1C1C")]
+        [InlineData(LmkPair.Pair2829, "6", "4A1A1A1A1A1A1A1A1C1C1C1C1C1C1C1C")]
+        [InlineData(LmkPair.Pair2829, "7", "6E1A1A1A1A1A1A1A1C1C1C1C1C1C1C1C")]
+        [InlineData(LmkPair.Pair2829, "8", "861A1A1A1A1A1A1A1C1C1C1C1C1C1C1C")]
+        [InlineData(LmkPair.Pair2829, "9", "E01A1A1A1A1A1A1A1C1C1C1C1C1C1C1C")]
+        [InlineData(LmkPair.Pair3031, "1", "85232323232323232525252525252525")]
+        [InlineData(LmkPair.Pair3031, "2", "79232323232323232525252525252525")]
+        [InlineData(LmkPair.Pair3031, "3", "49232323232323232525252525252525")]
+        [InlineData(LmkPair.Pair3031, "4", "FD232323232323232525252525252525")]
+        [InlineData(LmkPair.Pair3031, "5", "08232323232323232525252525252525")]
+        [InlineData(LmkPair.Pair3031, "6", "73232323232323232525252525252525")]
+        [InlineData(LmkPair.Pair3031, "7", "57232323232323232525252525252525")]
+        [InlineData(LmkPair.Pair3031, "8", "BF232323232323232525252525252525")]
+        [InlineData(LmkPair.Pair3031, "9", "D9232323232323232525252525252525")]
+        [InlineData(LmkPair.Pair3233, "1", "80262626262626262929292929292929")]
+        [InlineData(LmkPair.Pair3233, "2", "7C262626262626262929292929292929")]
+        [InlineData(LmkPair.Pair3233, "3", "4C262626262626262929292929292929")]
+        [InlineData(LmkPair.Pair3233, "4", "F8262626262626262929292929292929")]
+        [InlineData(LmkPair.Pair3233, "5", "0D262626262626262929292929292929")]
+        [InlineData(LmkPair.Pair3233, "6", "76262626262626262929292929292929")]
+        [InlineData(LmkPair.Pair3233, "7", "52262626262626262929292929292929")]
+        [InlineData(LmkPair.Pair3233, "8", "BA262626262626262929292929292929")]
+        [InlineData(LmkPair.Pair3233, "9", "DC262626262626262929292929292929")]
+        [InlineData(LmkPair.Pair3435, "1", "8C2A2A2A2A2A2A2A2C2C2C2C2C2C2C2C")]
+        [InlineData(LmkPair.Pair3435, "2", "702A2A2A2A2A2A2A2C2C2C2C2C2C2C2C")]
+        [InlineData(LmkPair.Pair3435, "3", "402A2A2A2A2A2A2A2C2C2C2C2C2C2C2C")]
+        [InlineData(LmkPair.Pair3435, "4", "F42A2A2A2A2A2A2A2C2C2C2C2C2C2C2C")]
+        [InlineData(LmkPair.Pair3435, "5", "012A2A2A2A2A2A2A2C2C2C2C2C2C2C2C")]
+        [InlineData(LmkPair.Pair3435, "6", "7A2A2A2A2A2A2A2A2C2C2C2C2C2C2C2C")]
+        [InlineData(LmkPair.Pair3435, "7", "5E2A2A2A2A2A2A2A2C2C2C2C2C2C2C2C")]
+        [InlineData(LmkPair.Pair3435, "8", "B62A2A2A2A2A2A2A2C2C2C2C2C2C2C2C")]
+        [InlineData(LmkPair.Pair3435, "9", "D02A2A2A2A2A2A2A2C2C2C2C2C2C2C2C")]
+        [InlineData(LmkPair.Pair3637, "1", "892F2F2F2F2F2F2F3131313131313131")]
+        [InlineData(LmkPair.Pair3637, "2", "752F2F2F2F2F2F2F3131313131313131")]
+        [InlineData(LmkPair.Pair3637, "3", "452F2F2F2F2F2F2F3131313131313131")]
+        [InlineData(LmkPair.Pair3637, "4", "F12F2F2F2F2F2F2F3131313131313131")]
+        [InlineData(LmkPair.Pair3637, "5", "042F2F2F2F2F2F2F3131313131313131")]
+        [InlineData(LmkPair.Pair3637, "6", "7F2F2F2F2F2F2F2F3131313131313131")]
+        [InlineData(LmkPair.Pair3637, "7", "5B2F2F2F2F2F2F2F3131313131313131")]
+        [InlineData(LmkPair.Pair3637, "8", "B32F2F2F2F2F2F2F3131313131313131")]
+        [InlineData(LmkPair.Pair3637, "9", "D52F2F2F2F2F2F2F3131313131313131")]
+        [InlineData(LmkPair.Pair3839, "1", "A7010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair3839, "2", "5B010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair3839, "3", "6B010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair3839, "4", "DF010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair3839, "5", "2A010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair3839, "6", "51010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair3839, "7", "75010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair3839, "8", "9D010101010101010101010101010101")]
+        [InlineData(LmkPair.Pair3839, "9", "FB010101010101010101010101010101")]
+        public void VerifyDefaultLmkVariants(LmkPair pair, string variant, string expected)
+        {
+            File.Delete("lmk.txt");
+            Storage.ReadLmks("lmk.txt");
 
-                for (var pair = LmkPair.Pair0001; pair <= LmkPair.Pair3839; pair++)
-                {
-                    Assert.Equal(Storage.Lmk(pair).Xor(hexVariantKey), Storage.Lmk(pair, i.ToString()));
-                }
-            }
+            Assert.Equal(expected, Storage.Lmk(pair, variant));
         }
 
         [Fact]
