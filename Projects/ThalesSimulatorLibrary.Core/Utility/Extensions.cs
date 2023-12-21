@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using Ardalis.GuardClauses;
 using ThalesSimulatorLibrary.Core.Cryptography.Key;
 
 namespace ThalesSimulatorLibrary.Core.Utility
@@ -28,6 +29,11 @@ namespace ThalesSimulatorLibrary.Core.Utility
                 .Where(x => x % 2 == 0)
                 .Select(x => Convert.ToByte(text.Substring(x, 2), 16))
                 .ToArray();
+        }
+
+        public static string GetHex(this byte[] bytes)
+        {
+            return BitConverter.ToString(bytes).Replace("-", "").ToUpper();
         }
 
         public static string Xor(this string key1, string key2)
