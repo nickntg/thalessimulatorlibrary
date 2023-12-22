@@ -10,8 +10,6 @@
         Iso95641Format1 = 5,
         Emv = 34,
         PayNowPayLater = 35,
-        PinChangeWithoutOldPin = 41,
-        PinChangeWithOldPin = 42,
         Iso95641Format3 = 47
     }
 }
