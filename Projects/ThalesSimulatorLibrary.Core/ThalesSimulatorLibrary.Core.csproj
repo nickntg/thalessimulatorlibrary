@@ -6,6 +6,14 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;IDE0063</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;IDE0063</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Ardalis.GuardClauses" Version="4.2.0" />
     <PackageReference Include="NLog" Version="5.2.7" />

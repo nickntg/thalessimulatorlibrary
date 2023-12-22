@@ -1,10 +1,16 @@
 ﻿using ThalesSimulatorLibrary.Core.Cryptography.LMK;
+using ThalesSimulatorLibrary.Core.Tests.TestHelpers;
 using Xunit;
 
 namespace ThalesSimulatorLibrary.Core.Tests.Cryptography.LMK
 {
     public class StorageTests
     {
+        public StorageTests()
+        {
+            StorageHelpers.ReadLmks();
+        }
+
         [Theory]
         [InlineData(LmkPair.Pair0001, "01010101010101017902CD1FD36EF8BA")]
         [InlineData(LmkPair.Pair0203, "20202020202020203131313131313131")]
@@ -28,9 +34,6 @@ namespace ThalesSimulatorLibrary.Core.Tests.Cryptography.LMK
         [InlineData(LmkPair.Pair3839, "01010101010101010101010101010101")]
         public void VerifyDefaults(LmkPair pair, string expected)
         {
-            File.Delete("lmk.txt");
-            Storage.ReadLmks("lmk.txt");
-
             Assert.Equal(expected, Storage.Lmk(pair));
         }
 
@@ -217,25 +220,18 @@ namespace ThalesSimulatorLibrary.Core.Tests.Cryptography.LMK
         [InlineData(LmkPair.Pair3839, "9", "FB010101010101010101010101010101")]
         public void VerifyDefaultLmkVariants(LmkPair pair, string variant, string expected)
         {
-            File.Delete("lmk.txt");
-            Storage.ReadLmks("lmk.txt");
-
             Assert.Equal(expected, Storage.Lmk(pair, variant));
         }
 
         [Fact]
         public void CheckLmkStorage()
         {
-            Storage.ReadLmks("lmk.txt");
             Assert.True(Storage.CheckLmkStorage());
         }
 
         [Fact]
         public void AutomaticallyCreateNewLmkSet()
         {
-            File.Delete("lmk.txt.1");
-            Storage.ReadLmks("lmk.txt");
-
             Storage.Lmk(LmkPair.Pair0001, 1);
 
             Assert.True(File.Exists("lmk.txt.1"));

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Text;
 using ThalesSimulatorLibrary.Core.Utility;
@@ -8,8 +8,10 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.LMK
 {
     public class Storage
     {
-        private static Dictionary<LmkPair, string>[] _lmks;
+        private static ConcurrentDictionary<LmkPair, string>[] _lmks;
         private static string _lmkFile = string.Empty;
+
+        public static bool LmksLoaded { get; private set; }
 
         public static string Lmk(LmkPair lmkPair)
         {
@@ -73,12 +75,14 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.LMK
             }
 
             _lmkFile = lmkFile;
-            _lmks = new Dictionary<LmkPair, string>[100];
+            _lmks = new ConcurrentDictionary<LmkPair, string>[100];
 
             for (var i = 0; i < 100; i++)
             {
                 ReadLmks(lmkFile, i);
             }
+
+            LmksLoaded = true;
         }
 
         private static void AutomaticallyCreateLmks(int lmkIdentifier)
@@ -91,7 +95,7 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.LMK
             var contents = new StringBuilder();
             contents.AppendLine($"; Automatically generated LMKs, identifier {lmkIdentifier}");
 
-            _lmks[lmkIdentifier] = new Dictionary<LmkPair, string>();
+            _lmks[lmkIdentifier] = new ConcurrentDictionary<LmkPair, string>();
 
             var rnd = new Random();
             for (var pair = LmkPair.Pair0001; pair <= LmkPair.Pair3839; pair++)
@@ -123,7 +127,7 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.LMK
                 return;
             }
 
-            _lmks[lmkIdentifier] = new Dictionary<LmkPair, string>();
+            _lmks[lmkIdentifier] = new ConcurrentDictionary<LmkPair, string>();
 
             var lines = File.ReadAllLines(lmkFile);
             var pair = LmkPair.Pair0001;
@@ -134,7 +138,7 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.LMK
                     continue;
                 }
 
-                _lmks[lmkIdentifier].Add(pair, line);
+                _lmks[lmkIdentifier].TryAdd(pair, line);
                 pair++;
             }
         }

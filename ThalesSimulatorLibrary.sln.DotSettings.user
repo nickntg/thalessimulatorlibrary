@@ -19,5 +19,7 @@
     &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.PIN.ExtensionsTests.AnsiPinBlockAccountIncorrect&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.PIN.ExtensionsTests.AnsiPinBlock&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.PIN.ExtensionsTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.LMK.StorageTests.VerifyDefaultLmkVariants&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B74DB628-0CC4-4B18-83CB-1428EC9DD365::net8.0::ThalesSimulatorLibrary.Core.Tests.Cryptography.DES.CryptTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
