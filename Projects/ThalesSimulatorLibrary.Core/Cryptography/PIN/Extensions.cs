@@ -19,6 +19,7 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
                 PinBlockFormat.Iso95641Format1 => pinBlock.GetPinIso95641(),
                 PinBlockFormat.Emv => pinBlock.GetPinEmv(),
                 PinBlockFormat.PayNowPayLater => pinBlock.GetPinPayNowPayLater(accountOrPadding),
+                PinBlockFormat.Iso95641Format3 => pinBlock.GetPinIso95643(accountOrPadding),
                 _ => throw new ArgumentException($"PIN block format {format} not supported")
             };
         }
@@ -36,6 +37,7 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
                 PinBlockFormat.Iso95641Format1 => pin.GetPinBlockIso95641(),
                 PinBlockFormat.Emv => pin.GetPinBlockEmv(),
                 PinBlockFormat.PayNowPayLater => pin.GetPinBlockPayNowPayLater(accountOrPadding),
+                PinBlockFormat.Iso95641Format3 => pin.GetPinBlockIso95643(accountOrPadding),
                 _ => throw new ArgumentException($"PIN block format {format} not supported")
             };
         }
@@ -139,6 +141,26 @@ namespace ThalesSimulatorLibrary.Core.Cryptography.PIN
             var s1 = GetPinBlockEmv(pin);
             var s2 = $"0000{accountOrPadding.Substring(accountOrPadding.Length - 12)}";
 
+            return s1.Xor(s2);
+        }
+
+        private static string GetPinIso95643(this string pinBlock, string accountOrPadding)
+        {
+            Guard.Against.NullOrEmpty(accountOrPadding, nameof(accountOrPadding));
+
+            var s2 = $"0000{accountOrPadding.Substring(accountOrPadding.Length - 12)}";
+            var s1 = s2.Xor(pinBlock);
+
+            return s1.Substring(2, HexLength(pinBlock[1..2]));
+        }
+
+        private static string GetPinBlockIso95643(this string pin, string accountOrPadding)
+        {
+            Guard.Against.NullOrEmpty(accountOrPadding, nameof(accountOrPadding));
+
+            var s1 = $"3{pin.Length:X}{pin}".PadRight(16, 'F');
+            accountOrPadding = accountOrPadding.PadLeft(12, '0');
+            var s2 = $"0000{accountOrPadding.Substring(accountOrPadding.Length - 12)}";
             return s1.Xor(s2);
         }
 

@@ -163,5 +163,29 @@ namespace ThalesSimulatorLibrary.Core.Tests.Cryptography.PIN
         {
             Assert.Equal(expected, pinBlock.GetPin(PinBlockFormat.PayNowPayLater, accountOrPadding));
         }
+
+        [Fact]
+        public void GetIso956413PinBlockInvalidData()
+        {
+            Assert.Throws<ArgumentException>(() => "1234".GetPinBlock(PinBlockFormat.Iso95641Format3, ""));
+        }
+
+        [Fact]
+        public void GetPinIso956413InvalidData()
+        {
+            Assert.Throws<ArgumentException>(() => "3412AC89ABCDEF67".GetPin(PinBlockFormat.Iso95641Format3, ""));
+        }
+
+        [Fact]
+        public void GetIso956413PinBlock()
+        {
+            Assert.Equal("3412AC89ABCDEF67", "1234".GetPinBlock(PinBlockFormat.Iso95641Format3, "4321987654321098"));
+        }
+
+        [Fact]
+        public void GetPinIso956413()
+        {
+            Assert.Equal("1234", "3412AC89ABCDEF67".GetPin(PinBlockFormat.Iso95641Format3, "4321987654321098"));
+        }
     }
 }
